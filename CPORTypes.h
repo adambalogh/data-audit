@@ -7,17 +7,17 @@
 #include "Project/third_party/cryptopp/sha.h"
 
 struct BlockTag {
-  long index_;
-  CryptoPP::Integer sigma_;
+  long index;
+  CryptoPP::Integer sigma;
 };
 
 struct FileTag {
-  long num_blocks_;
-  long num_sectors_;
-  std::vector<CryptoPP::Integer> alphas_;
+  long num_blocks;
+  long num_sectors;
+  std::vector<CryptoPP::Integer> alphas;
 };
 
 template <typename MacHashFunction>
 struct SecretKey {
-  byte mac_key_[CryptoPP::HMAC<MacHashFunction>::DEFAULT_KEYLENGTH];
+  byte mac_key[CryptoPP::HMAC<MacHashFunction>::DEFAULT_KEYLENGTH];
 };
