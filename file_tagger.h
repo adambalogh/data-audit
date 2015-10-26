@@ -10,10 +10,17 @@ namespace audit {
 
 class FileTagger {
  public:
-  FileTagger(std::istream& file) : file_(file) { MakeAlphas(); }
+  FileTagger(std::istream& file, int num_sectors, int sector_size)
+      : file_(file),
+        num_sectors_(num_sectors),
+        sector_size_(sector_size),
+        alphas_(num_sectors) {
+    MakeAlphas();
+  }
 
-  BlockTag NextTag();
-  bool HasNextTag();
+  BlockTag GetNext();
+  bool HasNext();
+
   FileTag GetFileTag();
 
  private:
@@ -21,12 +28,13 @@ class FileTagger {
   BlockTag GenerateTag();
 
   std::istream& file_;
+  bool valid_;
 
   // The number of sectors in a block
-  int num_sectors_{10};
+  int num_sectors_;
 
   // The size of a block in bytes
-  int sector_size_{10};
+  int sector_size_;
 
   std::vector<CryptoPP::Integer> alphas_;
 };

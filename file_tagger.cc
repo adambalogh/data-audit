@@ -21,6 +21,7 @@ BlockTag FileTagger::GenerateTag() {
     size_t bytes_read = file_.gcount();
 
     if (!bytes_read) {
+      valid_ = false;
       break;
     }
 
@@ -31,5 +32,5 @@ BlockTag FileTagger::GenerateTag() {
   return tag;
 }
 
-BlockTag FileTagger::NextTag() { return GenerateTag(); }
+BlockTag FileTagger::GetNext() { return GenerateTag(); }
 }

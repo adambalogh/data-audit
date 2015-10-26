@@ -4,7 +4,7 @@ cc_library(
   hdrs = ["file_tagger.h"],
   deps = [
     "//audit/third_party/cryptopp:cryptopp",
-  ]
+  ],
 )
 
 cc_binary(
@@ -13,6 +13,15 @@ cc_binary(
   deps = [
     ":file_tagger",
     "//audit/third_party/cryptopp:cryptopp",
-  ]
+  ],
+)
+
+cc_test(
+  name = "test",
+  srcs = ["file_tagger_test.cc"],
+  deps = [
+    "@gtest//:main",
+    ":file_tagger",
+  ],
 )
 
