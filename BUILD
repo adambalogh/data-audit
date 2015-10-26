@@ -17,7 +17,7 @@ cc_binary(
 )
 
 cc_test(
-  name = "test",
+  name = "file_tagger_test",
   srcs = ["file_tagger_test.cc"],
   deps = [
     "@gtest//:main",

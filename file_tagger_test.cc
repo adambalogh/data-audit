@@ -5,11 +5,23 @@
 
 using namespace audit;
 
+TEST(FileTagger, EmptyFile) {
+  std::stringstream s;
+  FileTagger t{s, 10, 10};
+  EXPECT_EQ(false, t.HasNext());
+}
+
+TEST(FileTagger, IsValid) {
+  std::stringstream s{"a"};
+  FileTagger t{s, 1, 1};
+  EXPECT_EQ(true, t.HasNext());
+}
+
 TEST(FileTagger, SingleLetter) {
   std::stringstream s{"a"};
-  audit::FileTagger t{s, 1, 1};
+  FileTagger t{s, 10, 10};
   auto tag = t.GetNext();
-  EXPECT_EQ(static_cast<int>('a'), tag.sigma);
+  EXPECT_EQ(static_cast<long>('a'), tag.sigma.ConvertToLong());
 }
 
 int main(int argc, char **argv) {

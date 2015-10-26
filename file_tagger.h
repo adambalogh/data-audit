@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <vector>
 
 #include "audit/third_party/cryptopp/integer.h"
 
@@ -15,11 +16,15 @@ class FileTagger {
         num_sectors_(num_sectors),
         sector_size_(sector_size),
         alphas_(num_sectors) {
+    if (file.peek() == std::char_traits<char>::eof()) {
+      valid_ = false;
+      return;
+    }
     MakeAlphas();
   }
 
-  BlockTag GetNext();
-  bool HasNext();
+  BlockTag GetNext() { return GenerateTag(); }
+  bool HasNext() { return valid_; }
 
   FileTag GetFileTag();
 
@@ -28,7 +33,7 @@ class FileTagger {
   BlockTag GenerateTag();
 
   std::istream& file_;
-  bool valid_;
+  bool valid_{true};
 
   // The number of sectors in a block
   int num_sectors_;

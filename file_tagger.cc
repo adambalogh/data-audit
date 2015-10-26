@@ -31,6 +31,4 @@ BlockTag FileTagger::GenerateTag() {
 
   return tag;
 }
-
-BlockTag FileTagger::GetNext() { return GenerateTag(); }
 }
