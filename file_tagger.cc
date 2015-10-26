@@ -29,6 +29,14 @@ BlockTag FileTagger::GenerateTag() {
     tag.sigma += sector * alphas_[i];
   }
 
+  CheckValid();
   return tag;
+}
+
+void FileTagger::CheckValid() {
+  if (file_.peek() == std::char_traits<char>::eof()) {
+    valid_ = false;
+    return;
+  }
 }
 }

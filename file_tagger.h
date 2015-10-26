@@ -16,10 +16,7 @@ class FileTagger {
         num_sectors_(num_sectors),
         sector_size_(sector_size),
         alphas_(num_sectors) {
-    if (file.peek() == std::char_traits<char>::eof()) {
-      valid_ = false;
-      return;
-    }
+    CheckValid();
     MakeAlphas();
   }
 
@@ -29,6 +26,7 @@ class FileTagger {
   FileTag GetFileTag();
 
  private:
+  void CheckValid();
   void MakeAlphas();
   BlockTag GenerateTag();
 
