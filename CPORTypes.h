@@ -10,7 +10,14 @@
 
 namespace audit {
 
+typedef unsigned char byte;
+
+struct Block {};
+
 struct BlockTag {
+  BlockTag(long i) : index(i) {}
+  BlockTag(long i, CryptoPP::Integer s) : index(i), sigma(s) {}
+
   long index;
   CryptoPP::Integer sigma;
 };
@@ -25,5 +32,11 @@ template <typename HashFunction = CryptoPP::SHA512>
 struct SecretKey {
   std::array<byte, CryptoPP::HMAC<HashFunction>::DEFAULT_KEYLENGTH> mac_key;
   std::array<byte, CryptoPP::AES::DEFAULT_KEYLENGTH> enc_key;
+};
+
+struct Challenge {};
+
+struct CPORContext {
+  CryptoPP::Integer p;
 };
 }
