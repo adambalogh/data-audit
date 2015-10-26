@@ -2,21 +2,22 @@
 
 #include <iostream>
 
-#include "auditing/third_party/cryptopp/integer.h"
+#include "audit/third_party/cryptopp/integer.h"
 
-#include "CPORTypes.h"
+#include "cpor_types.h"
 
 namespace audit {
 
-class FileProcessor {
+class FileTagger {
  public:
-  FileProcessor(std::istream& file) : file_(file) {}
+  FileTagger(std::istream& file) : file_(file) { MakeAlphas(); }
 
   BlockTag NextTag();
-  bool HasNextTag() const;
+  bool HasNextTag();
   FileTag GetFileTag();
 
  private:
+  void MakeAlphas();
   BlockTag GenerateTag();
 
   std::istream& file_;

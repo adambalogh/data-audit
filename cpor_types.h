@@ -3,10 +3,10 @@
 #include <array>
 #include <vector>
 
-#include "auditing/third_party/cryptopp/integer.h"
-#include "auditing/third_party/cryptopp/hmac.h"
-#include "auditing/third_party/cryptopp/sha.h"
-#include "auditing/third_party/cryptopp/aes.h"
+#include "audit/third_party/cryptopp/integer.h"
+#include "audit/third_party/cryptopp/hmac.h"
+#include "audit/third_party/cryptopp/sha.h"
+#include "audit/third_party/cryptopp/aes.h"
 
 namespace audit {
 

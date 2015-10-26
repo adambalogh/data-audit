@@ -1,13 +1,17 @@
-#include "FileProcessor.h"
+#include "file_tagger.h"
 
 #include <iostream>
 #include <string>
 
-#include "CPORTypes.h"
+#include "cpor_types.h"
 
 namespace audit {
 
-BlockTag FileProcessor::GenerateTag() {
+void FileTagger::MakeAlphas() {
+  std::generate(std::begin(alphas_), std::end(alphas_), []() { return 1; });
+}
+
+BlockTag FileTagger::GenerateTag() {
   BlockTag tag{0};
   std::vector<byte> chunk(sector_size_);
 
@@ -21,9 +25,11 @@ BlockTag FileProcessor::GenerateTag() {
     }
 
     CryptoPP::Integer sector{chunk.data(), bytes_read};
-    tag.sigma += sector * 1;
+    tag.sigma += sector * alphas_[i];
   }
 
   return tag;
 }
+
+BlockTag FileTagger::NextTag() { return GenerateTag(); }
 }
