@@ -4,11 +4,14 @@
 
 #include "file_tagger.h"
 
-#include "third_party/cryptopp/integer.h"
-
 int main() {
-  std::stringstream s{"hellokocsogerokoerkow"};
-  audit::FileTagger f(s);
-  auto tag = f.NextTag();
-  std::cout << tag.sigma << std::endl;
+  std::stringstream s{"aztwiowerihweriohwitrh"};
+  audit::CryptoNumberGenerator g;
+  audit::FileTagger t{s, 2, 1, CryptoPP::Integer{10424345432432}, g};
+
+  while (t.HasNext()) {
+    auto tag = t.GetNext();
+    std::cout << tag.index << ": " << tag.sigma << std::endl;
+  }
+  auto file_tag = t.GetFileTag();
 }
