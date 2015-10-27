@@ -12,8 +12,6 @@ namespace audit {
 
 typedef unsigned char byte;
 
-struct Block {};
-
 struct BlockTag {
   BlockTag(long i) : index(i) {}
   BlockTag(long i, CryptoPP::Integer s) : index(i), sigma(s) {}
@@ -23,8 +21,10 @@ struct BlockTag {
 };
 
 struct FileTag {
-  long num_blocks;
-  long num_sectors;
+  int num_blocks;
+  int num_sectors;
+  int sector_size;
+  CryptoPP::Integer p;
   std::vector<CryptoPP::Integer> alphas;
 };
 
@@ -34,9 +34,17 @@ struct SecretKey {
   std::array<byte, CryptoPP::AES::DEFAULT_KEYLENGTH> enc_key;
 };
 
-struct Challenge {};
+struct Proof {
+  CryptoPP::Integer sigma;
+  std::vector<CryptoPP::Integer> mus;
+};
 
-struct CPORContext {
-  CryptoPP::Integer p;
+struct C {
+  long index;
+  CryptoPP::Integer weight;
+};
+
+struct Challenge {
+  std::vector<C> challenges;
 };
 }

@@ -9,8 +9,7 @@
 
 using namespace audit;
 
-CryptoPP::Integer p{256203221};
-
+// Random number generator that returns 1 all the time
 class ConstantNumberGenerator : public RandomNumberGenerator {
  public:
   CryptoPP::Integer GenerateNumber(const CryptoPP::Integer &) {
@@ -18,11 +17,13 @@ class ConstantNumberGenerator : public RandomNumberGenerator {
   }
 };
 
+// Random number generator that returns the numbers from the passed vector, in
+// sequence
 class DummyNumberGenerator : public RandomNumberGenerator {
  public:
   DummyNumberGenerator(std::vector<int> nums) : nums_(nums) {}
   CryptoPP::Integer GenerateNumber(const CryptoPP::Integer &) override {
-    return CryptoPP::Integer{nums_[index++]};
+    return CryptoPP::Integer{nums_.at(index++)};
   }
 
  private:
@@ -31,6 +32,7 @@ class DummyNumberGenerator : public RandomNumberGenerator {
 };
 
 ConstantNumberGenerator c_gen;
+CryptoPP::Integer p{256203221};
 
 TEST(FileTagger, EmptyFile) {
   std::stringstream s;

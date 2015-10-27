@@ -10,6 +10,7 @@
 
 namespace audit {
 
+// A generic interface for random number generation
 class RandomNumberGenerator {
  public:
   // Returns a random number x, where x >= 0 and x < max
@@ -17,6 +18,7 @@ class RandomNumberGenerator {
   virtual ~RandomNumberGenerator() {}
 };
 
+// RandomNumberGenerator implementation using CryptoPP
 class CryptoNumberGenerator : public RandomNumberGenerator {
  public:
   CryptoPP::Integer GenerateNumber(const CryptoPP::Integer& max) override {
@@ -41,18 +43,32 @@ class FileTagger {
     MakeAlphas();
   }
 
-  BlockTag GetNext() { return GenerateTag(); }
-  bool HasNext() { return valid_; }
+  // Returns the BlockTag for the next block from the file, should only be
+  // called if HasNext() returns true
+  BlockTag GetNext();
 
+  // Returns false if we reached the end of the file and there are no more
+  // BlockTags to be returned
+  bool HasNext() const;
+
+  // Returns the FileTag for the whole file. Should only be called after
+  // HasNext() returns false, which means that the whole file has been processed
   FileTag GetFileTag();
 
  private:
+  // Sets valid_ to false if we reached the end of the file
   void CheckValid();
   void MakeAlphas();
+
+  // Should only be called when valid_ is true
   BlockTag GenerateTag();
 
   std::istream& file_;
+  // Indicates whether we can read more from the file
   bool valid_{true};
+
+  // The total number of blocks that were processed from file
+  int num_blocks_{0};
 
   // The number of sectors in a block
   int num_sectors_;
@@ -61,6 +77,7 @@ class FileTagger {
   int sector_size_;
 
   std::vector<CryptoPP::Integer> alphas_;
+
   CryptoPP::Integer p_;
   RandomNumberGenerator& random_gen_;
 };
