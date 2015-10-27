@@ -60,6 +60,22 @@ TEST(FileTagger, BecomesInvalid) {
   EXPECT_EQ(false, t.HasNext());
 }
 
+TEST(FileTagger, MultipleBlocks) {
+  std::stringstream s{"abc"};
+  DummyNumberGenerator gen{{10}};
+  FileTagger t{s, 1, 1, p, gen};
+  std::vector<BlockTag> tags;
+  while (t.HasNext()) {
+    tags.push_back(t.GetNext());
+  }
+  std::vector<BlockTag> expected{
+      BlockTag{0, CryptoPP::Integer{'a'} * 10},
+      BlockTag{1, CryptoPP::Integer{'b'} * 10},
+      BlockTag{2, CryptoPP::Integer{'c'} * 10},
+  };
+  EXPECT_EQ(expected, tags);
+}
+
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();

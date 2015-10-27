@@ -56,7 +56,6 @@ class FileTagger {
   FileTag GetFileTag();
 
  private:
-  // Sets valid_ to false if we reached the end of the file
   void CheckValid();
   void MakeAlphas();
 
