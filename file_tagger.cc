@@ -3,12 +3,16 @@
 #include <iostream>
 #include <string>
 
+#include "audit/third_party/cryptopp/integer.h"
+#include "audit/third_party/siphash/siphash24.h"
+
 #include "cpor_types.h"
 
 namespace audit {
 
 void FileTagger::MakeAlphas() {
-  std::generate(std::begin(alphas_), std::end(alphas_), []() { return 1; });
+  std::generate(std::begin(alphas_), std::end(alphas_),
+                [&]() { return random_gen_.GenerateNumber(p_); });
 }
 
 BlockTag FileTagger::GenerateTag() {
