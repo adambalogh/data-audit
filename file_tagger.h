@@ -29,6 +29,15 @@ class CryptoNumberGenerator : public RandomNumberGenerator {
   CryptoPP::AutoSeededRandomPool g;
 };
 
+// Example usage:
+//
+// FileTagger f{...};
+// while (f.HasNext()) {
+//   BlockTag tag = f.GetNext();
+//   ...
+// }
+// FileTag file_tag = f.GetFileTag();
+//
 class FileTagger {
  public:
   FileTagger(std::istream& file, int num_sectors, int sector_size,
@@ -62,7 +71,9 @@ class FileTagger {
   // Should only be called when valid_ is true
   BlockTag GenerateTag();
 
+  // The file we are tagging
   std::istream& file_;
+
   // Indicates whether we can read more from the file
   bool valid_{true};
 
@@ -78,6 +89,7 @@ class FileTagger {
   std::vector<CryptoPP::Integer> alphas_;
 
   CryptoPP::Integer p_;
+
   RandomNumberGenerator& random_gen_;
 };
 }
