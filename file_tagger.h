@@ -7,6 +7,7 @@
 #include "audit/third_party/cryptopp/osrng.h"
 
 #include "cpor_types.h"
+#include "prf.h"
 
 namespace audit {
 
@@ -41,13 +42,15 @@ class CryptoNumberGenerator : public RandomNumberGenerator {
 class FileTagger {
  public:
   FileTagger(std::istream& file, int num_sectors, int sector_size,
-             CryptoPP::Integer p, RandomNumberGenerator& random_gen)
+             CryptoPP::Integer p, RandomNumberGenerator& random_gen,
+             std::unique_ptr<PRF> prf)
       : file_(file),
         num_sectors_(num_sectors),
         sector_size_(sector_size),
         alphas_(num_sectors),
         p_(p),
-        random_gen_(random_gen) {
+        random_gen_(random_gen),
+        prf_(std::move(p)) {
     CheckValid();
     MakeAlphas();
   }
@@ -90,6 +93,9 @@ class FileTagger {
 
   CryptoPP::Integer p_;
 
+  // random number generator
   RandomNumberGenerator& random_gen_;
+
+  std::unique_ptr<PRF> prf_;
 };
 }

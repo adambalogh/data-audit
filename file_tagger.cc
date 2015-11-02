@@ -5,9 +5,9 @@
 #include <string>
 
 #include "audit/third_party/cryptopp/integer.h"
-#include "audit/third_party/siphash/siphash24.h"
 
 #include "cpor_types.h"
+#include "prf.h"
 
 namespace audit {
 
@@ -16,9 +16,10 @@ void FileTagger::MakeAlphas() {
                 [&]() { return random_gen_.GenerateNumber(p_); });
 }
 
+CryptoPP::Integer FileTagger::EncodeIndex(int i) {}
+
 BlockTag FileTagger::GenerateTag() {
-  BlockTag tag{num_blocks_};
-  ++num_blocks_;
+  BlockTag tag{num_blocks_++};
 
   std::vector<byte> chunk(sector_size_);
 
@@ -33,7 +34,9 @@ BlockTag FileTagger::GenerateTag() {
     }
 
     CryptoPP::Integer sector{chunk.data(), bytes_read};
+
     tag.sigma += sector * alphas_[i];
+    tag.sigma += prf_->Encode(i);
   }
 
   return tag;
