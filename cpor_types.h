@@ -13,16 +13,16 @@ namespace audit {
 typedef unsigned char byte;
 
 struct BlockTag {
-  BlockTag(long i) : index(i) {}
-  BlockTag(long i, CryptoPP::Integer s) : index(i), sigma(s) {}
+  BlockTag(unsigned long i) : index(i) {}
+  BlockTag(unsigned long i, CryptoPP::Integer s) : index(i), sigma(s) {}
 
-  long index;
+  unsigned long index;
   CryptoPP::Integer sigma;
 };
 
 struct FileTag {
-  int num_blocks;
-  int num_sectors;
+  unsigned long num_blocks;
+  unsigned long num_sectors;
   int sector_size;
   CryptoPP::Integer p;
   std::vector<CryptoPP::Integer> alphas;
@@ -40,7 +40,7 @@ struct Proof {
 };
 
 struct C {
-  long index;
+  unsigned long index;
   CryptoPP::Integer weight;
 };
 
