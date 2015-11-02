@@ -46,6 +46,16 @@ cc_binary(
 )
 
 cc_test(
+  name = "util_test",
+  srcs = ["util_test.cc"],
+  deps = [
+    "@gtest//:main",
+    ":util",
+    "//audit/third_party/cryptopp:cryptopp",
+  ],
+)
+
+cc_test(
   name = "file_tagger_test",
   srcs = ["file_tagger_test.cc"],
   deps = [

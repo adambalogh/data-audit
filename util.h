@@ -5,7 +5,7 @@ namespace audit {
 
 inline void CryptoIntegerToString(const CryptoPP::Integer& number,
                                   std::string* out) {
-  out->reserve(number.MinEncodedSize());
+  out->resize(number.MinEncodedSize());
   number.Encode((unsigned char*)out->data(), out->size());
 }
 
