@@ -20,10 +20,6 @@ struct BlockTag {
   CryptoPP::Integer sigma;
 };
 
-bool operator==(const BlockTag& a, const BlockTag& b) {
-  return a.index == b.index && a.sigma == b.sigma;
-}
-
 struct FileTag {
   int num_blocks;
   int num_sectors;

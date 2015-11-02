@@ -31,12 +31,12 @@ class CryptoNumberGenerator : public RandomNumberGenerator {
 
 // Example usage:
 //
-// FileTagger f{...};
-// while (f.HasNext()) {
-//   BlockTag tag = f.GetNext();
-//   ...
-// }
-// FileTag file_tag = f.GetFileTag();
+//   FileTagger f{...};
+//   while (f.HasNext()) {
+//     BlockTag tag = f.GetNext();
+//     ...
+//   }
+//   FileTag file_tag = f.GetFileTag();
 //
 class FileTagger {
  public:

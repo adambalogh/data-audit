@@ -3,9 +3,17 @@ cc_library(
   srcs = ["file_tagger.cc"],
   hdrs = ["file_tagger.h"],
   deps = [
+    ":cpor_types",
     "//audit/third_party/cryptopp:cryptopp",
     "//audit/third_party/siphash:siphash",
   ],
+)
+
+cc_library(
+  name = "cpor_types",
+  srcs = [],
+  hdrs = ["cpor_types.h"],
+  deps = []
 )
 
 cc_binary(
