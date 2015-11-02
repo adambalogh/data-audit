@@ -5,9 +5,19 @@ cc_library(
   deps = [
     ":cpor_types",
     ":prf",
+    ":util",
     "//audit/proto:cpor",
     "//audit/third_party/cryptopp:cryptopp",
   ],
+)
+
+cc_library(
+  name = "util",
+  srcs = ["util.cc"],
+  hdrs = ["util.h"],
+  deps = [
+    "//audit/third_party/cryptopp:cryptopp",
+  ]
 )
 
 cc_library(

@@ -8,6 +8,7 @@
 
 #include "proto/cpor.pb.h"
 #include "prf.h"
+#include "util.h"
 
 namespace audit {
 
@@ -34,10 +35,7 @@ BlockTag FileTagger::GenerateTag() {
 
   // TODO fix it
   tag.set_index(0);
-
-  std::string* encoded_sigma = tag.mutable_sigma();
-  encoded_sigma->reserve(sigma.MinEncodedSize());
-  sigma.Encode((unsigned char*)encoded_sigma->data(), encoded_sigma->size());
+  CryptoIntegerToString(sigma, tag.mutable_sigma());
 
   return tag;
 }
