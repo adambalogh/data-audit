@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+message FileTag {
+  int64 num_blocks = 0;
+  int64 num_sectors = 1;
+  int64 sector_size = 2;
+  repeated bytes alphas = 3;
+  bytes hmac_code = 4;
+  bytes prf_key = 5;
+}
+
+message Challenge {
+  int64 index = 0;
+  bytes weight = 1;
+}
