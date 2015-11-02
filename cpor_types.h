@@ -28,10 +28,10 @@ struct FileTag {
   std::vector<CryptoPP::Integer> alphas;
 };
 
-template <typename HashFunction = CryptoPP::SHA512>
-struct SecretKey {
-  std::array<byte, CryptoPP::HMAC<HashFunction>::DEFAULT_KEYLENGTH> mac_key;
+struct SecretKeys {
+  std::array<byte, CryptoPP::HMAC<CryptoPP::SHA512>::DEFAULT_KEYLENGTH> mac_key;
   std::array<byte, CryptoPP::AES::DEFAULT_KEYLENGTH> enc_key;
+  std::array<byte, CryptoPP::HMAC<CryptoPP::SHA256>::DEFAULT_KEYLENGTH> prf_key;
 };
 
 struct Proof {
