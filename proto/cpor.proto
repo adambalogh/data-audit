@@ -17,15 +17,13 @@ message FileTag {
   // The size of a block in bytes
   int32 sector_size = 3;
 
-  bytes alphas = 4;
+  repeated bytes alphas = 4;
 
   bytes hmac_code = 5;
 
   bytes prf_key = 6;
 
   bytes p = 7;
-
-  repeated bytes alphas = 8;
 }
 
 message ChallengeItem {
