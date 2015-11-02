@@ -8,4 +8,9 @@ inline void CryptoIntegerToString(const CryptoPP::Integer& number,
   out->reserve(number.MinEncodedSize());
   number.Encode((unsigned char*)out->data(), out->size());
 }
+
+inline void StringToCryptoInteger(const std::string& in,
+                                  CryptoPP::Integer* out) {
+  out->Decode((unsigned char*)in.data(), in.size());
+}
 }
