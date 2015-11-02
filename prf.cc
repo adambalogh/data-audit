@@ -2,7 +2,7 @@
 
 namespace audit {
 
-CryptoPP::Integer SiphashPRF::Encode(int i) {
+CryptoPP::Integer SiphashPRF::Encode(unsigned int i) {
   unsigned char bytes[4];
 
   bytes[0] = (i >> 24) & 0xFF;

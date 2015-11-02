@@ -23,7 +23,7 @@ BlockTag FileTagger::GenerateTag() {
 
   std::vector<byte> chunk(sector_size_);
 
-  for (int i = 0; i < num_sectors_; i++) {
+  for (unsigned int i = 0; i < num_sectors_; i++) {
     // TODO Ugly hack
     file_.read((char*)chunk.data(), chunk.size());
     size_t bytes_read = file_.gcount();

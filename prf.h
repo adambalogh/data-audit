@@ -7,14 +7,14 @@ namespace audit {
 
 class PRF {
  public:
-  virtual CryptoPP::Integer Encode(int i) = 0;
+  virtual CryptoPP::Integer Encode(unsigned int i) = 0;
   virtual ~PRF() {}
 };
 
 class SiphashPRF : public PRF {
  public:
   SiphashPRF() {}
-  CryptoPP::Integer Encode(int i);
+  CryptoPP::Integer Encode(unsigned int i);
 
  private:
   siphash::stream24_t s_;
