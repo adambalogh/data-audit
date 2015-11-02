@@ -1,7 +1,8 @@
 #pragma once
 
 #include "audit/third_party/cryptopp/integer.h"
-#include "audit/third_party/siphashxx/siphash.hpp"
+#include "audit/third_party/cryptopp/hmac.h"
+#include "audit/third_party/cryptopp/sha.h"
 
 namespace audit {
 
@@ -13,10 +14,10 @@ class PRF {
 
 class SiphashPRF : public PRF {
  public:
-  SiphashPRF() {}
+  SiphashPRF(const unsigned char* key, int length) : hmac_(key, length) {}
   CryptoPP::Integer Encode(unsigned int i);
 
  private:
-  siphash::stream24_t s_;
+  CryptoPP::HMAC<CryptoPP::SHA256> hmac_;
 };
 }

@@ -21,7 +21,6 @@ cc_library(
   srcs = ["prf.cc"],
   hdrs = ["prf.h"],
   deps = [
-    "//audit/third_party/siphashxx:siphashxx",
     "//audit/third_party/cryptopp:cryptopp",
   ]
 )
