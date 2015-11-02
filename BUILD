@@ -5,6 +5,7 @@ cc_library(
   deps = [
     ":cpor_types",
     ":prf",
+    "//audit/proto:cpor",
     "//audit/third_party/cryptopp:cryptopp",
   ],
 )

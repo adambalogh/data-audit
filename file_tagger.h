@@ -6,7 +6,7 @@
 #include "audit/third_party/cryptopp/integer.h"
 #include "audit/third_party/cryptopp/osrng.h"
 
-#include "cpor_types.h"
+#include "proto/cpor.pb.h"
 #include "prf.h"
 
 namespace audit {
@@ -41,16 +41,12 @@ class CryptoNumberGenerator : public RandomNumberGenerator {
 //
 class FileTagger {
  public:
-  FileTagger(std::istream& file, int num_sectors, int sector_size,
-             CryptoPP::Integer p, RandomNumberGenerator& random_gen,
-             std::unique_ptr<PRF> prf)
+  FileTagger(std::istream& file, FileTag* file_tag,
+             RandomNumberGenerator& random_gen, std::unique_ptr<PRF> prf)
       : file_(file),
-        num_sectors_(num_sectors),
-        sector_size_(sector_size),
-        alphas_(num_sectors),
-        p_(p),
+        file_tag_(file_tag),
         random_gen_(random_gen),
-        prf_(std::move(p)) {
+        prf_(std::move(prf)) {
     CheckValid();
     MakeAlphas();
   }
@@ -62,10 +58,6 @@ class FileTagger {
   // Returns false if we reached the end of the file and there are no more
   // BlockTags to be returned
   bool HasNext() const;
-
-  // Returns the FileTag for the whole file. Should only be called after
-  // HasNext() returns false, which means that the whole file has been processed
-  FileTag GetFileTag();
 
  private:
   void CheckValid();
@@ -80,18 +72,7 @@ class FileTagger {
   // Indicates whether we can read more from the file
   bool valid_{true};
 
-  // The total number of blocks that were processed from file
-  int num_blocks_{0};
-
-  // The number of sectors in a block
-  int num_sectors_;
-
-  // The size of a block in bytes
-  int sector_size_;
-
-  std::vector<CryptoPP::Integer> alphas_;
-
-  CryptoPP::Integer p_;
+  FileTag* const file_tag_;
 
   // random number generator
   RandomNumberGenerator& random_gen_;

@@ -6,24 +6,17 @@
 
 #include "audit/third_party/cryptopp/integer.h"
 
-#include "cpor_types.h"
+#include "proto/cpor.pb.h"
 #include "prf.h"
 
 namespace audit {
 
-void FileTagger::MakeAlphas() {
-  std::generate(std::begin(alphas_), std::end(alphas_),
-                [&]() { return random_gen_.GenerateNumber(p_); });
-}
-
-CryptoPP::Integer FileTagger::EncodeIndex(int i) {}
-
 BlockTag FileTagger::GenerateTag() {
-  BlockTag tag{num_blocks_++};
+  BlockTag tag;
+  auto sigma = CryptoPP::Integer::Zero();
+  std::vector<byte> chunk(file_tag_->sector_size());
 
-  std::vector<byte> chunk(sector_size_);
-
-  for (unsigned int i = 0; i < num_sectors_; i++) {
+  for (unsigned int i = 0; i < file_tag_->num_sectors(); i++) {
     // TODO Ugly hack
     file_.read((char*)chunk.data(), chunk.size());
     size_t bytes_read = file_.gcount();
@@ -35,9 +28,16 @@ BlockTag FileTagger::GenerateTag() {
 
     CryptoPP::Integer sector{chunk.data(), bytes_read};
 
-    tag.sigma += sector * alphas_[i];
-    tag.sigma += prf_->Encode(i);
+    sigma += sector * file_tag_->alphas()[i];
+    sigma += prf_->Encode(i);
   }
+
+  // TODO fix it
+  tag.set_index(0);
+
+  std::string* encoded_sigma = tag.mutable_sigma();
+  encoded_sigma->reserve(sigma.MinEncodedSize());
+  sigma.Encode((unsigned char*)encoded_sigma->data(), encoded_sigma->size());
 
   return tag;
 }
@@ -54,19 +54,8 @@ BlockTag FileTagger::GetNext() {
     CheckValid();
     return tag;
   }
-  return BlockTag{0};
+  return BlockTag{};
 }
 
 bool FileTagger::HasNext() const { return valid_; }
-
-FileTag FileTagger::GetFileTag() {
-  FileTag t;
-  t.num_blocks = num_blocks_;
-  t.num_sectors = num_sectors_;
-  t.sector_size = sector_size_;
-  t.p = p_;
-  t.alphas = alphas_;
-
-  return t;
-}
 }
