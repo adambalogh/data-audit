@@ -21,7 +21,6 @@ proto::BlockTag BlockTagger::GenerateTag() {
   std::vector<byte> chunk(file_tag_->sector_size);
 
   for (unsigned int i = 0; i < file_tag_->num_sectors; i++) {
-    // TODO Ugly hack
     file_.read((char*)chunk.data(), chunk.size());
     size_t bytes_read = file_.gcount();
 
@@ -36,8 +35,6 @@ proto::BlockTag BlockTagger::GenerateTag() {
     sigma += prf_->Encode(i);
   }
 
-  // TODO fix it
-  tag.set_index(0);
   CryptoIntegerToString(sigma, tag.mutable_sigma());
 
   return tag;

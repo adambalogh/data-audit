@@ -61,6 +61,8 @@ cc_test(
   deps = [
     "@gtest//:main",
     ":block_tagger",
+    ":util",
+    ":prf",
     "//audit/third_party/cryptopp:cryptopp",
   ],
 )
