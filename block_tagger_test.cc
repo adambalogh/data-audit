@@ -3,9 +3,12 @@
 #include <sstream>
 #include <vector>
 
-#include "file_tagger.h"
+#include "block_tagger.h"
 
 #include "audit/third_party/cryptopp/integer.h"
+
+#include "util.h"
+#include "prf.h"
 
 using namespace audit;
 
@@ -31,68 +34,92 @@ class DummyNumberGenerator : public RandomNumberGenerator {
   std::vector<int> nums_;
 };
 
-ConstantNumberGenerator c_gen;
-CryptoPP::Integer p{256203221};
+// Random number generator that returns 1 all the time
+class ConstantNumberPRF : public PRF {
+ public:
+  CryptoPP::Integer Encode(unsigned int i) { return CryptoPP::Integer::One(); }
+};
 
-TEST(FileTagger, EmptyFile) {
+class BlockTaggerTest : public ::testing::Test {
+ protected:
+  virtual void SetUp() {
+    file_tag.num_sectors = 10;
+    file_tag.sector_size = 10;
+    file_tag.p = p;
+    prf.reset(new ConstantNumberPRF{});
+  }
+
+  BlockTagger GetBlockTagger(std::istream &s) {
+    return BlockTagger{s, &file_tag, c_gen, std::move(prf)};
+  }
+
+  ConstantNumberGenerator c_gen;
+  FileTag file_tag;
+  CryptoPP::Integer p{256203221};
+  std::unique_ptr<PRF> prf{new ConstantNumberPRF{}};
+};
+
+void ExpectProtosEqual(std::vector<proto::BlockTag> &expected,
+                       std::vector<proto::BlockTag> &actual) {
+  EXPECT_EQ(expected.size(), actual.size());
+  for (int i = 0; i < expected.size(); i++) {
+    EXPECT_EQ(expected.at(i).DebugString(), actual.at(i).DebugString());
+  }
+}
+
+TEST_F(BlockTaggerTest, EmptyFile) {
   std::stringstream s;
-  FileTagger t{s, 10, 10, p, c_gen};
+  auto t = GetBlockTagger(s);
   EXPECT_EQ(false, t.HasNext());
 }
 
-TEST(FileTagger, NotEmptyFile) {
+TEST_F(BlockTaggerTest, NotEmptyFile) {
   std::stringstream s{"a"};
-  FileTagger t{s, 1, 1, p, c_gen};
+  file_tag.sector_size = 1;
+  file_tag.num_sectors = 1;
+  auto t = GetBlockTagger(s);
   EXPECT_EQ(true, t.HasNext());
 }
 
-TEST(FileTagger, SingleLetter) {
+TEST_F(BlockTaggerTest, SingleLetter) {
   std::stringstream s{"a"};
-  FileTagger t{s, 10, 10, p, c_gen};
+  auto t = GetBlockTagger(s);
   auto tag = t.GetNext();
-  EXPECT_EQ(0, tag.index);
-  EXPECT_EQ(static_cast<long>('a'), tag.sigma);
+  EXPECT_EQ(0, tag.index());
+  EXPECT_EQ(static_cast<long>('a'), StringToCryptoInteger(tag.sigma()));
 }
 
-TEST(FileTagger, BecomesInvalid) {
+TEST_F(BlockTaggerTest, BecomesInvalid) {
   std::stringstream s{"abc"};
-  FileTagger t{s, 10, 10, p, c_gen};
+  auto t = GetBlockTagger(s);
   t.GetNext();
   EXPECT_EQ(false, t.HasNext());
 }
 
-TEST(FileTagger, MultipleBlocks) {
+TEST_F(BlockTaggerTest, MultipleBlocks) {
   std::stringstream s{"abc"};
+  auto t = GetBlockTagger(s);
   DummyNumberGenerator gen{{10}};
-  FileTagger t{s, 1, 1, p, gen};
 
-  std::vector<BlockTag> tags;
+  std::vector<proto::BlockTag> tags;
   while (t.HasNext()) {
     tags.push_back(t.GetNext());
   }
 
-  std::vector<BlockTag> expected{
-      BlockTag{0, CryptoPP::Integer{'a'} * 10},
-      BlockTag{1, CryptoPP::Integer{'b'} * 10},
-      BlockTag{2, CryptoPP::Integer{'c'} * 10},
-  };
-  EXPECT_EQ(expected, tags);
-}
+  std::vector<proto::BlockTag> expected;
 
-TEST(FileTagger, FileTag) {
-  std::stringstream s{"abc"};
-  FileTagger t{s, 1, 1, p, c_gen};
-  while (t.HasNext()) {
-    t.GetNext();
-  }
-  auto file_tag = t.GetFileTag();
-  FileTag expected;
-  expected.num_blocks = 3;
-  expected.num_sectors = 1;
-  expected.sector_size = 1;
-  expected.p = p;
-  expected.alphas = {1};
-  // EXPECT_EQ(expected, file_tag);
+  proto::BlockTag block;
+  block.set_index(0);
+  block.set_sigma(CryptoIntegerToString(CryptoPP::Integer{'a'} * 10));
+  expected.push_back(block);
+  block.set_index(1);
+  block.set_sigma(CryptoIntegerToString(CryptoPP::Integer{'b'} * 10));
+  expected.push_back(block);
+  block.set_index(2);
+  block.set_sigma(CryptoIntegerToString(CryptoPP::Integer{'c'} * 10));
+  expected.push_back(block);
+
+  ExpectProtosEqual(expected, tags);
 }
 
 int main(int argc, char **argv) {
