@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package audit;
+package audit.proto;
 
 message BlockTag {
   uint64 index = 1;
