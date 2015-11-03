@@ -57,6 +57,8 @@ class BlockTagger {
   bool HasNext() const;
 
  private:
+  static const sector_size = 16;
+
   void CheckValid();
 
   // Never call this if valid_ is false

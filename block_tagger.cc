@@ -13,6 +13,7 @@
 
 namespace audit {
 
+// TODO optimize disk access
 proto::BlockTag BlockTagger::GenerateTag() {
   auto sigma = CryptoPP::Integer::Zero();
   sigma += prf_->Encode(file_tag_->num_blocks);

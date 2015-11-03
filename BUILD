@@ -1,3 +1,14 @@
+cc_binary(
+  name = "client",
+  srcs = ["client.cc"],
+  deps = [
+    ":cpor_types",
+    ":block_tagger",
+    ":prf",
+    "//audit/third_party/cryptopp:cryptopp",
+  ]
+)
+
 cc_library(
   name = "block_tagger",
   srcs = ["block_tagger.cc"],
@@ -48,6 +59,7 @@ cc_library(
   srcs = [],
   hdrs = ["cpor_types.h"],
   deps = [
+    ":util",
     "//audit/third_party/cryptopp:cryptopp",
   ]
 )
