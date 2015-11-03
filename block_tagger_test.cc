@@ -62,7 +62,7 @@ class BlockTaggerTest : public ::testing::Test {
   }
 
   FileTag file_tag;
-  CryptoPP::Integer p{256203221};
+  CryptoPP::Integer p{11111111111};
   std::unique_ptr<PRF> prf{new DummyPRF{}};
 };
 
@@ -99,6 +99,20 @@ TEST_F(BlockTaggerTest, BecomesInvalid) {
 
   t.GetNext();
   EXPECT_EQ(false, t.HasNext());
+}
+
+TEST_F(BlockTaggerTest, Modulo) {
+  std::stringstream s{"a"};
+
+  file_tag.alphas = {100};
+  file_tag.num_sectors = 2;
+  file_tag.p = 11;
+  auto t = GetBlockTagger(s);
+
+  int expected = (100 * static_cast<int>('a')) % 11;
+
+  auto tag = t.GetNext();
+  EXPECT_EQ(CryptoPP::Integer{expected}, StringToCryptoInteger(tag.sigma()));
 }
 
 TEST_F(BlockTaggerTest, FullTest) {

@@ -32,6 +32,7 @@ proto::BlockTag BlockTagger::GenerateTag() {
 
     sigma += sector * file_tag_->alphas[i];
   }
+  sigma = sigma.Modulo(file_tag_->p);
 
   proto::BlockTag tag;
   tag.set_index(file_tag_->num_blocks++);
