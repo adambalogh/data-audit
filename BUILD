@@ -61,3 +61,12 @@ cc_library(
   ]
 )
 
+cc_test(
+  name = "prf_test",
+  srcs = ["prf_test.cc"],
+  deps = [
+    "@gtest//:main",
+    ":prf",
+    "//audit/third_party/cryptopp:cryptopp",
+  ],
+)

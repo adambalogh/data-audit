@@ -23,6 +23,6 @@ class SiphashPRF : public PRF {
   CryptoPP::Integer Encode(unsigned int i);
 
  private:
-  CryptoPP::HMAC<CryptoPP::SHA512> hmac_;
+  CryptoPP::HMAC<CryptoPP::SHA1> hmac_;
 };
 }
