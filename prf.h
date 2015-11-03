@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 #include "audit/third_party/cryptopp/integer.h"
 #include "audit/third_party/cryptopp/hmac.h"
 #include "audit/third_party/cryptopp/sha.h"
@@ -15,6 +17,8 @@ class PRF {
 class SiphashPRF : public PRF {
  public:
   SiphashPRF(const unsigned char* key, int length) : hmac_(key, length) {}
+  SiphashPRF(const std::string& key)
+      : hmac_((unsigned char*)key.data(), key.size()) {}
   CryptoPP::Integer Encode(unsigned int i);
 
  private:
