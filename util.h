@@ -13,9 +13,21 @@ inline void CryptoIntegerToString(const CryptoPP::Integer& number,
   number.Encode((unsigned char*)out->data(), out->size());
 }
 
+inline std::string CryptoIntegerToString(const CryptoPP::Integer& number) {
+  std::string out;
+  CryptoIntegerToString(number, &out);
+  return out;
+}
+
 inline void StringToCryptoInteger(const std::string& in,
                                   CryptoPP::Integer* out) {
   out->Decode((unsigned char*)in.data(), in.size());
+}
+
+inline CryptoPP::Integer StringToCryptoInteger(const std::string& in) {
+  CryptoPP::Integer out;
+  StringToCryptoInteger(in, &out);
+  return out;
 }
 
 // A generic interface for random number generation
