@@ -25,7 +25,7 @@ namespace audit {
 // value after BlockTagger tagged all the blocks in the file, that is, when
 // HasNext() returns false.
 //
-// Example usage:
+// Example:
 //
 //   BlockTagger f{...};
 //   while (f.HasNext()) {
@@ -42,6 +42,7 @@ class BlockTagger {
   // @param file_tag: a FileTag object, where the num_blocks field doesn't
   //   have to be set. It will be set to the correct value by BlockTagger.
   // @param prf: a unique_ptr to a PRF object
+  //
   BlockTagger(std::istream& file, FileTag* file_tag, std::unique_ptr<PRF> prf)
       : file_(file), file_tag_(file_tag), prf_(std::move(prf)) {
     CheckValid();
@@ -69,11 +70,13 @@ class BlockTagger {
   // The file we are tagging
   std::istream& file_;
 
+  // Pointer to the FileTag of the file being tagged
   FileTag* const file_tag_;
 
+  // Pointer to a pseudorandom function
   std::unique_ptr<PRF> prf_;
 
-  // Indicates whether we can read more from the file
+  // Indicates whether there are any more BlockTags available from the file
   bool valid_{true};
 };
 }
