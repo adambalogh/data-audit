@@ -15,7 +15,7 @@ namespace audit {
 
 // BlockTagger returns a BlockTag for each block in the given file.
 //
-// A block consists of num_sector sectors, and each sector has a size
+// A block consists of num_sectors sectors, and each sector has a size
 // of sector_size bytes. Therefore, the size of a block is equal to
 // num_sectors * sector_size bytes. By increasing the block size, we can
 // decrease the storage size needed for all the tags, in exchange for
@@ -41,15 +41,10 @@ class BlockTagger {
   //   It must point to the beggining of the stream.
   // @param file_tag: a FileTag object, where the num_blocks field doesn't
   //   have to be set. It will be set to the correct value by BlockTagger.
-  // @param random_gen: a reference to an instance of a RandomNumberGenerator
-  //   subclass
   // @param prf: a unique_ptr to a PRF object
   BlockTagger(std::istream& file, FileTag* file_tag,
               RandomNumberGenerator& random_gen, std::unique_ptr<PRF> prf)
-      : file_(file),
-        file_tag_(file_tag),
-        random_gen_(random_gen),
-        prf_(std::move(prf)) {
+      : file_(file), file_tag_(file_tag), prf_(std::move(prf)) {
     CheckValid();
     file_tag->num_blocks = 0;
   }
@@ -71,14 +66,11 @@ class BlockTagger {
   // The file we are tagging
   std::istream& file_;
 
-  // Indicates whether we can read more from the file
-  bool valid_{true};
-
   FileTag* const file_tag_;
 
-  // random number generator
-  RandomNumberGenerator& random_gen_;
-
   std::unique_ptr<PRF> prf_;
+
+  // Indicates whether we can read more from the file
+  bool valid_{true};
 };
 }
