@@ -115,7 +115,23 @@ TEST_F(BlockTaggerTest, Modulo) {
   EXPECT_EQ(CryptoPP::Integer{expected}, StringToCryptoInteger(tag.sigma()));
 }
 
-TEST_F(BlockTaggerTest, FullTest) {
+TEST_F(BlockTaggerTest, NumBlocks) {
+  std::stringstream s{"aaaaa"};
+
+  file_tag.num_blocks = 100;
+  file_tag.alphas = {1, 1};
+  file_tag.num_sectors = 2;
+  file_tag.sector_size = 1;
+  auto t = GetBlockTagger(s);
+
+  while (t.HasNext()) {
+    t.GetNext();
+  }
+
+  EXPECT_EQ(3, file_tag.num_blocks);
+}
+
+TEST_F(BlockTaggerTest, FullFile) {
   // Blocks{"abcd", "efgh", "i"}
   std::stringstream s{"abcdefghi"};
   auto s_ptr = (unsigned char *)s.str().data();
