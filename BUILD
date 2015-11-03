@@ -1,7 +1,7 @@
 cc_library(
-  name = "file_tagger",
-  srcs = ["file_tagger.cc"],
-  hdrs = ["file_tagger.h"],
+  name = "block_tagger",
+  srcs = ["block_tagger.cc"],
+  hdrs = ["block_tagger.h"],
   deps = [
     ":cpor_types",
     ":prf",
@@ -40,7 +40,7 @@ cc_binary(
   name = "main",
   srcs = ["main.cc"],
   deps = [
-    ":file_tagger",
+    ":block_tagger",
     "//audit/third_party/cryptopp:cryptopp",
   ],
 )
@@ -56,11 +56,11 @@ cc_test(
 )
 
 cc_test(
-  name = "file_tagger_test",
-  srcs = ["file_tagger_test.cc"],
+  name = "block_tagger_test",
+  srcs = ["block_tagger_test.cc"],
   deps = [
     "@gtest//:main",
-    ":file_tagger",
+    ":block_tagger",
     "//audit/third_party/cryptopp:cryptopp",
   ],
 )

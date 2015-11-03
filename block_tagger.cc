@@ -1,4 +1,4 @@
-#include "file_tagger.h"
+#include "block_tagger.h"
 
 #include <assert.h>
 #include <iostream>
@@ -6,18 +6,21 @@
 
 #include "audit/third_party/cryptopp/integer.h"
 
+#include "cpor_types.h"
 #include "proto/cpor.pb.h"
 #include "prf.h"
 #include "util.h"
 
 namespace audit {
 
-BlockTag FileTagger::GenerateTag() {
-  BlockTag tag;
-  auto sigma = CryptoPP::Integer::Zero();
-  std::vector<byte> chunk(file_tag_->sector_size());
+proto::BlockTag BlockTagger::GenerateTag() {
+  proto::BlockTag tag;
+  tag.set_index(file_tag_->num_blocks++);
 
-  for (unsigned int i = 0; i < file_tag_->num_sectors(); i++) {
+  auto sigma = CryptoPP::Integer::Zero();
+  std::vector<byte> chunk(file_tag_->sector_size);
+
+  for (unsigned int i = 0; i < file_tag_->num_sectors; i++) {
     // TODO Ugly hack
     file_.read((char*)chunk.data(), chunk.size());
     size_t bytes_read = file_.gcount();
@@ -29,7 +32,7 @@ BlockTag FileTagger::GenerateTag() {
 
     CryptoPP::Integer sector{chunk.data(), bytes_read};
 
-    sigma += sector * file_tag_->alphas()[i];
+    sigma += sector * file_tag_->alphas[i];
     sigma += prf_->Encode(i);
   }
 
@@ -40,20 +43,20 @@ BlockTag FileTagger::GenerateTag() {
   return tag;
 }
 
-void FileTagger::CheckValid() {
+void BlockTagger::CheckValid() {
   if (file_.peek() == std::char_traits<char>::eof()) {
     valid_ = false;
   }
 }
 
-BlockTag FileTagger::GetNext() {
+proto::BlockTag BlockTagger::GetNext() {
   if (valid_) {
     auto tag = GenerateTag();
     CheckValid();
     return tag;
   }
-  return BlockTag{};
+  return proto::BlockTag{};
 }
 
-bool FileTagger::HasNext() const { return valid_; }
+bool BlockTagger::HasNext() const { return valid_; }
 }
