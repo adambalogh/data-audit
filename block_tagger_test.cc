@@ -83,6 +83,46 @@ TEST_F(BlockTaggerTest, SingleLetter) {
 
   file_tag.alphas = {10};
   file_tag.num_sectors = 1;
+  file_tag.sector_size = 1;
+  auto t = GetBlockTagger(s);
+
+  auto tag = t.GetNext();
+  EXPECT_EQ(0, tag.index());
+  EXPECT_EQ(static_cast<long>('a') * 10, StringToCryptoInteger(tag.sigma()));
+}
+
+TEST_F(BlockTaggerTest, LargerSectorSize) {
+  std::stringstream s{"a"};
+
+  file_tag.alphas = {10};
+  file_tag.num_sectors = 1;
+  file_tag.sector_size = 10;
+  auto t = GetBlockTagger(s);
+
+  auto tag = t.GetNext();
+  EXPECT_EQ(0, tag.index());
+  EXPECT_EQ(static_cast<long>('a') * 10, StringToCryptoInteger(tag.sigma()));
+}
+
+TEST_F(BlockTaggerTest, LargerSectorNumber) {
+  std::stringstream s{"a"};
+
+  file_tag.alphas = {10, 10};
+  file_tag.num_sectors = 10;
+  file_tag.sector_size = 1;
+  auto t = GetBlockTagger(s);
+
+  auto tag = t.GetNext();
+  EXPECT_EQ(0, tag.index());
+  EXPECT_EQ(static_cast<long>('a') * 10, StringToCryptoInteger(tag.sigma()));
+}
+
+TEST_F(BlockTaggerTest, LargeSectorSizeAndNumber) {
+  std::stringstream s{"a"};
+
+  file_tag.alphas = {10};
+  file_tag.num_sectors = 10;
+  file_tag.sector_size = 10;
   auto t = GetBlockTagger(s);
 
   auto tag = t.GetNext();
@@ -105,7 +145,6 @@ TEST_F(BlockTaggerTest, Modulo) {
   std::stringstream s{"a"};
 
   file_tag.alphas = {100};
-  file_tag.num_sectors = 2;
   file_tag.p = 11;
   auto t = GetBlockTagger(s);
 
