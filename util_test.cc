@@ -2,7 +2,7 @@
 
 #include "util.h"
 
-#include "audit/third_party/cryptopp/integer.h"
+#include "cryptopp/integer.h"
 
 using namespace audit;
 

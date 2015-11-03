@@ -5,11 +5,11 @@ cc_library(
   srcs = ["cpor.pb.cc"],
   hdrs = ["cpor.pb.h"],
   deps = [],
-  copts = [
-    "-I/usr/local/include",
-    "-D_THREAD_SAFE",
+  linkopts = [
     "-L/usr/local/lib",
     "-lprotobuf",
-    "-D_THREAD_SAFE",
+  ],
+  copts = [
+    "-I/usr/local/include",
   ],
 )

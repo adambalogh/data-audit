@@ -1,5 +1,9 @@
 #include "prf.h"
 
+#include "cryptopp/integer.h"
+#include "cryptopp/hmac.h"
+#include "cryptopp/sha.h"
+
 namespace audit {
 
 CryptoPP::Integer SiphashPRF::Encode(unsigned int i) {

@@ -2,9 +2,9 @@
 
 #include <string>
 
-#include "audit/third_party/cryptopp/integer.h"
-#include "audit/third_party/cryptopp/hmac.h"
-#include "audit/third_party/cryptopp/sha.h"
+#include "cryptopp/integer.h"
+#include "cryptopp/hmac.h"
+#include "cryptopp/sha.h"
 
 namespace audit {
 
@@ -19,9 +19,10 @@ class SiphashPRF : public PRF {
   SiphashPRF(const unsigned char* key, int length) : hmac_(key, length) {}
   SiphashPRF(const std::string& key)
       : hmac_((unsigned char*)key.data(), key.size()) {}
+
   CryptoPP::Integer Encode(unsigned int i);
 
  private:
-  CryptoPP::HMAC<CryptoPP::SHA256> hmac_;
+  CryptoPP::HMAC<CryptoPP::SHA512> hmac_;
 };
 }

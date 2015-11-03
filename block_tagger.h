@@ -3,8 +3,8 @@
 #include <iostream>
 #include <vector>
 
-#include "audit/third_party/cryptopp/integer.h"
-#include "audit/third_party/cryptopp/osrng.h"
+#include "cryptopp/integer.h"
+#include "cryptopp/osrng.h"
 
 #include "cpor_types.h"
 #include "proto/cpor.pb.h"

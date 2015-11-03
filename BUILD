@@ -47,7 +47,9 @@ cc_library(
   name = "cpor_types",
   srcs = [],
   hdrs = ["cpor_types.h"],
-  deps = []
+  deps = [
+    "//audit/third_party/cryptopp:cryptopp",
+  ]
 )
 
 cc_library(
@@ -57,14 +59,5 @@ cc_library(
   deps = [
     "//audit/third_party/cryptopp:cryptopp",
   ]
-)
-
-cc_binary(
-  name = "main",
-  srcs = ["main.cc"],
-  deps = [
-    ":block_tagger",
-    "//audit/third_party/cryptopp:cryptopp",
-  ],
 )
 
