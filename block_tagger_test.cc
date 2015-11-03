@@ -101,12 +101,14 @@ TEST_F(BlockTaggerTest, BecomesInvalid) {
   EXPECT_EQ(false, t.HasNext());
 }
 
-TEST_F(BlockTaggerTest, MultipleBlocks) {
-  std::stringstream s{"abc"};
+TEST_F(BlockTaggerTest, FullTest) {
+  // Blocks{"abcd", "efgh", "i"}
+  std::stringstream s{"abcdefghi"};
+  auto s_ptr = (unsigned char *)s.str().data();
 
-  file_tag.num_sectors = 1;
-  file_tag.sector_size = 1;
-  file_tag.alphas = {10};
+  file_tag.num_sectors = 2;
+  file_tag.sector_size = 2;
+  file_tag.alphas = {2, 4};
   auto t = GetBlockTagger(s);
 
   std::vector<proto::BlockTag> tags;
@@ -117,13 +119,18 @@ TEST_F(BlockTaggerTest, MultipleBlocks) {
   std::vector<proto::BlockTag> expected;
   proto::BlockTag block;
   block.set_index(0);
-  block.set_sigma(CryptoIntegerToString(CryptoPP::Integer{'a'} * 10 + 0));
+  block.set_sigma(CryptoIntegerToString((CryptoPP::Integer{s_ptr, 2} * 2) +
+                                        (CryptoPP::Integer{s_ptr + 2, 2} * 4) +
+                                        0));
   expected.push_back(block);
   block.set_index(1);
-  block.set_sigma(CryptoIntegerToString(CryptoPP::Integer{'b'} * 10 + 1));
+  block.set_sigma(CryptoIntegerToString((CryptoPP::Integer{s_ptr + 4, 2} * 2) +
+                                        (CryptoPP::Integer{s_ptr + 6, 2} * 4) +
+                                        1));
   expected.push_back(block);
   block.set_index(2);
-  block.set_sigma(CryptoIntegerToString(CryptoPP::Integer{'c'} * 10 + 2));
+  block.set_sigma(
+      CryptoIntegerToString((CryptoPP::Integer{s_ptr + 8, 1} * 2) + 2));
   expected.push_back(block);
 
   ExpectProtosEqual(expected, tags);
