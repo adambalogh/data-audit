@@ -35,7 +35,7 @@ class FileTag {
 
   unsigned long num_blocks{0};
   unsigned long num_sectors;
-  int sector_size;
+  size_t sector_size;
   std::vector<CryptoPP::Integer> alphas;
   CryptoPP::Integer p;
   RandomNumberGenerator* random_gen;

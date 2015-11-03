@@ -13,49 +13,53 @@
 
 namespace audit {
 
-// TODO optimize disk access
+bool BlockTagger::FillBuffer() {
+  assert(!file_read_);
+  auto bytes_left = end_ - start_;
+
+  // If there are any unread bytes, move it to the beginning of the buffer
+  std::copy(std::begin(buffer) + start_, std::begin(buffer) + end_,
+            std::begin(buffer));
+
+  file_.read((char*)buffer.data() + bytes_left, buffer.size() - bytes_left);
+  start_ = 0;
+  end_ = bytes_left + file_.gcount();
+  if (end_ != buffer.size()) {
+    file_read_ = true;
+  }
+  return end_ > 0;
+}
+
 proto::BlockTag BlockTagger::GenerateTag() {
   auto sigma = CryptoPP::Integer::Zero();
-  sigma += prf_->Encode(file_tag_->num_blocks);
-
-  std::vector<byte> chunk(file_tag_->sector_size);
+  sigma += prf_->Encode(num_blocks_read_);
 
   for (unsigned int i = 0; i < file_tag_->num_sectors; ++i) {
-    file_.read((char*)chunk.data(), chunk.size());
-    size_t bytes_read = file_.gcount();
-
-    if (!bytes_read) {
-      assert(i > 0);
-      break;
+    if (file_read_ && start_ >= end_) break;
+    if (start_ + file_tag_->sector_size > end_ && !file_read_) {
+      FillBuffer();
     }
 
-    CryptoPP::Integer sector{chunk.data(), bytes_read};
-
+    CryptoPP::Integer sector{
+        buffer.data() + start_,
+        std::min(file_tag_->sector_size,
+                 static_cast<unsigned long>(end_ - start_))};
     sigma += sector * file_tag_->alphas[i];
+
+    start_ += file_tag_->sector_size;
   }
   sigma = sigma.Modulo(file_tag_->p);
 
   proto::BlockTag tag;
-  tag.set_index(file_tag_->num_blocks++);
+  tag.set_index(num_blocks_read_++);
   CryptoIntegerToString(sigma, tag.mutable_sigma());
 
   return tag;
 }
 
-void BlockTagger::CheckValid() {
-  if (file_.peek() == std::char_traits<char>::eof()) {
-    valid_ = false;
-  }
-}
+proto::BlockTag BlockTagger::GetNext() { return GenerateTag(); }
 
-proto::BlockTag BlockTagger::GetNext() {
-  if (valid_) {
-    auto tag = GenerateTag();
-    CheckValid();
-    return tag;
-  }
-  return proto::BlockTag{};
+bool BlockTagger::HasNext() const {
+  return num_blocks_read_ < file_tag_->num_blocks;
 }
-
-bool BlockTagger::HasNext() const { return valid_; }
 }

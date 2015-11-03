@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <iostream>
 #include <vector>
 
@@ -38,15 +39,25 @@ class BlockTagger {
   // Constructs a BlockTagger
   //
   // @param file: an istream object whose blocks are going to be tagger.
-  //   It must point to the beggining of the stream.
+  //   It must point to the beggining of the stream
   // @param file_tag: a FileTag object, where the num_blocks field doesn't
-  //   have to be set. It will be set to the correct value by BlockTagger.
-  // @param prf: a unique_ptr to a PRF object
+  //   have to be set. It will be set to the correct value by BlockTagger
+  // @param prf: a unique_ptr to a PRF object used for encoding the index of
+  //   each block
   //
   BlockTagger(std::istream& file, FileTag* file_tag, std::unique_ptr<PRF> prf)
       : file_(file), file_tag_(file_tag), prf_(std::move(prf)) {
-    CheckValid();
-    file_tag->num_blocks = 0;
+    // Get file size
+    file_.seekg(0, file_.end);
+    auto length = file_.tellg();
+    file_.seekg(0, file_.beg);
+
+    auto block_size = file_tag_->sector_size * file_tag_->num_sectors;
+
+    file_tag->num_blocks = length / block_size;
+    if (length % block_size != 0) {
+      ++file_tag_->num_blocks;
+    }
   }
 
   // Returns the BlockTag for the next block from the file, should only be
@@ -58,14 +69,21 @@ class BlockTagger {
   bool HasNext() const;
 
  private:
-  void CheckValid();
+  bool FillBuffer();
 
   // Never call this if valid_ is false
   proto::BlockTag GenerateTag();
 
   // Buffer for reading file
-  static const int BUFFER_SIZE = 500 * 1000;  // 0.5 Megabyte
-  unsigned char buffer[BUFFER_SIZE];
+  static const int BUFFER_SIZE = 50 * 1000;  // 0.05 Megabyte
+  std::array<unsigned char, BUFFER_SIZE> buffer;
+
+  int start_{0};
+  int end_{0};
+
+  unsigned long num_blocks_read_{0};
+
+  bool file_read_{false};
 
   // The file we are tagging
   std::istream& file_;
@@ -75,8 +93,5 @@ class BlockTagger {
 
   // Pointer to a pseudorandom function
   std::unique_ptr<PRF> prf_;
-
-  // Indicates whether there are any more BlockTags available from the file
-  bool valid_{true};
 };
 }
