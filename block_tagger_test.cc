@@ -35,13 +35,13 @@ class DummyNumberGenerator : public RandomNumberGenerator {
   std::vector<int> nums_;
 };
 
-// void ExpectProtosEqual(std::vector<proto::BlockTag> &expected,
-//                       std::vector<proto::BlockTag> &actual) {
-//  EXPECT_EQ(expected.size(), actual.size());
-//  for (int i = 0; i < expected.size(); i++) {
-//    EXPECT_EQ(expected.at(i).DebugString(), actual.at(i).DebugString());
-//  }
-//}
+void ExpectProtosEqual(std::vector<proto::BlockTag> &expected,
+                       std::vector<proto::BlockTag> &actual) {
+  EXPECT_EQ(expected.size(), actual.size());
+  for (int i = 0; i < expected.size(); i++) {
+    EXPECT_EQ(expected.at(i).DebugString(), actual.at(i).DebugString());
+  }
+}
 
 class DummyPRF : public PRF {
  public:
@@ -74,31 +74,40 @@ TEST_F(BlockTaggerTest, EmptyFile) {
 
 TEST_F(BlockTaggerTest, NotEmptyFile) {
   std::stringstream s{"a"};
-  file_tag.sector_size = 1;
-  file_tag.num_sectors = 1;
   auto t = GetBlockTagger(s);
   EXPECT_EQ(true, t.HasNext());
 }
 
 TEST_F(BlockTaggerTest, SingleLetter) {
   std::stringstream s{"a"};
+
+  file_tag.alphas = {10};
+  file_tag.num_sectors = 1;
   auto t = GetBlockTagger(s);
+
   auto tag = t.GetNext();
   EXPECT_EQ(0, tag.index());
-  EXPECT_EQ(static_cast<long>('a'), StringToCryptoInteger(tag.sigma()));
+  EXPECT_EQ(static_cast<long>('a') * 10, StringToCryptoInteger(tag.sigma()));
 }
 
 TEST_F(BlockTaggerTest, BecomesInvalid) {
   std::stringstream s{"abc"};
+
+  file_tag.alphas = {1};
+  file_tag.num_sectors = 1;
   auto t = GetBlockTagger(s);
+
   t.GetNext();
   EXPECT_EQ(false, t.HasNext());
 }
 
 TEST_F(BlockTaggerTest, MultipleBlocks) {
   std::stringstream s{"abc"};
+
+  file_tag.num_sectors = 1;
+  file_tag.sector_size = 1;
+  file_tag.alphas = {10};
   auto t = GetBlockTagger(s);
-  DummyNumberGenerator gen{{10}};
 
   std::vector<proto::BlockTag> tags;
   while (t.HasNext()) {
@@ -108,16 +117,16 @@ TEST_F(BlockTaggerTest, MultipleBlocks) {
   std::vector<proto::BlockTag> expected;
   proto::BlockTag block;
   block.set_index(0);
-  block.set_sigma(CryptoIntegerToString(CryptoPP::Integer{'a'} * 10));
+  block.set_sigma(CryptoIntegerToString(CryptoPP::Integer{'a'} * 10 + 0));
   expected.push_back(block);
   block.set_index(1);
-  block.set_sigma(CryptoIntegerToString(CryptoPP::Integer{'b'} * 10));
+  block.set_sigma(CryptoIntegerToString(CryptoPP::Integer{'b'} * 10 + 1));
   expected.push_back(block);
   block.set_index(2);
-  block.set_sigma(CryptoIntegerToString(CryptoPP::Integer{'c'} * 10));
+  block.set_sigma(CryptoIntegerToString(CryptoPP::Integer{'c'} * 10 + 2));
   expected.push_back(block);
 
-  // ExpectProtosEqual(expected, tags);
+  ExpectProtosEqual(expected, tags);
 }
 
 int main(int argc, char **argv) {

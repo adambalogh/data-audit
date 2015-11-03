@@ -14,10 +14,9 @@
 namespace audit {
 
 proto::BlockTag BlockTagger::GenerateTag() {
-  proto::BlockTag tag;
-  tag.set_index(file_tag_->num_blocks++);
-
   auto sigma = CryptoPP::Integer::Zero();
+  sigma += prf_->Encode(file_tag_->num_blocks);
+
   std::vector<byte> chunk(file_tag_->sector_size);
 
   for (unsigned int i = 0; i < file_tag_->num_sectors; ++i) {
@@ -32,9 +31,10 @@ proto::BlockTag BlockTagger::GenerateTag() {
     CryptoPP::Integer sector{chunk.data(), bytes_read};
 
     sigma += sector * file_tag_->alphas[i];
-    sigma += prf_->Encode(i);
   }
 
+  proto::BlockTag tag;
+  tag.set_index(file_tag_->num_blocks++);
   CryptoIntegerToString(sigma, tag.mutable_sigma());
 
   return tag;
