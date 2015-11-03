@@ -42,8 +42,7 @@ class BlockTagger {
   // @param file_tag: a FileTag object, where the num_blocks field doesn't
   //   have to be set. It will be set to the correct value by BlockTagger.
   // @param prf: a unique_ptr to a PRF object
-  BlockTagger(std::istream& file, FileTag* file_tag,
-              RandomNumberGenerator& random_gen, std::unique_ptr<PRF> prf)
+  BlockTagger(std::istream& file, FileTag* file_tag, std::unique_ptr<PRF> prf)
       : file_(file), file_tag_(file_tag), prf_(std::move(prf)) {
     CheckValid();
     file_tag->num_blocks = 0;

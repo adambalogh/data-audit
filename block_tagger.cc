@@ -20,7 +20,7 @@ proto::BlockTag BlockTagger::GenerateTag() {
   auto sigma = CryptoPP::Integer::Zero();
   std::vector<byte> chunk(file_tag_->sector_size);
 
-  for (unsigned int i = 0; i < file_tag_->num_sectors; i++) {
+  for (unsigned int i = 0; i < file_tag_->num_sectors; ++i) {
     file_.read((char*)chunk.data(), chunk.size());
     size_t bytes_read = file_.gcount();
 

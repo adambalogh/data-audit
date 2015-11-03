@@ -11,6 +11,19 @@ cc_library(
   ],
 )
 
+cc_test(
+  name = "block_tagger_test",
+  srcs = ["block_tagger_test.cc"],
+  deps = [
+    "@gtest//:main",
+    ":block_tagger",
+    ":util",
+    ":prf",
+    "//audit/proto:cpor",
+    "//audit/third_party/cryptopp:cryptopp",
+  ],
+)
+
 cc_library(
   name = "util",
   srcs = ["util.cc"],
@@ -18,6 +31,16 @@ cc_library(
   deps = [
     "//audit/third_party/cryptopp:cryptopp",
   ]
+)
+
+cc_test(
+  name = "util_test",
+  srcs = ["util_test.cc"],
+  deps = [
+    "@gtest//:main",
+    ":util",
+    "//audit/third_party/cryptopp:cryptopp",
+  ],
 )
 
 cc_library(
@@ -41,28 +64,6 @@ cc_binary(
   srcs = ["main.cc"],
   deps = [
     ":block_tagger",
-    "//audit/third_party/cryptopp:cryptopp",
-  ],
-)
-
-cc_test(
-  name = "util_test",
-  srcs = ["util_test.cc"],
-  deps = [
-    "@gtest//:main",
-    ":util",
-    "//audit/third_party/cryptopp:cryptopp",
-  ],
-)
-
-cc_test(
-  name = "block_tagger_test",
-  srcs = ["block_tagger_test.cc"],
-  deps = [
-    "@gtest//:main",
-    ":block_tagger",
-    ":util",
-    ":prf",
     "//audit/third_party/cryptopp:cryptopp",
   ],
 )
