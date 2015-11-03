@@ -57,12 +57,14 @@ class BlockTagger {
   bool HasNext() const;
 
  private:
-  static const sector_size = 16;
-
   void CheckValid();
 
   // Never call this if valid_ is false
   proto::BlockTag GenerateTag();
+
+  // Buffer for reading file
+  static const int BUFFER_SIZE = 500 * 1000;  // 0.5 Megabyte
+  unsigned char buffer[BUFFER_SIZE];
 
   // The file we are tagging
   std::istream& file_;
