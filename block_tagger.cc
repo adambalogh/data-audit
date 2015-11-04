@@ -33,6 +33,7 @@ bool BlockTagger::FillBuffer() {
 }
 
 proto::BlockTag BlockTagger::GenerateTag() {
+  // TODO free this
   BN_CTX* ctx = BN_CTX_new();
   BN_ptr sigma{BN_new(), ::BN_free};
 
