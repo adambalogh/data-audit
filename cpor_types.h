@@ -16,7 +16,6 @@ namespace audit {
 
 class FileTag {
  public:
-  FileTag() {}
   FileTag(unsigned long num_sectors, int sector_size, BN_ptr p,
           RandomNumberGenerator* random_gen)
       : num_sectors(num_sectors),
@@ -29,9 +28,9 @@ class FileTag {
   void set_num_blocks(unsigned long n) { num_blocks = n; }
 
   void MakeAlphas() {
-    alphas.resize(num_sectors);
-    std::generate(std::begin(alphas), std::end(alphas),
-                  [&]() { return random_gen->GenerateNumber(p); });
+    std::generate_n(std::back_inserter(alphas), num_blocks, [&]() -> BN_ptr {
+      return std::move(random_gen->GenerateNumber(*p));
+    });
   }
 
   unsigned long num_blocks{0};

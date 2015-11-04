@@ -5,12 +5,15 @@
 #include "cryptopp/integer.h"
 #include "cryptopp/hmac.h"
 #include "cryptopp/sha.h"
+#include "openssl/bn.h"
+
+#include "cpor_types.h"
 
 namespace audit {
 
 class PRF {
  public:
-  virtual CryptoPP::Integer Encode(unsigned int i) = 0;
+  virtual BN_ptr Encode(unsigned int i) = 0;
   virtual ~PRF() {}
 };
 
@@ -20,7 +23,7 @@ class SiphashPRF : public PRF {
   SiphashPRF(const std::string& key)
       : hmac_((unsigned char*)key.data(), key.size()) {}
 
-  CryptoPP::Integer Encode(unsigned int i);
+  BN_ptr Encode(unsigned int i);
 
  private:
   CryptoPP::HMAC<CryptoPP::SHA1> hmac_;

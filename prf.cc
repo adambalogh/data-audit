@@ -1,12 +1,14 @@
+#include "cpor_types.h"
 #include "prf.h"
 
 #include "cryptopp/integer.h"
 #include "cryptopp/hmac.h"
 #include "cryptopp/sha.h"
+#include "openssl/bn.h"
 
 namespace audit {
 
-CryptoPP::Integer SiphashPRF::Encode(unsigned int i) {
+BN_ptr SiphashPRF::Encode(unsigned int i) {
   hmac_.Restart();
 
   unsigned char bytes[4];
@@ -19,6 +21,9 @@ CryptoPP::Integer SiphashPRF::Encode(unsigned int i) {
   hmac_.Update(&bytes[0], 4);
   hmac_.Final(&digest[0]);
 
-  return CryptoPP::Integer{&digest[0], hmac_.DigestSize()};
+  BN_ptr result{BN_new(), ::BN_free};
+  BN_bin2bn(&digest[0], hmac_.DigestSize(), result.get());
+
+  return std::move(result);
 }
 }

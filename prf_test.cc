@@ -1,5 +1,7 @@
 #include "gtest/gtest.h"
 
+#include "openssl/bn.h"
+
 #include "prf.h"
 
 using namespace audit;
@@ -8,10 +10,13 @@ TEST(SiphashPRF, Same) {
   SiphashPRF prf_hello{"hello"};
   SiphashPRF prf_hello2{"hello"};
 
-  EXPECT_EQ(prf_hello.Encode(10), prf_hello.Encode(10));
-  EXPECT_EQ(prf_hello.Encode(10), prf_hello2.Encode(10));
+  auto a = prf_hello.Encode(10);
+  auto b = prf_hello.Encode(10);
 
-  std::cout << prf_hello.Encode(11);
+  EXPECT_EQ(0, BN_cmp(a.get(), b.get()));
+
+  auto c = prf_hello2.Encode(10);
+  EXPECT_EQ(0, BN_cmp(a.get(), c.get()));
 }
 
 int main(int argc, char **argv) {
