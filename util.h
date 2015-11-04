@@ -4,6 +4,9 @@
 
 #include "cryptopp/integer.h"
 #include "cryptopp/osrng.h"
+#include "openssl/bn.h"
+
+#include "common.h"
 
 namespace audit {
 
@@ -34,18 +37,17 @@ inline CryptoPP::Integer StringToCryptoInteger(const std::string& in) {
 class RandomNumberGenerator {
  public:
   // Returns a random number x, where x >= 0 and x < max
-  virtual CryptoPP::Integer GenerateNumber(const CryptoPP::Integer& max) = 0;
+  virtual BN_ptr GenerateNumber(const BIGNUM& max) = 0;
   virtual ~RandomNumberGenerator() {}
 };
 
 // RandomNumberGenerator implementation using CryptoPP
 class CryptoNumberGenerator : public RandomNumberGenerator {
  public:
-  CryptoPP::Integer GenerateNumber(const CryptoPP::Integer& max) override {
-    return CryptoPP::Integer{g, 0, max};
+  BN_ptr GenerateNumber(const BIGNUM& max) override {
+    BN_ptr number{BN_new(), ::BN_free};
+    BN_rand_range(number.get(), &max);
+    return std::move(number);
   }
-
- private:
-  CryptoPP::AutoSeededRandomPool g;
 };
 }

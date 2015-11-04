@@ -1,3 +1,14 @@
+cc_library(
+  name = "common",
+  srcs = [],
+  hdrs = [
+    "common.h",
+  ],
+  deps = [
+    "//audit/third_party/openssl:openssl",
+  ]
+)
+
 cc_binary(
   name = "client",
   srcs = ["client.cc"],
@@ -42,6 +53,7 @@ cc_library(
   srcs = ["util.cc"],
   hdrs = ["util.h"],
   deps = [
+    ":common",
     "//audit/third_party/openssl:openssl",
     "//audit/third_party/cryptopp:cryptopp",
   ]
