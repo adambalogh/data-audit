@@ -6,7 +6,9 @@
 #include <vector>
 
 #include "cryptopp/integer.h"
+#include "openssl/bn.h"
 
+#include "common.h"
 #include "util.h"
 #include "proto/cpor.pb.h"
 #include "prf.h"
@@ -16,9 +18,7 @@ using namespace audit;
 // Random number generator that returns 1 all the time
 class ConstantNumberGenerator : public RandomNumberGenerator {
  public:
-  CryptoPP::Integer GenerateNumber(const CryptoPP::Integer &) {
-    return CryptoPP::Integer::One();
-  }
+  BN_ptr GenerateNumber(const BIGNUM &) { return CryptoPP::Integer::One(); }
 };
 
 // Random number generator that returns the numbers from the given vector, in
@@ -26,7 +26,7 @@ class ConstantNumberGenerator : public RandomNumberGenerator {
 class DummyNumberGenerator : public RandomNumberGenerator {
  public:
   DummyNumberGenerator(std::vector<int> nums) : nums_(nums) {}
-  CryptoPP::Integer GenerateNumber(const CryptoPP::Integer &) override {
+  BN_ptr GenerateNumber(const BIGNUM &) override {
     return CryptoPP::Integer{nums_.at(index++)};
   }
 
@@ -45,7 +45,7 @@ void ExpectProtosEqual(std::vector<proto::BlockTag> &expected,
 
 class DummyPRF : public PRF {
  public:
-  CryptoPP::Integer Encode(unsigned int i) { return CryptoPP::Integer{i}; }
+  BN_ptr Encode(unsigned int i) { return CryptoPP::Integer{i}; }
 };
 
 class BlockTaggerTest : public ::testing::Test {
@@ -88,7 +88,7 @@ TEST_F(BlockTaggerTest, SingleLetter) {
 
   auto tag = t.GetNext();
   EXPECT_EQ(0, tag.index());
-  EXPECT_EQ(static_cast<long>('a') * 10, StringToCryptoInteger(tag.sigma()));
+  EXPECT_EQ(static_cast<long>('a') * 10, StringToBignum(tag.sigma()));
 }
 
 TEST_F(BlockTaggerTest, LargerSectorSize) {
@@ -101,7 +101,7 @@ TEST_F(BlockTaggerTest, LargerSectorSize) {
 
   auto tag = t.GetNext();
   EXPECT_EQ(0, tag.index());
-  EXPECT_EQ(static_cast<long>('a') * 10, StringToCryptoInteger(tag.sigma()));
+  EXPECT_EQ(static_cast<long>('a') * 10, StringToBignum(tag.sigma()));
 }
 
 TEST_F(BlockTaggerTest, LargerSectorNumber) {
@@ -114,7 +114,7 @@ TEST_F(BlockTaggerTest, LargerSectorNumber) {
 
   auto tag = t.GetNext();
   EXPECT_EQ(0, tag.index());
-  EXPECT_EQ(static_cast<long>('a') * 10, StringToCryptoInteger(tag.sigma()));
+  EXPECT_EQ(static_cast<long>('a') * 10, StringToBignum(tag.sigma()));
 }
 
 TEST_F(BlockTaggerTest, LargeSectorSizeAndNumber) {
@@ -127,7 +127,7 @@ TEST_F(BlockTaggerTest, LargeSectorSizeAndNumber) {
 
   auto tag = t.GetNext();
   EXPECT_EQ(0, tag.index());
-  EXPECT_EQ(static_cast<long>('a') * 10, StringToCryptoInteger(tag.sigma()));
+  EXPECT_EQ(static_cast<long>('a') * 10, StringToBignum(tag.sigma()));
 }
 
 TEST_F(BlockTaggerTest, BecomesInvalid) {
@@ -151,7 +151,7 @@ TEST_F(BlockTaggerTest, Modulo) {
   int expected = (100 * static_cast<int>('a')) % 11;
 
   auto tag = t.GetNext();
-  EXPECT_EQ(CryptoPP::Integer{expected}, StringToCryptoInteger(tag.sigma()));
+  EXPECT_EQ(CryptoPP::Integer{expected}, StringToBignum(tag.sigma()));
 }
 
 TEST_F(BlockTaggerTest, NumBlocks) {
@@ -188,18 +188,15 @@ TEST_F(BlockTaggerTest, FullFile) {
   std::vector<proto::BlockTag> expected;
   proto::BlockTag block;
   block.set_index(0);
-  block.set_sigma(CryptoIntegerToString((CryptoPP::Integer{s_ptr, 2} * 2) +
-                                        (CryptoPP::Integer{s_ptr + 2, 2} * 4) +
-                                        0));
+  block.set_sigma(BignumToString((CryptoPP::Integer{s_ptr, 2} * 2) +
+                                 (CryptoPP::Integer{s_ptr + 2, 2} * 4) + 0));
   expected.push_back(block);
   block.set_index(1);
-  block.set_sigma(CryptoIntegerToString((CryptoPP::Integer{s_ptr + 4, 2} * 2) +
-                                        (CryptoPP::Integer{s_ptr + 6, 2} * 4) +
-                                        1));
+  block.set_sigma(BignumToString((CryptoPP::Integer{s_ptr + 4, 2} * 2) +
+                                 (CryptoPP::Integer{s_ptr + 6, 2} * 4) + 1));
   expected.push_back(block);
   block.set_index(2);
-  block.set_sigma(
-      CryptoIntegerToString((CryptoPP::Integer{s_ptr + 8, 1} * 2) + 2));
+  block.set_sigma(BignumToString((CryptoPP::Integer{s_ptr + 8, 1} * 2) + 2));
   expected.push_back(block);
 
   ExpectProtosEqual(expected, tags);
