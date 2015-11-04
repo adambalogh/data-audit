@@ -10,15 +10,14 @@
 #include "openssl/bn.h"
 
 #include "util.h"
+#include "common.h"
 
 namespace audit {
-
-typedef unsigned char byte;
 
 class FileTag {
  public:
   FileTag() {}
-  FileTag(unsigned long num_sectors, int sector_size, std::unique_ptr<BIGNUM> p,
+  FileTag(unsigned long num_sectors, int sector_size, BN_ptr p,
           RandomNumberGenerator* random_gen)
       : num_sectors(num_sectors),
         sector_size(sector_size),
@@ -38,8 +37,8 @@ class FileTag {
   unsigned long num_blocks{0};
   unsigned long num_sectors;
   size_t sector_size;
-  std::vector<unique_ptr<BIGNUM>> alphas;
-  std::unique_ptr<BIGNUM> p;
+  std::vector<BN_ptr> alphas;
+  BN_ptr p;
   RandomNumberGenerator* random_gen;
 };
 
