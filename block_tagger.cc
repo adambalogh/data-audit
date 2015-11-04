@@ -64,7 +64,7 @@ proto::BlockTag BlockTagger::GenerateTag() {
 
   proto::BlockTag tag;
   tag.set_index(num_blocks_read_++);
-  // CryptoIntegerToString(sigma, tag.mutable_sigma());
+  BignumToString(*sigma, tag.mutable_sigma());
 
   return tag;
 }
