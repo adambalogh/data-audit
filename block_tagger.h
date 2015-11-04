@@ -75,7 +75,7 @@ class BlockTagger {
   proto::BlockTag GenerateTag();
 
   // Buffer for reading file
-  static const int BUFFER_SIZE = 50 * 1000;  // 0.05 Megabyte
+  static const int BUFFER_SIZE = 50 * 1000;  // 0.5 Megabyte
   std::array<unsigned char, BUFFER_SIZE> buffer;
 
   int start_{0};
