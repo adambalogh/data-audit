@@ -7,6 +7,7 @@
 #include "cryptopp/integer.h"
 #include "cryptopp/osrng.h"
 
+#include "common.h"
 #include "cpor_types.h"
 #include "proto/cpor.pb.h"
 #include "prf.h"

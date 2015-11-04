@@ -9,8 +9,8 @@
 #include "cryptopp/aes.h"
 #include "openssl/bn.h"
 
-#include "util.h"
 #include "common.h"
+#include "util.h"
 
 namespace audit {
 
@@ -25,10 +25,8 @@ class FileTag {
     MakeAlphas();
   }
 
-  void set_num_blocks(unsigned long n) { num_blocks = n; }
-
   void MakeAlphas() {
-    std::generate_n(std::back_inserter(alphas), num_blocks, [&]() -> BN_ptr {
+    std::generate_n(std::back_inserter(alphas), num_sectors, [&]() -> BN_ptr {
       return std::move(random_gen->GenerateNumber(*p));
     });
   }

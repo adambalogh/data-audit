@@ -7,6 +7,7 @@
 #include "cryptopp/integer.h"
 #include "openssl/bn.h"
 
+#include "common.h"
 #include "cpor_types.h"
 #include "proto/cpor.pb.h"
 #include "prf.h"
@@ -33,9 +34,11 @@ bool BlockTagger::FillBuffer() {
 
 proto::BlockTag BlockTagger::GenerateTag() {
   BN_CTX* ctx = BN_CTX_new();
-  BIGNUM* sigma = BN_new();
+  BN_ptr sigma{BN_new(), ::BN_free};
 
-  BN_add(sigma, sigma, prf_->Encode(num_blocks_read_));
+  auto encoded_index = prf_->Encode(num_blocks_read_);
+  // sigma = sigma + encoded_index
+  BN_add(sigma.get(), sigma.get(), encoded_index.get());
 
   for (unsigned int i = 0; i < file_tag_->num_sectors; ++i) {
     if (file_read_ && start_ >= end_) break;
@@ -43,17 +46,21 @@ proto::BlockTag BlockTagger::GenerateTag() {
       FillBuffer();
     }
 
-    BIGNUM* sector = BN_new();
+    BN_ptr sector{BN_new(), ::BN_free};
     BN_bin2bn(buffer.data() + start_,
               std::min(file_tag_->sector_size,
                        static_cast<unsigned long>(end_ - start_)),
-              sector);
-    BN_mul(sector, file_tag_->alphas[i], sector, ctx);
-    BN_add(sigma, sigma, sector, ctx);
+              sector.get());
+
+    // sector = sector * alpha[i]
+    BN_mul(sector.get(), file_tag_->alphas[i].get(), sector.get(), ctx);
+    // sigma = sigma + sector
+    BN_add(sigma.get(), sigma.get(), sector.get());
 
     start_ += file_tag_->sector_size;
   }
-  BN_mod(sigma, sigma, file_tag_->p);
+  // sigma = sigma % p
+  BN_mod(sigma.get(), sigma.get(), file_tag_->p.get(), ctx);
 
   proto::BlockTag tag;
   tag.set_index(num_blocks_read_++);
