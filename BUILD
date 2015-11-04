@@ -19,6 +19,7 @@ cc_library(
     ":util",
     "//audit/proto:cpor",
     "//audit/third_party/cryptopp:cryptopp",
+    "//audit/third_party/openssl:openssl",
   ],
 )
 
@@ -32,6 +33,7 @@ cc_test(
     ":prf",
     "//audit/proto:cpor",
     "//audit/third_party/cryptopp:cryptopp",
+    "//audit/third_party/openssl:openssl",
   ],
 )
 
@@ -40,6 +42,7 @@ cc_library(
   srcs = ["util.cc"],
   hdrs = ["util.h"],
   deps = [
+    "//audit/third_party/openssl:openssl",
     "//audit/third_party/cryptopp:cryptopp",
   ]
 )
@@ -51,6 +54,7 @@ cc_test(
     "@gtest//:main",
     ":util",
     "//audit/third_party/cryptopp:cryptopp",
+    "//audit/third_party/openssl:openssl",
   ],
 )
 
@@ -61,6 +65,7 @@ cc_library(
   deps = [
     ":util",
     "//audit/third_party/cryptopp:cryptopp",
+    "//audit/third_party/openssl:openssl",
   ]
 )
 
@@ -70,6 +75,7 @@ cc_library(
   hdrs = ["prf.h"],
   deps = [
     "//audit/third_party/cryptopp:cryptopp",
+    "//audit/third_party/openssl:openssl",
   ]
 )
 
@@ -80,5 +86,6 @@ cc_test(
     "@gtest//:main",
     ":prf",
     "//audit/third_party/cryptopp:cryptopp",
+    "//audit/third_party/openssl:openssl",
   ],
 )
