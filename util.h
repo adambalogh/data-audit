@@ -5,6 +5,7 @@
 #include "cryptopp/integer.h"
 #include "cryptopp/osrng.h"
 #include "openssl/bn.h"
+#include <openssl/rand.h>
 
 #include "common.h"
 
@@ -44,6 +45,12 @@ class RandomNumberGenerator {
 // RandomNumberGenerator implementation using CryptoPP
 class CryptoNumberGenerator : public RandomNumberGenerator {
  public:
+  CryptoNumberGenerator() {
+    // TODO add better seed
+    std::string seed{"seeeeeeeeeeed"};
+    RAND_seed(seed.c_str(), seed.size());
+  }
+
   BN_ptr GenerateNumber(const BIGNUM& max) override {
     BN_ptr number{BN_new(), ::BN_free};
     BN_rand_range(number.get(), &max);
