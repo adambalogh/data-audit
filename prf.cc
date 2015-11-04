@@ -6,6 +6,8 @@
 #include "cryptopp/sha.h"
 #include "openssl/bn.h"
 
+#include "common.h"
+
 namespace audit {
 
 BN_ptr SiphashPRF::Encode(unsigned int i) {

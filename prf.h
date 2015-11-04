@@ -7,6 +7,7 @@
 #include "cryptopp/sha.h"
 #include "openssl/bn.h"
 
+#include "common.h"
 #include "cpor_types.h"
 
 namespace audit {
