@@ -2,22 +2,24 @@
 
 #include "util.h"
 
-#include "cryptopp/integer.h"
+#include "openssl/bn.h"
 
 using namespace audit;
 
 TEST(Util, CryptoEncodeDecode) {
-  CryptoPP::Integer original{14323454};
+  BIGNUM* original = BN_new();
+  BN_add_word(original, 1000432);
 
-  std::string encoded;
-  CryptoIntegerToString(original, &encoded);
-  CryptoPP::Integer decoded;
-  StringToCryptoInteger(encoded, &decoded);
+  auto encoded = BignumToString(*original);
+  auto decoded = StringToBignum(encoded);
 
-  EXPECT_EQ(decoded, original);
+  EXPECT_EQ(0, BN_cmp(decoded, original));
+
+  BN_free(original);
+  BN_free(decoded);
 }
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 }

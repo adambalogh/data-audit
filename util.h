@@ -11,26 +11,24 @@
 
 namespace audit {
 
-inline void CryptoIntegerToString(const CryptoPP::Integer& number,
-                                  std::string* out) {
-  out->resize(number.MinEncodedSize());
-  number.Encode((unsigned char*)out->data(), out->size());
+inline void BignumToString(const BIGNUM& number, std::string* out) {
+  out->resize(BN_num_bytes(&number));
+  BN_bn2bin(&number, (unsigned char*)out->data());
 }
 
-inline std::string CryptoIntegerToString(const CryptoPP::Integer& number) {
+inline std::string BignumToString(const BIGNUM& number) {
   std::string out;
-  CryptoIntegerToString(number, &out);
+  BignumToString(number, &out);
   return out;
 }
 
-inline void StringToCryptoInteger(const std::string& in,
-                                  CryptoPP::Integer* out) {
-  out->Decode((unsigned char*)in.data(), in.size());
+inline void StringToBignum(const std::string& in, BIGNUM* out) {
+  BN_bin2bn((unsigned char*)in.data(), in.size(), out);
 }
 
-inline CryptoPP::Integer StringToCryptoInteger(const std::string& in) {
-  CryptoPP::Integer out;
-  StringToCryptoInteger(in, &out);
+inline BIGNUM* StringToBignum(const std::string& in) {
+  BIGNUM* out = BN_new();
+  StringToBignum(in, out);
   return out;
 }
 
