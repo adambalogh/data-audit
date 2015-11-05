@@ -33,6 +33,7 @@ bool BlockTagger::FillBuffer() {
 }
 
 proto::BlockTag BlockTagger::GenerateTag() {
+  // TODO free this
   BN_CTX* ctx = BN_CTX_new();
   auto sigma = BN_ptr_new();
   auto encoded_index = prf_->Encode(num_blocks_read_);
