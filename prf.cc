@@ -23,7 +23,7 @@ BN_ptr SiphashPRF::Encode(unsigned int i) {
   hmac_.Update(&bytes[0], 4);
   hmac_.Final(&digest[0]);
 
-  BN_ptr result{BN_new(), ::BN_free};
+  auto result = BN_ptr_new();
   BN_bin2bn(&digest[0], hmac_.DigestSize(), result.get());
 
   return std::move(result);

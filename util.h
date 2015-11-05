@@ -50,7 +50,7 @@ class CryptoNumberGenerator : public RandomNumberGenerator {
   }
 
   BN_ptr GenerateNumber(const BIGNUM& max) override {
-    BN_ptr number{BN_new(), ::BN_free};
+    auto number = BN_ptr_new();
     BN_rand_range(number.get(), &max);
     return std::move(number);
   }
