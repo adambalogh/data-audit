@@ -21,8 +21,7 @@ namespace audit {
 // less accuracy.
 //
 // The num_blocks field of the passed FileTag will be set to the correct
-// value after BlockTagger tagged all the blocks in the file, that is, when
-// HasNext() returns false.
+// value.
 //
 // Example:
 //

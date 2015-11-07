@@ -24,6 +24,8 @@ message FileTag {
   bytes prf_key = 6;
 
   bytes p = 7;
+
+  string file_name = 8;
 }
 
 message ChallengeItem {
@@ -34,6 +36,7 @@ message ChallengeItem {
   bytes weight = 2;
 }
 
+// Challenge sent to server from client to prove that it stores a file
 message Challenge {
   repeated ChallengeItem items = 1;
 }
