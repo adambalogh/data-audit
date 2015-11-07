@@ -18,13 +18,9 @@ message FileTag {
   int32 sector_size = 3;
 
   repeated bytes alphas = 4;
-
   bytes hmac_code = 5;
-
   bytes prf_key = 6;
-
   bytes p = 7;
-
   string file_name = 8;
 }
 
@@ -38,7 +34,8 @@ message ChallengeItem {
 
 // Challenge sent to server from client to prove that it stores a file
 message Challenge {
-  repeated ChallengeItem items = 1;
+  string file_name = 1;
+  repeated ChallengeItem items = 2;
 }
 
 message Proof {

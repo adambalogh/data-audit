@@ -1,5 +1,5 @@
 cc_library(
-  name = "fecher",
+  name = "fetcher",
   srcs = ["fetcher.cc"],
   hdrs = ["fetcher.h"],
   deps = [
