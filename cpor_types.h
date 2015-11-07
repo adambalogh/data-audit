@@ -9,8 +9,8 @@
 #include "cryptopp/aes.h"
 #include "openssl/bn.h"
 
-#include "common.h"
-#include "util.h"
+#include "audit/common.h"
+#include "audit/client/util.h"
 
 namespace audit {
 

@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#include "util.h"
+#include "audit/client/util.h"
 
 #include "openssl/bn.h"
 

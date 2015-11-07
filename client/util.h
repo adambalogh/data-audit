@@ -7,7 +7,7 @@
 #include "openssl/bn.h"
 #include <openssl/rand.h>
 
-#include "common.h"
+#include "audit/common.h"
 
 namespace audit {
 

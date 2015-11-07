@@ -4,11 +4,11 @@
 #include <iostream>
 #include <vector>
 
-#include "common.h"
-#include "cpor_types.h"
-#include "proto/cpor.pb.h"
-#include "prf.h"
-#include "util.h"
+#include "audit/common.h"
+#include "audit/cpor_types.h"
+#include "audit/proto/cpor.pb.h"
+#include "audit/client/prf.h"
+#include "audit/client/util.h"
 
 namespace audit {
 

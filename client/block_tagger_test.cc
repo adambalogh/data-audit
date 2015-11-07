@@ -8,10 +8,10 @@
 #include "cryptopp/integer.h"
 #include "openssl/bn.h"
 
-#include "common.h"
-#include "util.h"
-#include "proto/cpor.pb.h"
-#include "prf.h"
+#include "audit/common.h"
+#include "audit/client/prf.h"
+#include "audit/client/util.h"
+#include "audit/proto/cpor.pb.h"
 
 using namespace audit;
 

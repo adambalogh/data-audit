@@ -2,8 +2,8 @@
 
 namespace audit {
 
-class FileProcessor {
+class Prover {
  public:
-  FileProcessor() {}
+  Proof Prove(Challenge chal);
 };
 }

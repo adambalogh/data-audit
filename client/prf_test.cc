@@ -2,7 +2,7 @@
 
 #include "openssl/bn.h"
 
-#include "prf.h"
+#include "audit/client/prf.h"
 
 using namespace audit;
 
