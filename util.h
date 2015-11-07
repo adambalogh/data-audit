@@ -26,10 +26,10 @@ inline void StringToBignum(const std::string& in, BIGNUM* out) {
   BN_bin2bn((unsigned char*)in.data(), in.size(), out);
 }
 
-inline BIGNUM* StringToBignum(const std::string& in) {
-  BIGNUM* out = BN_new();
-  StringToBignum(in, out);
-  return out;
+inline BN_ptr StringToBignum(const std::string& in) {
+  BN_ptr out{BN_new(), ::BN_free};
+  StringToBignum(in, out.get());
+  return std::move(out);
 }
 
 // A generic interface for random number generation

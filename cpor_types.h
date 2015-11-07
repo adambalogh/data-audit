@@ -16,6 +16,14 @@ namespace audit {
 
 class FileTag {
  public:
+  // TODO fix this
+  FileTag()
+      : p([]() {
+          BN_ptr n{BN_new(), ::BN_free};
+          BN_set_word(n.get(), 0);
+          return std::move(n);
+        }()) {}
+
   FileTag(unsigned long num_sectors, int sector_size, BN_ptr p,
           RandomNumberGenerator* random_gen)
       : num_sectors(num_sectors),

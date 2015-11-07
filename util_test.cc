@@ -7,16 +7,15 @@
 using namespace audit;
 
 TEST(Util, CryptoEncodeDecode) {
-  BIGNUM* original = BN_new();
-  BN_add_word(original, 1000432);
+  BN_ptr original{BN_new(), ::BN_free};
+  BN_add_word(original.get(), 1000432);
 
   auto encoded = BignumToString(*original);
   auto decoded = StringToBignum(encoded);
 
-  EXPECT_EQ(0, BN_cmp(decoded, original));
+  EXPECT_EQ(0, BN_cmp(decoded.get(), original.get()));
 
   BN_free(original);
-  BN_free(decoded);
 }
 
 int main(int argc, char** argv) {

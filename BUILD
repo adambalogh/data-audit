@@ -34,7 +34,7 @@ cc_library(
   ],
 )
 
-cc_test(
+cc_binary(
   name = "block_tagger_test",
   srcs = ["block_tagger_test.cc"],
   deps = [
