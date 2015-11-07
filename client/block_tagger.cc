@@ -9,9 +9,9 @@
 
 #include "audit/common.h"
 #include "audit/cpor_types.h"
+#include "audit/util.h"
 #include "audit/proto/cpor.pb.h"
 #include "audit/client/prf.h"
-#include "audit/client/util.h"
 
 namespace audit {
 

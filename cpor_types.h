@@ -10,7 +10,7 @@
 #include "openssl/bn.h"
 
 #include "audit/common.h"
-#include "audit/client/util.h"
+#include "audit/util.h"
 
 namespace audit {
 

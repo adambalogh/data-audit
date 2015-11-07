@@ -8,7 +8,7 @@ cc_library(
     "//audit:common",
     "//audit:cpor_types",
     ":prf",
-    ":util",
+    "//audit:util",
     "//audit/proto:cpor",
     "//audit/third_party/cryptopp:cryptopp",
     "//audit/third_party/openssl:openssl",
@@ -22,32 +22,9 @@ cc_binary(
     "//audit:common",
     "@gtest//:main",
     ":block_tagger",
-    ":util",
+    "//audit:util",
     ":prf",
     "//audit/proto:cpor",
-    "//audit/third_party/cryptopp:cryptopp",
-    "//audit/third_party/openssl:openssl",
-  ],
-)
-
-cc_library(
-  name = "util",
-  srcs = ["util.cc"],
-  hdrs = ["util.h"],
-  deps = [
-    "//audit:common",
-    "//audit/third_party/openssl:openssl",
-    "//audit/third_party/cryptopp:cryptopp",
-  ]
-)
-
-cc_test(
-  name = "util_test",
-  srcs = ["util_test.cc"],
-  deps = [
-    "@gtest//:main",
-    "//audit:common",
-    ":util",
     "//audit/third_party/cryptopp:cryptopp",
     "//audit/third_party/openssl:openssl",
   ],

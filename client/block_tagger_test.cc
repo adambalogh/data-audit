@@ -9,8 +9,8 @@
 #include "openssl/bn.h"
 
 #include "audit/common.h"
+#include "audit/util.h"
 #include "audit/client/prf.h"
-#include "audit/client/util.h"
 #include "audit/proto/cpor.pb.h"
 
 using namespace audit;
