@@ -14,8 +14,6 @@ TEST(Util, CryptoEncodeDecode) {
   auto decoded = StringToBignum(encoded);
 
   EXPECT_EQ(0, BN_cmp(decoded.get(), original.get()));
-
-  BN_free(original);
 }
 
 int main(int argc, char** argv) {
