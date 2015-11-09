@@ -17,6 +17,7 @@ cc_library(
   hdrs = ["cpor_types.h"],
   deps = [
     ":util",
+    "//audit/proto:cpor",
     "//audit/third_party/cryptopp:cryptopp",
     "//audit/third_party/openssl:openssl",
   ]

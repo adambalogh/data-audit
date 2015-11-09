@@ -7,7 +7,7 @@ message BlockTag {
   bytes sigma = 2;
 }
 
-message FileTag {
+message PublicFileTag {
   // The total number of blocks in the file
   uint64 num_blocks = 1;
 
@@ -17,11 +17,19 @@ message FileTag {
   // The size of a block in bytes
   int32 sector_size = 3;
 
-  repeated bytes alphas = 4;
-  bytes hmac_code = 5;
-  bytes prf_key = 6;
-  bytes p = 7;
-  string file_name = 8;
+  bytes p = 4;
+
+  string file_name = 5;
+}
+
+message PrivateFileTag {
+  PublicFileTag public = 1;
+
+  repeated bytes alphas = 2;
+
+  bytes hmac_code = 3;
+
+  bytes prf_key = 4;
 }
 
 message ChallengeItem {
