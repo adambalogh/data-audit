@@ -1,5 +1,7 @@
 #include "prover.h"
 
+#include <assert.h>
+
 #include "openssl/bn.h"
 
 #include "audit/common.h"
@@ -8,25 +10,49 @@
 
 namespace audit {
 
-proto::Proof Prover::Prove(proto::Challenge chal) {
+proto::Proof Prover::Prove(const proto::FileTag& file_tag, Fetcher& fetcher,
+                           const proto::Challenge& chal) {
+  std::vector<BN_ptr> mus;
+  std::generate_n(std::back_inserter(mus), file_tag.num_sectors(), []() {
+    return std::move(BN_ptr{BN_new(), ::BN_free});
+  });
+
   BN_ptr sigma_sum{BN_new(), ::BN_free};
   BN_CTX_ptr ctx{BN_CTX_new(), ::BN_CTX_free};
 
   for (auto& challenge : chal.items()) {
     BN_ptr mu{BN_new(), ::BN_free};
-    auto tag = fetcher_->FetchBlockTag(challenge.index());
-    auto block = fetcher_->FetchBlock(challenge.index());
+    const auto tag = fetcher.FetchBlockTag(challenge.index());
+    auto& block_stream = fetcher.FetchBlock(challenge.index());
 
+    auto weight = StringToBignum(challenge.weight());
     auto sigma = StringToBignum(tag.sigma());
-    // sigma = sigma * weight
-    BN_mul(sigma.get(), sigma.get(), ctx.get());
 
+    // sigma = sigma * weight
+    BN_mul(sigma.get(), sigma.get(), weight.get(), ctx.get());
     // sigma_sum += sigma
     BN_add(sigma_sum.get(), sigma_sum.get(), sigma.get());
+
+    std::vector<unsigned char> block;
+    block.resize(file_tag.sector_size());
+    BN_ptr content{BN_new(), ::BN_free};
+
+    for (int i = 0; i < file_tag.num_sectors(); ++i) {
+      block_stream.read((char*)block.data(), file_tag.sector_size());
+      assert(block_stream.gcount() == file_tag.sector_size() ||
+             i + 1 == file_tag.num_sectors());
+      BN_bin2bn(&block[0], block_stream.gcount(), content.get());
+      // content = content * weight
+      BN_mul(content.get(), content.get(), weight.get(), ctx.get());
+      // mus[i] += content
+      BN_add(mus.at(i).get(), mus.at(i).get(), content.get());
+    }
   }
 
   proto::Proof proof;
-  for (auto& mu : mus_) {
+  BignumToString(*sigma_sum, proof.mutable_sigma());
+  for (auto& mu : mus) {
+    proof.add_mus(BignumToString(*mu));
   }
 
   return proof;

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include <string>
 
 #include "audit/proto/cpor.pb.h"
@@ -12,7 +13,7 @@ class Fetcher {
   Fetcher(const proto::FileTag& file_tag) : file_tag_(file_tag) {}
 
   // Returns the content of the block at index
-  virtual std::basic_iostream<char, std::char_traits<char>>& FetchBlock(
+  virtual std::basic_istream<char, std::char_traits<char>>& FetchBlock(
       unsigned long index) = 0;
   //
   // Returns the BlockTag for the block at index
