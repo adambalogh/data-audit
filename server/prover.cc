@@ -47,10 +47,15 @@ proto::Proof Prover::Prove(const proto::PublicFileTag& file_tag,
       BN_add(mus.at(i).get(), mus.at(i).get(), content.get());
     }
   }
+  auto p = StringToBignum(file_tag.public.p());
 
   proto::Proof proof;
+  // sigma_sum = sigma_sum % p
+  BN_mod(sigma_sum.get(), sigma_sum.get(), p.get(), ctx.get());
   BignumToString(*sigma_sum, proof.mutable_sigma());
   for (auto& mu : mus) {
+    // mus[i] = mus[i] % p
+    BN_mod(mu.get(), mu.get(), p.get(), ctx.get());
     proof.add_mus(BignumToString(*mu));
   }
 
