@@ -21,7 +21,6 @@ proto::Proof Prover::Prove(const proto::FileTag& file_tag, Fetcher& fetcher,
   BN_CTX_ptr ctx{BN_CTX_new(), ::BN_CTX_free};
 
   for (auto& challenge : chal.items()) {
-    BN_ptr mu{BN_new(), ::BN_free};
     const auto tag = fetcher.FetchBlockTag(challenge.index());
     auto& block_stream = fetcher.FetchBlock(challenge.index());
 

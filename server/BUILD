@@ -19,3 +19,17 @@ cc_library(
     "//audit/third_party/openssl:openssl",
   ]
 )
+
+cc_binary(
+  name = "prover_test",
+  srcs = ["prover_test.cc"],
+  deps = [
+    "@gtest//:main",
+    ":prover",
+    "//audit/third_party/openssl:openssl",
+    "//audit:util",
+    "//audit:common",
+    "//audit/client:block_tagger",
+    "//audit/client:prf",
+  ]
+)
