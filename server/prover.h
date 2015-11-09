@@ -1,5 +1,7 @@
 #pragma once
 
+#include "audit/common.h"
+
 #include "audit/proto/cpor.pb.h"
 #include "audit/server/fetcher.h"
 
@@ -17,5 +19,5 @@ class Prover : public ProverInterface {
  private:
   std::vector<BN_ptr> mus_;
   std::unique_ptr<Fetcher> fetcher_;
-}
+};
 }
