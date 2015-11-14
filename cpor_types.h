@@ -9,6 +9,7 @@
 #include "cryptopp/aes.h"
 #include "openssl/bn.h"
 
+#include "audit/proto/cpor.pb.h"
 #include "audit/common.h"
 #include "audit/util.h"
 
@@ -37,6 +38,15 @@ class FileTag {
     std::generate_n(std::back_inserter(alphas), num_sectors, [&]() -> BN_ptr {
       return std::move(random_gen->GenerateNumber(*p));
     });
+  }
+
+  proto::PublicFileTag Proto() const {
+    proto::PublicFileTag file_tag;
+    file_tag.set_num_sectors(num_sectors);
+    file_tag.set_num_blocks(num_blocks);
+    file_tag.set_sector_size(sector_size);
+    BignumToString(*p, file_tag.mutable_p());
+    return file_tag;
   }
 
   unsigned long num_blocks{0};

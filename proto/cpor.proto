@@ -23,7 +23,7 @@ message PublicFileTag {
 }
 
 message PrivateFileTag {
-  PublicFileTag public = 1;
+  PublicFileTag public_tag = 1;
 
   repeated bytes alphas = 2;
 

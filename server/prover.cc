@@ -6,6 +6,7 @@
 
 #include "audit/common.h"
 #include "audit/util.h"
+#include "audit/proto/cpor.pb.h"
 #include "audit/server/fetcher.h"
 
 namespace audit {
@@ -47,7 +48,7 @@ proto::Proof Prover::Prove(const proto::PublicFileTag& file_tag,
       BN_add(mus.at(i).get(), mus.at(i).get(), content.get());
     }
   }
-  auto p = StringToBignum(file_tag.public.p());
+  auto p = StringToBignum(file_tag.p());
 
   proto::Proof proof;
   // sigma_sum = sigma_sum % p

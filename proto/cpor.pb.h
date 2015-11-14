@@ -38,7 +38,8 @@ void protobuf_AssignDesc_cpor_2eproto();
 void protobuf_ShutdownFile_cpor_2eproto();
 
 class BlockTag;
-class FileTag;
+class PublicFileTag;
+class PrivateFileTag;
 class ChallengeItem;
 class Challenge;
 class Proof;
@@ -135,32 +136,32 @@ class BlockTag : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
-class FileTag : public ::google::protobuf::Message {
+class PublicFileTag : public ::google::protobuf::Message {
  public:
-  FileTag();
-  virtual ~FileTag();
+  PublicFileTag();
+  virtual ~PublicFileTag();
 
-  FileTag(const FileTag& from);
+  PublicFileTag(const PublicFileTag& from);
 
-  inline FileTag& operator=(const FileTag& from) {
+  inline PublicFileTag& operator=(const PublicFileTag& from) {
     CopyFrom(from);
     return *this;
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const FileTag& default_instance();
+  static const PublicFileTag& default_instance();
 
-  void Swap(FileTag* other);
+  void Swap(PublicFileTag* other);
 
   // implements Message ----------------------------------------------
 
-  inline FileTag* New() const { return New(NULL); }
+  inline PublicFileTag* New() const { return New(NULL); }
 
-  FileTag* New(::google::protobuf::Arena* arena) const;
+  PublicFileTag* New(::google::protobuf::Arena* arena) const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const FileTag& from);
-  void MergeFrom(const FileTag& from);
+  void CopyFrom(const PublicFileTag& from);
+  void MergeFrom(const PublicFileTag& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -175,7 +176,7 @@ class FileTag : public ::google::protobuf::Message {
   void SharedCtor();
   void SharedDtor();
   void SetCachedSize(int size) const;
-  void InternalSwap(FileTag* other);
+  void InternalSwap(PublicFileTag* other);
   private:
   inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
     return _internal_metadata_.arena();
@@ -209,10 +210,117 @@ class FileTag : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 sector_size() const;
   inline void set_sector_size(::google::protobuf::int32 value);
 
-  // repeated bytes alphas = 4;
+  // optional bytes p = 4;
+  inline void clear_p();
+  static const int kPFieldNumber = 4;
+  inline const ::std::string& p() const;
+  inline void set_p(const ::std::string& value);
+  inline void set_p(const char* value);
+  inline void set_p(const void* value, size_t size);
+  inline ::std::string* mutable_p();
+  inline ::std::string* release_p();
+  inline void set_allocated_p(::std::string* p);
+
+  // optional string file_name = 5;
+  inline void clear_file_name();
+  static const int kFileNameFieldNumber = 5;
+  inline const ::std::string& file_name() const;
+  inline void set_file_name(const ::std::string& value);
+  inline void set_file_name(const char* value);
+  inline void set_file_name(const char* value, size_t size);
+  inline ::std::string* mutable_file_name();
+  inline ::std::string* release_file_name();
+  inline void set_allocated_file_name(::std::string* file_name);
+
+  // @@protoc_insertion_point(class_scope:audit.proto.PublicFileTag)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  bool _is_default_instance_;
+  ::google::protobuf::uint64 num_blocks_;
+  ::google::protobuf::uint64 num_sectors_;
+  ::google::protobuf::internal::ArenaStringPtr p_;
+  ::google::protobuf::internal::ArenaStringPtr file_name_;
+  ::google::protobuf::int32 sector_size_;
+  mutable int _cached_size_;
+  friend void  protobuf_AddDesc_cpor_2eproto();
+  friend void protobuf_AssignDesc_cpor_2eproto();
+  friend void protobuf_ShutdownFile_cpor_2eproto();
+
+  void InitAsDefaultInstance();
+  static PublicFileTag* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class PrivateFileTag : public ::google::protobuf::Message {
+ public:
+  PrivateFileTag();
+  virtual ~PrivateFileTag();
+
+  PrivateFileTag(const PrivateFileTag& from);
+
+  inline PrivateFileTag& operator=(const PrivateFileTag& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const PrivateFileTag& default_instance();
+
+  void Swap(PrivateFileTag* other);
+
+  // implements Message ----------------------------------------------
+
+  inline PrivateFileTag* New() const { return New(NULL); }
+
+  PrivateFileTag* New(::google::protobuf::Arena* arena) const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const PrivateFileTag& from);
+  void MergeFrom(const PrivateFileTag& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  void InternalSwap(PrivateFileTag* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return _internal_metadata_.arena();
+  }
+  inline void* MaybeArenaPtr() const {
+    return _internal_metadata_.raw_arena_ptr();
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional .audit.proto.PublicFileTag public_tag = 1;
+  inline bool has_public_tag() const;
+  inline void clear_public_tag();
+  static const int kPublicTagFieldNumber = 1;
+  inline const ::audit::proto::PublicFileTag& public_tag() const;
+  inline ::audit::proto::PublicFileTag* mutable_public_tag();
+  inline ::audit::proto::PublicFileTag* release_public_tag();
+  inline void set_allocated_public_tag(::audit::proto::PublicFileTag* public_tag);
+
+  // repeated bytes alphas = 2;
   inline int alphas_size() const;
   inline void clear_alphas();
-  static const int kAlphasFieldNumber = 4;
+  static const int kAlphasFieldNumber = 2;
   inline const ::std::string& alphas(int index) const;
   inline ::std::string* mutable_alphas(int index);
   inline void set_alphas(int index, const ::std::string& value);
@@ -225,9 +333,9 @@ class FileTag : public ::google::protobuf::Message {
   inline const ::google::protobuf::RepeatedPtrField< ::std::string>& alphas() const;
   inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_alphas();
 
-  // optional bytes hmac_code = 5;
+  // optional bytes hmac_code = 3;
   inline void clear_hmac_code();
-  static const int kHmacCodeFieldNumber = 5;
+  static const int kHmacCodeFieldNumber = 3;
   inline const ::std::string& hmac_code() const;
   inline void set_hmac_code(const ::std::string& value);
   inline void set_hmac_code(const char* value);
@@ -236,9 +344,9 @@ class FileTag : public ::google::protobuf::Message {
   inline ::std::string* release_hmac_code();
   inline void set_allocated_hmac_code(::std::string* hmac_code);
 
-  // optional bytes prf_key = 6;
+  // optional bytes prf_key = 4;
   inline void clear_prf_key();
-  static const int kPrfKeyFieldNumber = 6;
+  static const int kPrfKeyFieldNumber = 4;
   inline const ::std::string& prf_key() const;
   inline void set_prf_key(const ::std::string& value);
   inline void set_prf_key(const char* value);
@@ -247,36 +355,22 @@ class FileTag : public ::google::protobuf::Message {
   inline ::std::string* release_prf_key();
   inline void set_allocated_prf_key(::std::string* prf_key);
 
-  // optional bytes p = 7;
-  inline void clear_p();
-  static const int kPFieldNumber = 7;
-  inline const ::std::string& p() const;
-  inline void set_p(const ::std::string& value);
-  inline void set_p(const char* value);
-  inline void set_p(const void* value, size_t size);
-  inline ::std::string* mutable_p();
-  inline ::std::string* release_p();
-  inline void set_allocated_p(::std::string* p);
-
-  // @@protoc_insertion_point(class_scope:audit.proto.FileTag)
+  // @@protoc_insertion_point(class_scope:audit.proto.PrivateFileTag)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   bool _is_default_instance_;
-  ::google::protobuf::uint64 num_blocks_;
-  ::google::protobuf::uint64 num_sectors_;
+  ::audit::proto::PublicFileTag* public_tag_;
   ::google::protobuf::RepeatedPtrField< ::std::string> alphas_;
   ::google::protobuf::internal::ArenaStringPtr hmac_code_;
   ::google::protobuf::internal::ArenaStringPtr prf_key_;
-  ::google::protobuf::internal::ArenaStringPtr p_;
-  ::google::protobuf::int32 sector_size_;
   mutable int _cached_size_;
   friend void  protobuf_AddDesc_cpor_2eproto();
   friend void protobuf_AssignDesc_cpor_2eproto();
   friend void protobuf_ShutdownFile_cpor_2eproto();
 
   void InitAsDefaultInstance();
-  static FileTag* default_instance_;
+  static PrivateFileTag* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -426,10 +520,21 @@ class Challenge : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // repeated .audit.proto.ChallengeItem items = 1;
+  // optional string file_name = 1;
+  inline void clear_file_name();
+  static const int kFileNameFieldNumber = 1;
+  inline const ::std::string& file_name() const;
+  inline void set_file_name(const ::std::string& value);
+  inline void set_file_name(const char* value);
+  inline void set_file_name(const char* value, size_t size);
+  inline ::std::string* mutable_file_name();
+  inline ::std::string* release_file_name();
+  inline void set_allocated_file_name(::std::string* file_name);
+
+  // repeated .audit.proto.ChallengeItem items = 2;
   inline int items_size() const;
   inline void clear_items();
-  static const int kItemsFieldNumber = 1;
+  static const int kItemsFieldNumber = 2;
   inline const ::audit::proto::ChallengeItem& items(int index) const;
   inline ::audit::proto::ChallengeItem* mutable_items(int index);
   inline ::audit::proto::ChallengeItem* add_items();
@@ -443,6 +548,7 @@ class Challenge : public ::google::protobuf::Message {
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   bool _is_default_instance_;
+  ::google::protobuf::internal::ArenaStringPtr file_name_;
   ::google::protobuf::RepeatedPtrField< ::audit::proto::ChallengeItem > items_;
   mutable int _cached_size_;
   friend void  protobuf_AddDesc_cpor_2eproto();
@@ -618,231 +724,315 @@ inline void BlockTag::set_allocated_sigma(::std::string* sigma) {
 
 // -------------------------------------------------------------------
 
-// FileTag
+// PublicFileTag
 
 // optional uint64 num_blocks = 1;
-inline void FileTag::clear_num_blocks() {
+inline void PublicFileTag::clear_num_blocks() {
   num_blocks_ = GOOGLE_ULONGLONG(0);
 }
-inline ::google::protobuf::uint64 FileTag::num_blocks() const {
-  // @@protoc_insertion_point(field_get:audit.proto.FileTag.num_blocks)
+inline ::google::protobuf::uint64 PublicFileTag::num_blocks() const {
+  // @@protoc_insertion_point(field_get:audit.proto.PublicFileTag.num_blocks)
   return num_blocks_;
 }
-inline void FileTag::set_num_blocks(::google::protobuf::uint64 value) {
+inline void PublicFileTag::set_num_blocks(::google::protobuf::uint64 value) {
   
   num_blocks_ = value;
-  // @@protoc_insertion_point(field_set:audit.proto.FileTag.num_blocks)
+  // @@protoc_insertion_point(field_set:audit.proto.PublicFileTag.num_blocks)
 }
 
 // optional uint64 num_sectors = 2;
-inline void FileTag::clear_num_sectors() {
+inline void PublicFileTag::clear_num_sectors() {
   num_sectors_ = GOOGLE_ULONGLONG(0);
 }
-inline ::google::protobuf::uint64 FileTag::num_sectors() const {
-  // @@protoc_insertion_point(field_get:audit.proto.FileTag.num_sectors)
+inline ::google::protobuf::uint64 PublicFileTag::num_sectors() const {
+  // @@protoc_insertion_point(field_get:audit.proto.PublicFileTag.num_sectors)
   return num_sectors_;
 }
-inline void FileTag::set_num_sectors(::google::protobuf::uint64 value) {
+inline void PublicFileTag::set_num_sectors(::google::protobuf::uint64 value) {
   
   num_sectors_ = value;
-  // @@protoc_insertion_point(field_set:audit.proto.FileTag.num_sectors)
+  // @@protoc_insertion_point(field_set:audit.proto.PublicFileTag.num_sectors)
 }
 
 // optional int32 sector_size = 3;
-inline void FileTag::clear_sector_size() {
+inline void PublicFileTag::clear_sector_size() {
   sector_size_ = 0;
 }
-inline ::google::protobuf::int32 FileTag::sector_size() const {
-  // @@protoc_insertion_point(field_get:audit.proto.FileTag.sector_size)
+inline ::google::protobuf::int32 PublicFileTag::sector_size() const {
+  // @@protoc_insertion_point(field_get:audit.proto.PublicFileTag.sector_size)
   return sector_size_;
 }
-inline void FileTag::set_sector_size(::google::protobuf::int32 value) {
+inline void PublicFileTag::set_sector_size(::google::protobuf::int32 value) {
   
   sector_size_ = value;
-  // @@protoc_insertion_point(field_set:audit.proto.FileTag.sector_size)
+  // @@protoc_insertion_point(field_set:audit.proto.PublicFileTag.sector_size)
 }
 
-// repeated bytes alphas = 4;
-inline int FileTag::alphas_size() const {
-  return alphas_.size();
-}
-inline void FileTag::clear_alphas() {
-  alphas_.Clear();
-}
-inline const ::std::string& FileTag::alphas(int index) const {
-  // @@protoc_insertion_point(field_get:audit.proto.FileTag.alphas)
-  return alphas_.Get(index);
-}
-inline ::std::string* FileTag::mutable_alphas(int index) {
-  // @@protoc_insertion_point(field_mutable:audit.proto.FileTag.alphas)
-  return alphas_.Mutable(index);
-}
-inline void FileTag::set_alphas(int index, const ::std::string& value) {
-  // @@protoc_insertion_point(field_set:audit.proto.FileTag.alphas)
-  alphas_.Mutable(index)->assign(value);
-}
-inline void FileTag::set_alphas(int index, const char* value) {
-  alphas_.Mutable(index)->assign(value);
-  // @@protoc_insertion_point(field_set_char:audit.proto.FileTag.alphas)
-}
-inline void FileTag::set_alphas(int index, const void* value, size_t size) {
-  alphas_.Mutable(index)->assign(
-    reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_set_pointer:audit.proto.FileTag.alphas)
-}
-inline ::std::string* FileTag::add_alphas() {
-  return alphas_.Add();
-}
-inline void FileTag::add_alphas(const ::std::string& value) {
-  alphas_.Add()->assign(value);
-  // @@protoc_insertion_point(field_add:audit.proto.FileTag.alphas)
-}
-inline void FileTag::add_alphas(const char* value) {
-  alphas_.Add()->assign(value);
-  // @@protoc_insertion_point(field_add_char:audit.proto.FileTag.alphas)
-}
-inline void FileTag::add_alphas(const void* value, size_t size) {
-  alphas_.Add()->assign(reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_add_pointer:audit.proto.FileTag.alphas)
-}
-inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
-FileTag::alphas() const {
-  // @@protoc_insertion_point(field_list:audit.proto.FileTag.alphas)
-  return alphas_;
-}
-inline ::google::protobuf::RepeatedPtrField< ::std::string>*
-FileTag::mutable_alphas() {
-  // @@protoc_insertion_point(field_mutable_list:audit.proto.FileTag.alphas)
-  return &alphas_;
-}
-
-// optional bytes hmac_code = 5;
-inline void FileTag::clear_hmac_code() {
-  hmac_code_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline const ::std::string& FileTag::hmac_code() const {
-  // @@protoc_insertion_point(field_get:audit.proto.FileTag.hmac_code)
-  return hmac_code_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline void FileTag::set_hmac_code(const ::std::string& value) {
-  
-  hmac_code_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:audit.proto.FileTag.hmac_code)
-}
-inline void FileTag::set_hmac_code(const char* value) {
-  
-  hmac_code_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:audit.proto.FileTag.hmac_code)
-}
-inline void FileTag::set_hmac_code(const void* value, size_t size) {
-  
-  hmac_code_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:audit.proto.FileTag.hmac_code)
-}
-inline ::std::string* FileTag::mutable_hmac_code() {
-  
-  // @@protoc_insertion_point(field_mutable:audit.proto.FileTag.hmac_code)
-  return hmac_code_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline ::std::string* FileTag::release_hmac_code() {
-  
-  return hmac_code_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline void FileTag::set_allocated_hmac_code(::std::string* hmac_code) {
-  if (hmac_code != NULL) {
-    
-  } else {
-    
-  }
-  hmac_code_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), hmac_code);
-  // @@protoc_insertion_point(field_set_allocated:audit.proto.FileTag.hmac_code)
-}
-
-// optional bytes prf_key = 6;
-inline void FileTag::clear_prf_key() {
-  prf_key_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline const ::std::string& FileTag::prf_key() const {
-  // @@protoc_insertion_point(field_get:audit.proto.FileTag.prf_key)
-  return prf_key_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline void FileTag::set_prf_key(const ::std::string& value) {
-  
-  prf_key_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:audit.proto.FileTag.prf_key)
-}
-inline void FileTag::set_prf_key(const char* value) {
-  
-  prf_key_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:audit.proto.FileTag.prf_key)
-}
-inline void FileTag::set_prf_key(const void* value, size_t size) {
-  
-  prf_key_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:audit.proto.FileTag.prf_key)
-}
-inline ::std::string* FileTag::mutable_prf_key() {
-  
-  // @@protoc_insertion_point(field_mutable:audit.proto.FileTag.prf_key)
-  return prf_key_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline ::std::string* FileTag::release_prf_key() {
-  
-  return prf_key_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline void FileTag::set_allocated_prf_key(::std::string* prf_key) {
-  if (prf_key != NULL) {
-    
-  } else {
-    
-  }
-  prf_key_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), prf_key);
-  // @@protoc_insertion_point(field_set_allocated:audit.proto.FileTag.prf_key)
-}
-
-// optional bytes p = 7;
-inline void FileTag::clear_p() {
+// optional bytes p = 4;
+inline void PublicFileTag::clear_p() {
   p_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline const ::std::string& FileTag::p() const {
-  // @@protoc_insertion_point(field_get:audit.proto.FileTag.p)
+inline const ::std::string& PublicFileTag::p() const {
+  // @@protoc_insertion_point(field_get:audit.proto.PublicFileTag.p)
   return p_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline void FileTag::set_p(const ::std::string& value) {
+inline void PublicFileTag::set_p(const ::std::string& value) {
   
   p_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:audit.proto.FileTag.p)
+  // @@protoc_insertion_point(field_set:audit.proto.PublicFileTag.p)
 }
-inline void FileTag::set_p(const char* value) {
+inline void PublicFileTag::set_p(const char* value) {
   
   p_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:audit.proto.FileTag.p)
+  // @@protoc_insertion_point(field_set_char:audit.proto.PublicFileTag.p)
 }
-inline void FileTag::set_p(const void* value, size_t size) {
+inline void PublicFileTag::set_p(const void* value, size_t size) {
   
   p_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:audit.proto.FileTag.p)
+  // @@protoc_insertion_point(field_set_pointer:audit.proto.PublicFileTag.p)
 }
-inline ::std::string* FileTag::mutable_p() {
+inline ::std::string* PublicFileTag::mutable_p() {
   
-  // @@protoc_insertion_point(field_mutable:audit.proto.FileTag.p)
+  // @@protoc_insertion_point(field_mutable:audit.proto.PublicFileTag.p)
   return p_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline ::std::string* FileTag::release_p() {
+inline ::std::string* PublicFileTag::release_p() {
   
   return p_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline void FileTag::set_allocated_p(::std::string* p) {
+inline void PublicFileTag::set_allocated_p(::std::string* p) {
   if (p != NULL) {
     
   } else {
     
   }
   p_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), p);
-  // @@protoc_insertion_point(field_set_allocated:audit.proto.FileTag.p)
+  // @@protoc_insertion_point(field_set_allocated:audit.proto.PublicFileTag.p)
+}
+
+// optional string file_name = 5;
+inline void PublicFileTag::clear_file_name() {
+  file_name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& PublicFileTag::file_name() const {
+  // @@protoc_insertion_point(field_get:audit.proto.PublicFileTag.file_name)
+  return file_name_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void PublicFileTag::set_file_name(const ::std::string& value) {
+  
+  file_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:audit.proto.PublicFileTag.file_name)
+}
+inline void PublicFileTag::set_file_name(const char* value) {
+  
+  file_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:audit.proto.PublicFileTag.file_name)
+}
+inline void PublicFileTag::set_file_name(const char* value, size_t size) {
+  
+  file_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:audit.proto.PublicFileTag.file_name)
+}
+inline ::std::string* PublicFileTag::mutable_file_name() {
+  
+  // @@protoc_insertion_point(field_mutable:audit.proto.PublicFileTag.file_name)
+  return file_name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* PublicFileTag::release_file_name() {
+  
+  return file_name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void PublicFileTag::set_allocated_file_name(::std::string* file_name) {
+  if (file_name != NULL) {
+    
+  } else {
+    
+  }
+  file_name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), file_name);
+  // @@protoc_insertion_point(field_set_allocated:audit.proto.PublicFileTag.file_name)
+}
+
+// -------------------------------------------------------------------
+
+// PrivateFileTag
+
+// optional .audit.proto.PublicFileTag public_tag = 1;
+inline bool PrivateFileTag::has_public_tag() const {
+  return !_is_default_instance_ && public_tag_ != NULL;
+}
+inline void PrivateFileTag::clear_public_tag() {
+  if (public_tag_ != NULL) delete public_tag_;
+  public_tag_ = NULL;
+}
+inline const ::audit::proto::PublicFileTag& PrivateFileTag::public_tag() const {
+  // @@protoc_insertion_point(field_get:audit.proto.PrivateFileTag.public_tag)
+  return public_tag_ != NULL ? *public_tag_ : *default_instance_->public_tag_;
+}
+inline ::audit::proto::PublicFileTag* PrivateFileTag::mutable_public_tag() {
+  
+  if (public_tag_ == NULL) {
+    public_tag_ = new ::audit::proto::PublicFileTag;
+  }
+  // @@protoc_insertion_point(field_mutable:audit.proto.PrivateFileTag.public_tag)
+  return public_tag_;
+}
+inline ::audit::proto::PublicFileTag* PrivateFileTag::release_public_tag() {
+  
+  ::audit::proto::PublicFileTag* temp = public_tag_;
+  public_tag_ = NULL;
+  return temp;
+}
+inline void PrivateFileTag::set_allocated_public_tag(::audit::proto::PublicFileTag* public_tag) {
+  delete public_tag_;
+  public_tag_ = public_tag;
+  if (public_tag) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_set_allocated:audit.proto.PrivateFileTag.public_tag)
+}
+
+// repeated bytes alphas = 2;
+inline int PrivateFileTag::alphas_size() const {
+  return alphas_.size();
+}
+inline void PrivateFileTag::clear_alphas() {
+  alphas_.Clear();
+}
+inline const ::std::string& PrivateFileTag::alphas(int index) const {
+  // @@protoc_insertion_point(field_get:audit.proto.PrivateFileTag.alphas)
+  return alphas_.Get(index);
+}
+inline ::std::string* PrivateFileTag::mutable_alphas(int index) {
+  // @@protoc_insertion_point(field_mutable:audit.proto.PrivateFileTag.alphas)
+  return alphas_.Mutable(index);
+}
+inline void PrivateFileTag::set_alphas(int index, const ::std::string& value) {
+  // @@protoc_insertion_point(field_set:audit.proto.PrivateFileTag.alphas)
+  alphas_.Mutable(index)->assign(value);
+}
+inline void PrivateFileTag::set_alphas(int index, const char* value) {
+  alphas_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set_char:audit.proto.PrivateFileTag.alphas)
+}
+inline void PrivateFileTag::set_alphas(int index, const void* value, size_t size) {
+  alphas_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:audit.proto.PrivateFileTag.alphas)
+}
+inline ::std::string* PrivateFileTag::add_alphas() {
+  return alphas_.Add();
+}
+inline void PrivateFileTag::add_alphas(const ::std::string& value) {
+  alphas_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add:audit.proto.PrivateFileTag.alphas)
+}
+inline void PrivateFileTag::add_alphas(const char* value) {
+  alphas_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add_char:audit.proto.PrivateFileTag.alphas)
+}
+inline void PrivateFileTag::add_alphas(const void* value, size_t size) {
+  alphas_.Add()->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_add_pointer:audit.proto.PrivateFileTag.alphas)
+}
+inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
+PrivateFileTag::alphas() const {
+  // @@protoc_insertion_point(field_list:audit.proto.PrivateFileTag.alphas)
+  return alphas_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::std::string>*
+PrivateFileTag::mutable_alphas() {
+  // @@protoc_insertion_point(field_mutable_list:audit.proto.PrivateFileTag.alphas)
+  return &alphas_;
+}
+
+// optional bytes hmac_code = 3;
+inline void PrivateFileTag::clear_hmac_code() {
+  hmac_code_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& PrivateFileTag::hmac_code() const {
+  // @@protoc_insertion_point(field_get:audit.proto.PrivateFileTag.hmac_code)
+  return hmac_code_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void PrivateFileTag::set_hmac_code(const ::std::string& value) {
+  
+  hmac_code_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:audit.proto.PrivateFileTag.hmac_code)
+}
+inline void PrivateFileTag::set_hmac_code(const char* value) {
+  
+  hmac_code_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:audit.proto.PrivateFileTag.hmac_code)
+}
+inline void PrivateFileTag::set_hmac_code(const void* value, size_t size) {
+  
+  hmac_code_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:audit.proto.PrivateFileTag.hmac_code)
+}
+inline ::std::string* PrivateFileTag::mutable_hmac_code() {
+  
+  // @@protoc_insertion_point(field_mutable:audit.proto.PrivateFileTag.hmac_code)
+  return hmac_code_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* PrivateFileTag::release_hmac_code() {
+  
+  return hmac_code_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void PrivateFileTag::set_allocated_hmac_code(::std::string* hmac_code) {
+  if (hmac_code != NULL) {
+    
+  } else {
+    
+  }
+  hmac_code_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), hmac_code);
+  // @@protoc_insertion_point(field_set_allocated:audit.proto.PrivateFileTag.hmac_code)
+}
+
+// optional bytes prf_key = 4;
+inline void PrivateFileTag::clear_prf_key() {
+  prf_key_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& PrivateFileTag::prf_key() const {
+  // @@protoc_insertion_point(field_get:audit.proto.PrivateFileTag.prf_key)
+  return prf_key_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void PrivateFileTag::set_prf_key(const ::std::string& value) {
+  
+  prf_key_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:audit.proto.PrivateFileTag.prf_key)
+}
+inline void PrivateFileTag::set_prf_key(const char* value) {
+  
+  prf_key_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:audit.proto.PrivateFileTag.prf_key)
+}
+inline void PrivateFileTag::set_prf_key(const void* value, size_t size) {
+  
+  prf_key_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:audit.proto.PrivateFileTag.prf_key)
+}
+inline ::std::string* PrivateFileTag::mutable_prf_key() {
+  
+  // @@protoc_insertion_point(field_mutable:audit.proto.PrivateFileTag.prf_key)
+  return prf_key_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* PrivateFileTag::release_prf_key() {
+  
+  return prf_key_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void PrivateFileTag::set_allocated_prf_key(::std::string* prf_key) {
+  if (prf_key != NULL) {
+    
+  } else {
+    
+  }
+  prf_key_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), prf_key);
+  // @@protoc_insertion_point(field_set_allocated:audit.proto.PrivateFileTag.prf_key)
 }
 
 // -------------------------------------------------------------------
@@ -910,7 +1100,50 @@ inline void ChallengeItem::set_allocated_weight(::std::string* weight) {
 
 // Challenge
 
-// repeated .audit.proto.ChallengeItem items = 1;
+// optional string file_name = 1;
+inline void Challenge::clear_file_name() {
+  file_name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& Challenge::file_name() const {
+  // @@protoc_insertion_point(field_get:audit.proto.Challenge.file_name)
+  return file_name_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void Challenge::set_file_name(const ::std::string& value) {
+  
+  file_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:audit.proto.Challenge.file_name)
+}
+inline void Challenge::set_file_name(const char* value) {
+  
+  file_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:audit.proto.Challenge.file_name)
+}
+inline void Challenge::set_file_name(const char* value, size_t size) {
+  
+  file_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:audit.proto.Challenge.file_name)
+}
+inline ::std::string* Challenge::mutable_file_name() {
+  
+  // @@protoc_insertion_point(field_mutable:audit.proto.Challenge.file_name)
+  return file_name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* Challenge::release_file_name() {
+  
+  return file_name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void Challenge::set_allocated_file_name(::std::string* file_name) {
+  if (file_name != NULL) {
+    
+  } else {
+    
+  }
+  file_name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), file_name);
+  // @@protoc_insertion_point(field_set_allocated:audit.proto.Challenge.file_name)
+}
+
+// repeated .audit.proto.ChallengeItem items = 2;
 inline int Challenge::items_size() const {
   return items_.size();
 }
