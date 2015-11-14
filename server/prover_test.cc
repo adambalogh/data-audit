@@ -41,15 +41,13 @@ class DummyFetcher : public Fetcher {
   std::stringstream& s_;
 };
 
-TEST(Prover, Prove) {
-  std::stringstream file{
-      "jdoigeowjoijJOJIOJRjegoirjgiergjeogjow f;erigje;gi j;gioewj "
-      ";eriojwasgpewpoeir34op3i"};
+TEST(Prover, Sigma) {
+  std::stringstream file{"abcdefghijklmno\npqr "};
 
   CryptoNumberGenerator g;
   BN_ptr p{BN_new(), ::BN_free};
   BN_set_word(p.get(), 353868019);
-  FileTag file_tag{3, 3, std::move(p), &g};
+  FileTag file_tag{2, 2, std::move(p), &g};
   std::unique_ptr<PRF> prf{new SiphashPRF{"hello"}};
 
   BlockTagger block_tagger{file, &file_tag, std::move(prf)};
@@ -60,20 +58,35 @@ TEST(Prover, Prove) {
   }
 
   proto::Challenge challenge;
+
   auto item = challenge.add_items();
   item->set_index(0);
-  item->set_weight("abcd");
+  BN_ptr weight1{BN_new(), ::BN_free};
+  BN_set_word(weight1.get(), 101);
+  item->set_weight(BignumToString(*weight1));
 
   item = challenge.add_items();
   item->set_index(2);
-  item->set_weight("abcdw");
+  BN_ptr weight2{BN_new(), ::BN_free};
+  BN_set_word(weight2.get(), 17);
+  item->set_weight(BignumToString(*weight2));
 
   DummyFetcher fetcher{file_tag, tags, file};
-
   Prover prover;
+
   auto proof = prover.Prove(file_tag.Proto(), fetcher, challenge);
 
-  std::cout << proof.DebugString() << std::endl;
+  BN_ptr sigma_sum{BN_new(), ::BN_free};
+  BN_CTX_ptr ctx{BN_CTX_new(), ::BN_CTX_free};
+
+  BN_mul(weight1.get(), weight1.get(), StringToBignum(tags[0].sigma()).get(),
+         ctx.get());
+  BN_mul(weight2.get(), weight2.get(), StringToBignum(tags[2].sigma()).get(),
+         ctx.get());
+  BN_add(sigma_sum.get(), weight1.get(), weight2.get());
+  BN_mod(sigma_sum.get(), sigma_sum.get(), file_tag.p.get(), ctx.get());
+
+  ASSERT_EQ(0, BN_cmp(sigma_sum.get(), StringToBignum(proof.sigma()).get()));
 }
 
 int main(int argc, char** argv) {
