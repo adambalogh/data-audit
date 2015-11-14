@@ -32,3 +32,13 @@ cc_binary(
     "//audit/client:prf",
   ]
 )
+
+cc_library(
+  name = "local_disk_fetcher",
+  srcs = ["local_disk_fetcher.cc"],
+  hdrs = ["local_disk_fetcher.h"],
+  deps = [
+    ":fetcher",
+    "//audit/proto:cpor",
+  ]
+)
