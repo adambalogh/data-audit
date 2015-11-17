@@ -11,8 +11,9 @@
 
 namespace audit {
 
-proto::Proof Prover::Prove(const proto::PublicFileTag& file_tag,
-                           Fetcher& fetcher, const proto::Challenge& chal) {
+proto::Proof Prover::Prove(Fetcher& fetcher, const proto::Challenge& chal) {
+  auto& file_tag = chal.file_tag();
+
   std::vector<BN_ptr> mus;
   std::generate_n(std::back_inserter(mus), file_tag.num_sectors(), []() {
     return std::move(BN_ptr{BN_new(), ::BN_free});

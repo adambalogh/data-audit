@@ -30,6 +30,7 @@ cc_binary(
     "//audit:common",
     "//audit/client:block_tagger",
     "//audit/client:prf",
+    "//audit/proto:cpor",
   ]
 )
 

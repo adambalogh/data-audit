@@ -9,14 +9,12 @@ namespace audit {
 
 class ProverInterface {
  public:
-  virtual proto::Proof Prove(const proto::PublicFileTag& file_tag,
-                             Fetcher& fetcher,
+  virtual proto::Proof Prove(Fetcher& fetcher,
                              const proto::Challenge& chal) = 0;
 };
 
 class Prover : public ProverInterface {
  public:
-  proto::Proof Prove(const proto::PublicFileTag& file_tag, Fetcher& fetcher,
-                     const proto::Challenge& chal) override;
+  proto::Proof Prove(Fetcher& fetcher, const proto::Challenge& chal) override;
 };
 }

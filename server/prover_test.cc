@@ -58,6 +58,7 @@ TEST(Prover, Sigma) {
   }
 
   proto::Challenge challenge;
+  *challenge.mutable_file_tag() = file_tag.Proto();
 
   auto item = challenge.add_items();
   item->set_index(0);
@@ -74,7 +75,7 @@ TEST(Prover, Sigma) {
   DummyFetcher fetcher{file_tag, tags, file};
   Prover prover;
 
-  auto proof = prover.Prove(file_tag.Proto(), fetcher, challenge);
+  auto proof = prover.Prove(fetcher, challenge);
 
   BN_ptr sigma_sum{BN_new(), ::BN_free};
   BN_CTX_ptr ctx{BN_CTX_new(), ::BN_CTX_free};
