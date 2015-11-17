@@ -10,7 +10,7 @@
 
 namespace audit {
 
-BN_ptr SiphashPRF::Encode(unsigned int i) {
+BN_ptr HMACPRF::Encode(unsigned int i) {
   hmac_.Restart();
 
   unsigned char bytes[4];

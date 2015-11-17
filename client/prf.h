@@ -18,10 +18,10 @@ class PRF {
   virtual ~PRF() {}
 };
 
-class SiphashPRF : public PRF {
+class HMACPRF : public PRF {
  public:
-  SiphashPRF(const unsigned char* key, int length) : hmac_(key, length) {}
-  SiphashPRF(const std::string& key)
+  HMACPRF(const unsigned char* key, int length) : hmac_(key, length) {}
+  HMACPRF(const std::string& key)
       : hmac_((unsigned char*)key.data(), key.size()) {}
 
   BN_ptr Encode(unsigned int i);

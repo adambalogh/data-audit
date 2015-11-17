@@ -7,8 +7,8 @@
 using namespace audit;
 
 TEST(SiphashPRF, Same) {
-  SiphashPRF prf_hello{"hello"};
-  SiphashPRF prf_hello2{"hello"};
+  HMACPRF prf_hello{"hello"};
+  HMACPRF prf_hello2{"hello"};
 
   auto a = prf_hello.Encode(10);
   auto b = prf_hello.Encode(10);
