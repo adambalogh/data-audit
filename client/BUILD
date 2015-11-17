@@ -41,6 +41,17 @@ cc_binary(
 )
 
 cc_library(
+  name = "verification",
+  srcs = ["verification.cc"],
+  hdrs = ["verification.h"],
+  deps = [
+    ":prf",
+    "//audit/proto:cpor",
+    "//audit/third_party/openssl:openssl",
+  ]
+)
+
+cc_library(
   name = "prf",
   srcs = ["prf.cc"],
   hdrs = ["prf.h"],

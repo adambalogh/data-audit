@@ -34,7 +34,7 @@ message PrivateFileTag {
 
 message ChallengeItem {
   // index of requested block from file
-  int64 index = 1;
+  uint64 index = 1;
 
   // weight of requested block
   bytes weight = 2;

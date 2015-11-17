@@ -42,3 +42,16 @@ cc_library(
     "//audit/proto:cpor",
   ]
 )
+
+cc_binary(
+  name = "local_disk_fetcher_test",
+  srcs = ["local_disk_fetcher_test.cc"],
+  deps = [
+    "@gtest//:main",
+    ":local_disk_fetcher",
+    "//audit/proto:cpor",
+    "//audit:common",
+    "//audit:util",
+    "//audit/third_party/openssl:openssl",
+  ]
+)
