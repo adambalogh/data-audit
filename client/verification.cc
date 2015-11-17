@@ -20,5 +20,14 @@ bool Verification::Verify(const proto::PrivateFileTag& file_tag,
     BN_add(sigma_sum.get(), sigma_sum.get(), weighted_index.get());
     BN_clear(weighted_index.get());
   }
+
+  for (int i = 0; i < proof.mus_size(); ++i) {
+    auto mu = StringToBignum(proof.mus(i));
+    BN_mul(mu.get(), mu.get(), StringToBignum(file_tag.alphas(i)).get(),
+           ctx.get());
+    BN_add(sigma_sum.get(), sigma_sum.get(), mu.get());
+  }
+
+  return BN_cmp(sigma_sum.get(), StringToBignum(proof.sigma()).get()) == 0;
 }
 }
