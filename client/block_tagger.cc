@@ -23,7 +23,8 @@ bool BlockTagger::FillBuffer() {
   std::copy(std::begin(buffer) + start_, std::begin(buffer) + end_,
             std::begin(buffer));
 
-  file_.read((char*)buffer.data() + bytes_left, buffer.size() - bytes_left);
+  file_tag_.file().read((char*)buffer.data() + bytes_left,
+                        buffer.size() - bytes_left);
   start_ = 0;
   end_ = bytes_left + file_.gcount();
   if (end_ != buffer.size()) {

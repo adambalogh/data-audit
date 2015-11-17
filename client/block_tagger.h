@@ -42,20 +42,8 @@ class BlockTagger {
   // @param prf: a unique_ptr to a PRF object used for encoding the index of
   //   each block
   //
-  BlockTagger(std::istream& file, FileTag* file_tag, std::unique_ptr<PRF> prf)
-      : file_(file), file_tag_(file_tag), prf_(std::move(prf)) {
-    // Get file size
-    file_.seekg(0, file_.end);
-    auto length = file_.tellg();
-    file_.seekg(0, file_.beg);
-
-    auto block_size = file_tag_->sector_size * file_tag_->num_sectors;
-
-    file_tag->num_blocks = length / block_size;
-    if (length % block_size != 0) {
-      ++file_tag_->num_blocks;
-    }
-  }
+  BlockTagger(FileTag* file_tag, std::unique_ptr<PRF> prf)
+      : file_tag_(file_tag), prf_(std::move(prf)) {}
 
   // Returns the BlockTag for the next block from the file, should only be
   // called if HasNext() returns true
@@ -81,9 +69,6 @@ class BlockTagger {
   unsigned long num_blocks_read_{0};
 
   bool file_read_{false};
-
-  // The file we are tagging
-  std::istream& file_;
 
   // Pointer to the FileTag of the file being tagged
   FileTag* const file_tag_;
