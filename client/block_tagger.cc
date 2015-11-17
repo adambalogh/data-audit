@@ -34,8 +34,7 @@ bool BlockTagger::FillBuffer() {
 }
 
 proto::BlockTag BlockTagger::GenerateTag() {
-  // TODO free this
-  BN_CTX* ctx = BN_CTX_new();
+  BN_CTX_ptr ctx{BN_CTX_new(), ::BN_CTX_free};
   BN_ptr sigma{BN_new(), ::BN_free};
   auto encoded_index = prf_->Encode(num_blocks_read_);
 
@@ -55,14 +54,15 @@ proto::BlockTag BlockTagger::GenerateTag() {
               sector.get());
 
     // sector = sector * alpha[i]
-    BN_mul(sector.get(), file_tag_->alphas().at(i).get(), sector.get(), ctx);
+    BN_mul(sector.get(), file_tag_->alphas().at(i).get(), sector.get(),
+           ctx.get());
     // sigma = sigma + sector
     BN_add(sigma.get(), sigma.get(), sector.get());
 
     start_ += file_tag_->sector_size();
   }
   // sigma = sigma % p
-  BN_mod(sigma.get(), sigma.get(), file_tag_->p(), ctx);
+  BN_mod(sigma.get(), sigma.get(), file_tag_->p(), ctx.get());
 
   proto::BlockTag tag;
   tag.set_index(num_blocks_read_++);
