@@ -59,7 +59,7 @@ TEST(Prover, Sigma) {
   }
 
   proto::Challenge challenge;
-  *challenge.mutable_file_tag() = file_tag.Proto();
+  *challenge.mutable_file_tag() = file_tag.PublicProto();
 
   auto item = challenge.add_items();
   item->set_index(0);

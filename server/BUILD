@@ -26,7 +26,7 @@ cc_binary(
     "@gtest//:main",
     ":prover",
     "//audit/third_party/openssl:openssl",
-    "//audit/file_tag",
+    "//audit:file_tag",
     "//audit:util",
     "//audit:common",
     "//audit/client:block_tagger",
