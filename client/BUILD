@@ -6,7 +6,7 @@ cc_binary(
   deps = [
     ":block_tagger",
     ":prf",
-    "//audit:cpor_types",
+    "//audit:file_tag",
   ]
 )
 
@@ -16,7 +16,7 @@ cc_library(
   hdrs = ["block_tagger.h"],
   deps = [
     "//audit:common",
-    "//audit:cpor_types",
+    "//audit:file_tag",
     ":prf",
     "//audit:util",
     "//audit/proto:cpor",

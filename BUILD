@@ -12,9 +12,9 @@ cc_library(
 )
 
 cc_library(
-  name = "cpor_types",
-  srcs = [],
-  hdrs = ["cpor_types.h"],
+  name = "file_tag",
+  srcs = ["file_tag.cc"],
+  hdrs = ["file_tag.h"],
   deps = [
     ":util",
     "//audit/proto:cpor",

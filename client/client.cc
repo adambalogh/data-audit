@@ -7,7 +7,7 @@
 #include "block_tagger.h"
 #include "prf.h"
 
-#include "audit/cpor_types.h"
+#include "audit/file_tag.h"
 #include "audit/util.h"
 
 int main(int argc, char** argv) {

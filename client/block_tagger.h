@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "audit/common.h"
-#include "audit/cpor_types.h"
+#include "audit/file_tag.h"
 #include "audit/util.h"
 #include "audit/client/prf.h"
 #include "audit/proto/cpor.pb.h"

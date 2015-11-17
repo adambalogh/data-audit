@@ -8,7 +8,7 @@
 #include "openssl/bn.h"
 
 #include "audit/common.h"
-#include "audit/cpor_types.h"
+#include "audit/file_tag.h"
 
 namespace audit {
 

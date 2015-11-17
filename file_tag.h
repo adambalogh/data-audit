@@ -27,34 +27,24 @@ class FileTag {
 
   FileTag(unsigned long num_sectors, int sector_size, BN_ptr p,
           RandomNumberGenerator* random_gen)
-      : num_sectors(num_sectors),
-        sector_size(sector_size),
-        p(std::move(p)),
-        random_gen(random_gen) {
-    MakeAlphas();
+      : num_sectors(num_sectors), sector_size(sector_size), p(std::move(p)) {
+    MakeAlphas(random_gen);
   }
 
-  void MakeAlphas() {
+  void MakeAlphas(RandomNumberGenerator* random_gen) {
     std::generate_n(std::back_inserter(alphas), num_sectors, [&]() -> BN_ptr {
       return std::move(random_gen->GenerateNumber(*p));
     });
   }
 
-  proto::PublicFileTag Proto() const {
-    proto::PublicFileTag file_tag;
-    file_tag.set_num_sectors(num_sectors);
-    file_tag.set_num_blocks(num_blocks);
-    file_tag.set_sector_size(sector_size);
-    BignumToString(*p, file_tag.mutable_p());
-    return file_tag;
-  }
+  proto::PrivateFileTag PrivateProto() const;
+  proto::PublicFileTag PublicProto() const;
 
   unsigned long num_blocks{0};
   unsigned long num_sectors;
   size_t sector_size;
   std::vector<BN_ptr> alphas;
   BN_ptr p;
-  RandomNumberGenerator* random_gen;
 };
 
 struct SecretKeys {
