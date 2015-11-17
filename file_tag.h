@@ -16,6 +16,13 @@
 
 namespace audit {
 
+// A FileTag must be created for each file we want to tag and upload.
+// It holds important information about the file and parameters to the tagging.
+//
+// After we are done tagging the file. It should be serialized to a proto, by
+// using the PrivateProto() method and saved along with the file and tags, as
+// it will be used for verification later.
+//
 class FileTag {
  public:
   FileTag(std::istream& file, unsigned long num_sectors, size_t sector_size,
@@ -40,7 +47,7 @@ class FileTag {
   proto::PrivateFileTag PrivateProto() const;
   proto::PublicFileTag PublicProto() const;
 
-  std::istream& file() { return file_; }
+  std::istream& file() const { return file_; }
 
   unsigned long num_blocks() const { return num_blocks_; }
   unsigned long num_sectors() const { return num_sectors_; }
@@ -70,6 +77,7 @@ class FileTag {
 
   std::istream& file_;
 
+  // As documented in proto/cpor.proto
   unsigned long num_blocks_{0};
   unsigned long num_sectors_;
   size_t sector_size_;
