@@ -120,7 +120,7 @@ void protobuf_AssignDesc_cpor_2eproto() {
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ChallengeItem, _is_default_instance_));
   Challenge_descriptor_ = file->message_type(4);
   static const int Challenge_offsets_[2] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Challenge, file_name_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Challenge, file_tag_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Challenge, items_),
   };
   Challenge_reflection_ =
@@ -208,10 +208,11 @@ void protobuf_AddDesc_cpor_2eproto() {
     "blic_tag\030\001 \001(\0132\032.audit.proto.PublicFileT"
     "ag\022\016\n\006alphas\030\002 \003(\014\022\021\n\thmac_code\030\003 \001(\014\022\017\n"
     "\007prf_key\030\004 \001(\014\".\n\rChallengeItem\022\r\n\005index"
-    "\030\001 \001(\003\022\016\n\006weight\030\002 \001(\014\"I\n\tChallenge\022\021\n\tf"
-    "ile_name\030\001 \001(\t\022)\n\005items\030\002 \003(\0132\032.audit.pr"
-    "oto.ChallengeItem\"#\n\005Proof\022\r\n\005sigma\030\001 \001("
-    "\014\022\013\n\003mus\030\002 \003(\014b\006proto3", 462);
+    "\030\001 \001(\004\022\016\n\006weight\030\002 \001(\014\"d\n\tChallenge\022,\n\010f"
+    "ile_tag\030\001 \001(\0132\032.audit.proto.PublicFileTa"
+    "g\022)\n\005items\030\002 \003(\0132\032.audit.proto.Challenge"
+    "Item\"#\n\005Proof\022\r\n\005sigma\030\001 \001(\014\022\013\n\003mus\030\002 \003("
+    "\014b\006proto3", 489);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "cpor.proto", &protobuf_RegisterTypes);
   BlockTag::default_instance_ = new BlockTag();
@@ -1256,7 +1257,7 @@ void ChallengeItem::SharedCtor() {
     _is_default_instance_ = false;
   ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
-  index_ = GOOGLE_LONGLONG(0);
+  index_ = GOOGLE_ULONGLONG(0);
   weight_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
@@ -1297,7 +1298,7 @@ ChallengeItem* ChallengeItem::New(::google::protobuf::Arena* arena) const {
 }
 
 void ChallengeItem::Clear() {
-  index_ = GOOGLE_LONGLONG(0);
+  index_ = GOOGLE_ULONGLONG(0);
   weight_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
@@ -1311,11 +1312,11 @@ bool ChallengeItem::MergePartialFromCodedStream(
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional int64 index = 1;
+      // optional uint64 index = 1;
       case 1: {
         if (tag == 8) {
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
                  input, &index_)));
 
         } else {
@@ -1362,9 +1363,9 @@ failure:
 void ChallengeItem::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
   // @@protoc_insertion_point(serialize_start:audit.proto.ChallengeItem)
-  // optional int64 index = 1;
+  // optional uint64 index = 1;
   if (this->index() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt64(1, this->index(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(1, this->index(), output);
   }
 
   // optional bytes weight = 2;
@@ -1379,9 +1380,9 @@ void ChallengeItem::SerializeWithCachedSizes(
 ::google::protobuf::uint8* ChallengeItem::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
   // @@protoc_insertion_point(serialize_to_array_start:audit.proto.ChallengeItem)
-  // optional int64 index = 1;
+  // optional uint64 index = 1;
   if (this->index() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt64ToArray(1, this->index(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(1, this->index(), target);
   }
 
   // optional bytes weight = 2;
@@ -1398,10 +1399,10 @@ void ChallengeItem::SerializeWithCachedSizes(
 int ChallengeItem::ByteSize() const {
   int total_size = 0;
 
-  // optional int64 index = 1;
+  // optional uint64 index = 1;
   if (this->index() != 0) {
     total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::Int64Size(
+      ::google::protobuf::internal::WireFormatLite::UInt64Size(
         this->index());
   }
 
@@ -1481,7 +1482,7 @@ void ChallengeItem::InternalSwap(ChallengeItem* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int Challenge::kFileNameFieldNumber;
+const int Challenge::kFileTagFieldNumber;
 const int Challenge::kItemsFieldNumber;
 #endif  // !_MSC_VER
 
@@ -1493,6 +1494,7 @@ Challenge::Challenge()
 
 void Challenge::InitAsDefaultInstance() {
   _is_default_instance_ = true;
+  file_tag_ = const_cast< ::audit::proto::PublicFileTag*>(&::audit::proto::PublicFileTag::default_instance());
 }
 
 Challenge::Challenge(const Challenge& from)
@@ -1505,9 +1507,8 @@ Challenge::Challenge(const Challenge& from)
 
 void Challenge::SharedCtor() {
     _is_default_instance_ = false;
-  ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
-  file_name_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  file_tag_ = NULL;
 }
 
 Challenge::~Challenge() {
@@ -1516,8 +1517,8 @@ Challenge::~Challenge() {
 }
 
 void Challenge::SharedDtor() {
-  file_name_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   if (this != default_instance_) {
+    delete file_tag_;
   }
 }
 
@@ -1547,7 +1548,8 @@ Challenge* Challenge::New(::google::protobuf::Arena* arena) const {
 }
 
 void Challenge::Clear() {
-  file_name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (file_tag_ != NULL) delete file_tag_;
+  file_tag_ = NULL;
   items_.Clear();
 }
 
@@ -1561,15 +1563,11 @@ bool Challenge::MergePartialFromCodedStream(
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional string file_name = 1;
+      // optional .audit.proto.PublicFileTag file_tag = 1;
       case 1: {
         if (tag == 10) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_file_name()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-            this->file_name().data(), this->file_name().length(),
-            ::google::protobuf::internal::WireFormat::PARSE,
-            "audit.proto.Challenge.file_name");
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_file_tag()));
         } else {
           goto handle_unusual;
         }
@@ -1615,14 +1613,10 @@ failure:
 void Challenge::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
   // @@protoc_insertion_point(serialize_start:audit.proto.Challenge)
-  // optional string file_name = 1;
-  if (this->file_name().size() > 0) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-      this->file_name().data(), this->file_name().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "audit.proto.Challenge.file_name");
-    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-      1, this->file_name(), output);
+  // optional .audit.proto.PublicFileTag file_tag = 1;
+  if (this->has_file_tag()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      1, *this->file_tag_, output);
   }
 
   // repeated .audit.proto.ChallengeItem items = 2;
@@ -1637,15 +1631,11 @@ void Challenge::SerializeWithCachedSizes(
 ::google::protobuf::uint8* Challenge::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
   // @@protoc_insertion_point(serialize_to_array_start:audit.proto.Challenge)
-  // optional string file_name = 1;
-  if (this->file_name().size() > 0) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
-      this->file_name().data(), this->file_name().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
-      "audit.proto.Challenge.file_name");
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        1, this->file_name(), target);
+  // optional .audit.proto.PublicFileTag file_tag = 1;
+  if (this->has_file_tag()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        1, *this->file_tag_, target);
   }
 
   // repeated .audit.proto.ChallengeItem items = 2;
@@ -1662,11 +1652,11 @@ void Challenge::SerializeWithCachedSizes(
 int Challenge::ByteSize() const {
   int total_size = 0;
 
-  // optional string file_name = 1;
-  if (this->file_name().size() > 0) {
+  // optional .audit.proto.PublicFileTag file_tag = 1;
+  if (this->has_file_tag()) {
     total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::StringSize(
-        this->file_name());
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        *this->file_tag_);
   }
 
   // repeated .audit.proto.ChallengeItem items = 2;
@@ -1698,9 +1688,8 @@ void Challenge::MergeFrom(const ::google::protobuf::Message& from) {
 void Challenge::MergeFrom(const Challenge& from) {
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
   items_.MergeFrom(from.items_);
-  if (from.file_name().size() > 0) {
-
-    file_name_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.file_name_);
+  if (from.has_file_tag()) {
+    mutable_file_tag()->::audit::proto::PublicFileTag::MergeFrom(from.file_tag());
   }
 }
 
@@ -1726,7 +1715,7 @@ void Challenge::Swap(Challenge* other) {
   InternalSwap(other);
 }
 void Challenge::InternalSwap(Challenge* other) {
-  file_name_.Swap(&other->file_name_);
+  std::swap(file_tag_, other->file_tag_);
   items_.UnsafeArenaSwap(&other->items_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   std::swap(_cached_size_, other->_cached_size_);

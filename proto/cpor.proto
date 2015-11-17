@@ -42,7 +42,7 @@ message ChallengeItem {
 
 // Challenge sent to server from client to prove that it stores a file
 message Challenge {
-  string file_name = 1;
+  PublicFileTag file_tag = 1;
   repeated ChallengeItem items = 2;
 }
 

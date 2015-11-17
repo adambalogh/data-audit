@@ -430,11 +430,11 @@ class ChallengeItem : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional int64 index = 1;
+  // optional uint64 index = 1;
   inline void clear_index();
   static const int kIndexFieldNumber = 1;
-  inline ::google::protobuf::int64 index() const;
-  inline void set_index(::google::protobuf::int64 value);
+  inline ::google::protobuf::uint64 index() const;
+  inline void set_index(::google::protobuf::uint64 value);
 
   // optional bytes weight = 2;
   inline void clear_weight();
@@ -452,7 +452,7 @@ class ChallengeItem : public ::google::protobuf::Message {
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   bool _is_default_instance_;
-  ::google::protobuf::int64 index_;
+  ::google::protobuf::uint64 index_;
   ::google::protobuf::internal::ArenaStringPtr weight_;
   mutable int _cached_size_;
   friend void  protobuf_AddDesc_cpor_2eproto();
@@ -520,16 +520,14 @@ class Challenge : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional string file_name = 1;
-  inline void clear_file_name();
-  static const int kFileNameFieldNumber = 1;
-  inline const ::std::string& file_name() const;
-  inline void set_file_name(const ::std::string& value);
-  inline void set_file_name(const char* value);
-  inline void set_file_name(const char* value, size_t size);
-  inline ::std::string* mutable_file_name();
-  inline ::std::string* release_file_name();
-  inline void set_allocated_file_name(::std::string* file_name);
+  // optional .audit.proto.PublicFileTag file_tag = 1;
+  inline bool has_file_tag() const;
+  inline void clear_file_tag();
+  static const int kFileTagFieldNumber = 1;
+  inline const ::audit::proto::PublicFileTag& file_tag() const;
+  inline ::audit::proto::PublicFileTag* mutable_file_tag();
+  inline ::audit::proto::PublicFileTag* release_file_tag();
+  inline void set_allocated_file_tag(::audit::proto::PublicFileTag* file_tag);
 
   // repeated .audit.proto.ChallengeItem items = 2;
   inline int items_size() const;
@@ -548,7 +546,7 @@ class Challenge : public ::google::protobuf::Message {
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   bool _is_default_instance_;
-  ::google::protobuf::internal::ArenaStringPtr file_name_;
+  ::audit::proto::PublicFileTag* file_tag_;
   ::google::protobuf::RepeatedPtrField< ::audit::proto::ChallengeItem > items_;
   mutable int _cached_size_;
   friend void  protobuf_AddDesc_cpor_2eproto();
@@ -1039,15 +1037,15 @@ inline void PrivateFileTag::set_allocated_prf_key(::std::string* prf_key) {
 
 // ChallengeItem
 
-// optional int64 index = 1;
+// optional uint64 index = 1;
 inline void ChallengeItem::clear_index() {
-  index_ = GOOGLE_LONGLONG(0);
+  index_ = GOOGLE_ULONGLONG(0);
 }
-inline ::google::protobuf::int64 ChallengeItem::index() const {
+inline ::google::protobuf::uint64 ChallengeItem::index() const {
   // @@protoc_insertion_point(field_get:audit.proto.ChallengeItem.index)
   return index_;
 }
-inline void ChallengeItem::set_index(::google::protobuf::int64 value) {
+inline void ChallengeItem::set_index(::google::protobuf::uint64 value) {
   
   index_ = value;
   // @@protoc_insertion_point(field_set:audit.proto.ChallengeItem.index)
@@ -1100,47 +1098,41 @@ inline void ChallengeItem::set_allocated_weight(::std::string* weight) {
 
 // Challenge
 
-// optional string file_name = 1;
-inline void Challenge::clear_file_name() {
-  file_name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+// optional .audit.proto.PublicFileTag file_tag = 1;
+inline bool Challenge::has_file_tag() const {
+  return !_is_default_instance_ && file_tag_ != NULL;
 }
-inline const ::std::string& Challenge::file_name() const {
-  // @@protoc_insertion_point(field_get:audit.proto.Challenge.file_name)
-  return file_name_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+inline void Challenge::clear_file_tag() {
+  if (file_tag_ != NULL) delete file_tag_;
+  file_tag_ = NULL;
 }
-inline void Challenge::set_file_name(const ::std::string& value) {
+inline const ::audit::proto::PublicFileTag& Challenge::file_tag() const {
+  // @@protoc_insertion_point(field_get:audit.proto.Challenge.file_tag)
+  return file_tag_ != NULL ? *file_tag_ : *default_instance_->file_tag_;
+}
+inline ::audit::proto::PublicFileTag* Challenge::mutable_file_tag() {
   
-  file_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:audit.proto.Challenge.file_name)
+  if (file_tag_ == NULL) {
+    file_tag_ = new ::audit::proto::PublicFileTag;
+  }
+  // @@protoc_insertion_point(field_mutable:audit.proto.Challenge.file_tag)
+  return file_tag_;
 }
-inline void Challenge::set_file_name(const char* value) {
+inline ::audit::proto::PublicFileTag* Challenge::release_file_tag() {
   
-  file_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:audit.proto.Challenge.file_name)
+  ::audit::proto::PublicFileTag* temp = file_tag_;
+  file_tag_ = NULL;
+  return temp;
 }
-inline void Challenge::set_file_name(const char* value, size_t size) {
-  
-  file_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:audit.proto.Challenge.file_name)
-}
-inline ::std::string* Challenge::mutable_file_name() {
-  
-  // @@protoc_insertion_point(field_mutable:audit.proto.Challenge.file_name)
-  return file_name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline ::std::string* Challenge::release_file_name() {
-  
-  return file_name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline void Challenge::set_allocated_file_name(::std::string* file_name) {
-  if (file_name != NULL) {
+inline void Challenge::set_allocated_file_tag(::audit::proto::PublicFileTag* file_tag) {
+  delete file_tag_;
+  file_tag_ = file_tag;
+  if (file_tag) {
     
   } else {
     
   }
-  file_name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), file_name);
-  // @@protoc_insertion_point(field_set_allocated:audit.proto.Challenge.file_name)
+  // @@protoc_insertion_point(field_set_allocated:audit.proto.Challenge.file_tag)
 }
 
 // repeated .audit.proto.ChallengeItem items = 2;
