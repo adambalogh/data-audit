@@ -35,11 +35,14 @@ class FileTag {
   const std::vector<BN_ptr>& alphas() const { return alphas_; }
   const BIGNUM* p() const { return p_.get(); }
 
-  const std::array<byte, CryptoPP::HMAC<CryptoPP::SHA512>::DEFAULT_KEYLENGTH>&
+  const std::array<unsigned char,
+                   CryptoPP::HMAC<CryptoPP::SHA512>::DEFAULT_KEYLENGTH>&
   hmac_key() const {
     return hmac_key_;
   }
-  const std::array<byte, CryptoPP::HMAC<CryptoPP::SHA256>::DEFAULT_KEYLENGTH>&
+
+  const std::array<unsigned char,
+                   CryptoPP::HMAC<CryptoPP::SHA1>::DEFAULT_KEYLENGTH>&
   prf_key() const {
     return prf_key_;
   }
@@ -58,9 +61,9 @@ class FileTag {
   std::vector<BN_ptr> alphas_;
   BN_ptr p_;
 
-  std::array<byte, CryptoPP::HMAC<CryptoPP::SHA512>::DEFAULT_KEYLENGTH>
+  std::array<unsigned char, CryptoPP::HMAC<CryptoPP::SHA1>::DEFAULT_KEYLENGTH>
       hmac_key_;
-  std::array<byte, CryptoPP::HMAC<CryptoPP::SHA256>::DEFAULT_KEYLENGTH>
+  std::array<unsigned char, CryptoPP::HMAC<CryptoPP::SHA256>::DEFAULT_KEYLENGTH>
       prf_key_;
 };
 }
