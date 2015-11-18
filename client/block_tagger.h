@@ -44,7 +44,8 @@ class BlockTagger {
   //
   BlockTagger(const FileTag& file_tag, std::unique_ptr<PRF> prf)
       : file_tag_(file_tag), prf_(std::move(prf)) {
-    buffer.resize(std::max(file_tag.sector_size(), DEFAULT_BUFFER_SIZE));
+    buffer.resize(std::max(file_tag.sector_size(),
+                           static_cast<unsigned long>(50 * 1000)));
   }
 
   // Returns the BlockTag for the next block from the file, should only be
@@ -62,7 +63,6 @@ class BlockTagger {
   proto::BlockTag GenerateTag();
 
   // Buffer for reading file
-  static const unsigned long DEFAULT_BUFFER_SIZE = 50 * 1000;  // 0.5 Megabyte
   std::vector<unsigned char> buffer;
 
   int start_{0};
