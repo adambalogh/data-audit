@@ -23,8 +23,9 @@ class DummyFetcher : public Fetcher {
   std::basic_istream<char, std::char_traits<char>>& FetchBlock(
       unsigned long index) {
     std::string block{
-        s_.str().data() + BlockSize() * index,
-        std::min(BlockSize(), s_.str().size() - (BlockSize() * index))};
+        s_.str().data() + file_tag_.block_size() * index,
+        std::min(file_tag_.block_size(),
+                 s_.str().size() - (file_tag_.block_size() * index))};
     stream.str(block);
     return stream;
   }
@@ -32,10 +33,6 @@ class DummyFetcher : public Fetcher {
   proto::BlockTag FetchBlockTag(unsigned long index) { return tags_.at(index); }
 
  private:
-  unsigned long BlockSize() {
-    return file_tag_.num_sectors * file_tag_.sector_size;
-  }
-
   const FileTag& file_tag_;
   std::istringstream stream;
   std::vector<proto::BlockTag>& tags_;
@@ -48,10 +45,10 @@ TEST(Prover, Sigma) {
   CryptoNumberGenerator g;
   BN_ptr p{BN_new(), ::BN_free};
   BN_set_word(p.get(), 353868019);
-  FileTag file_tag{2, 2, std::move(p), &g};
-  std::unique_ptr<PRF> prf{new SiphashPRF{"hello"}};
+  FileTag file_tag{file, 2, 2, std::move(p), &g};
+  std::unique_ptr<PRF> prf{new HMACPRF{"hello"}};
 
-  BlockTagger block_tagger{file, &file_tag, std::move(prf)};
+  BlockTagger block_tagger{file_tag, std::move(prf)};
 
   std::vector<proto::BlockTag> tags;
   while (block_tagger.HasNext()) {
@@ -86,7 +83,7 @@ TEST(Prover, Sigma) {
   BN_mul(weight2.get(), weight2.get(), StringToBignum(tags[2].sigma()).get(),
          ctx.get());
   BN_add(sigma_sum.get(), weight1.get(), weight2.get());
-  BN_mod(sigma_sum.get(), sigma_sum.get(), file_tag.p.get(), ctx.get());
+  BN_mod(sigma_sum.get(), sigma_sum.get(), file_tag.p(), ctx.get());
 
   ASSERT_EQ(0, BN_cmp(sigma_sum.get(), StringToBignum(proof.sigma()).get()));
 }

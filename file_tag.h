@@ -32,11 +32,17 @@ class FileTag {
   proto::PublicFileTag PublicProto() const;
 
   std::istream& file() const { return file_; }
+
   unsigned long num_blocks() const { return num_blocks_; }
   unsigned long num_sectors() const { return num_sectors_; }
   size_t sector_size() const { return sector_size_; }
+  unsigned long block_size() const {
+    return num_sectors_ * static_cast<unsigned long>(sector_size_);
+  }
+
   const std::vector<BN_ptr>& alphas() const { return alphas_; }
   const BIGNUM* p() const { return p_.get(); }
+
   const std::array<unsigned char,
                    CryptoPP::HMAC<CryptoPP::SHA512>::DEFAULT_KEYLENGTH>&
   hmac_key() const {
