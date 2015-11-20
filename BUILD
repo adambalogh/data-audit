@@ -23,6 +23,16 @@ cc_library(
   ]
 )
 
+cc_test(
+  name = "file_tag_test",
+  srcs = ["file_tag_test.cc"],
+  deps = [
+    "@gtest//:main",
+    ":file_tag",
+    "//audit/third_party/openssl:openssl",
+  ]
+)
+
 cc_library(
   name = "util",
   srcs = ["util.cc"],
