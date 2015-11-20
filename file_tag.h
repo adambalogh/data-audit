@@ -26,42 +26,22 @@ namespace audit {
 class FileTag {
  public:
   FileTag(std::istream& file, unsigned long num_sectors, size_t sector_size,
-          BN_ptr p, RandomNumberGenerator* random_gen)
-      : file_(file),
-        num_sectors_(num_sectors),
-        sector_size_(sector_size),
-        p_(std::move(p)) {
-    MakeAlphas(random_gen);
-
-    // Calculate number of blocks
-    file_.seekg(0, file_.end);
-    auto length = file_.tellg();
-    file_.seekg(0, file_.beg);
-    auto block_size = sector_size_ * num_sectors_;
-    num_blocks_ = length / block_size;
-    if (length % block_size != 0) {
-      ++num_blocks_;
-    }
-  }
+          BN_ptr p, RandomNumberGenerator* random_gen);
 
   proto::PrivateFileTag PrivateProto() const;
   proto::PublicFileTag PublicProto() const;
 
   std::istream& file() const { return file_; }
-
   unsigned long num_blocks() const { return num_blocks_; }
   unsigned long num_sectors() const { return num_sectors_; }
   size_t sector_size() const { return sector_size_; }
-
   const std::vector<BN_ptr>& alphas() const { return alphas_; }
   const BIGNUM* p() const { return p_.get(); }
-
   const std::array<unsigned char,
                    CryptoPP::HMAC<CryptoPP::SHA512>::DEFAULT_KEYLENGTH>&
   hmac_key() const {
     return hmac_key_;
   }
-
   const std::array<unsigned char,
                    CryptoPP::HMAC<CryptoPP::SHA1>::DEFAULT_KEYLENGTH>&
   prf_key() const {
