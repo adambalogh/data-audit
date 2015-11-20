@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <stdio.h>
+#include <vector>
 
 #include "openssl/bn.h"
 
@@ -10,6 +11,8 @@
 #include "audit/client/prf.h"
 #include "audit/client/file_tag.h"
 #include "audit/util.h"
+
+#define NDEBUG
 
 int time(double size, std::istream& file) {
   clock_t t;
@@ -35,26 +38,29 @@ int time(double size, std::istream& file) {
   return 0;
 }
 
+double size(std::ifstream& file) {
+  file.seekg(0, file.end);
+  auto length = file.tellg();
+  file.seekg(0, file.beg);
+  return length;
+}
+
 int main(int argc, char** argv) {
   std::string seed{"oewihoaihfoiqdhg;ierh;oifeh"};
   RAND_seed(seed.c_str(), seed.size());
 
+  std::vector<std::string> files{
+      "/Applications/iMovie.app/Contents/Frameworks/"
+      "StudioSharedResources.framework/Versions/A/Resources/AppThemeBitsB.car",
+      "/Applications/Firefox.app/Contents/MacOS/XUL",  // 150 MB
+      "/Applications/BioShock3.app/Contents/GameData/XGame/Movies/"
+      "BioshockInfinite_Credits.bik",  // 370 MB
+  };
+
   double int_size = 4;
-  for (int i = 4; i < 7; ++i) {
-    double size = pow(10, 3 + i);
-    {
-      std::ofstream out;
-      out.open("test_file");
-      auto written = 0;
-      auto i = 0;
-      while (written < size) {
-        out << i;
-        i = (i + 1) % 10;
-        written += int_size;
-      }
-    }
-    std::ifstream file{"test_file", std::ifstream::binary};
-    time(size, file);
+  for (auto file_name : files) {
+    std::ifstream file{file_name, std::ifstream::binary};
+    time(size(file), file);
     remove("test_file");
   }
 }
