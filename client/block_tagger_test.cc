@@ -9,9 +9,10 @@
 #include "openssl/bn.h"
 
 #include "audit/common.h"
-#include "audit/util.h"
 #include "audit/client/prf.h"
 #include "audit/proto/cpor.pb.h"
+#include "audit/test_util.h"
+#include "audit/util.h"
 
 using namespace audit;
 
@@ -23,10 +24,16 @@ void ExpectProtosEqual(std::vector<proto::BlockTag> &expected,
   }
 }
 
-FileTag &&BasicFileTag(std::istream &file) {
+FileTag BasicFileTag(std::istream &file) {
   BN_ptr p{BN_new(), ::BN_free};
   BN_set_word(p.get(), 32452867);
-  return std::move(FileTag{file, 1, 1, std::move(p)});
+  ConstantNumberGenerator<1> gen;
+  return std::move(FileTag{file, 1, 1, std::move(p), &gen});
+}
+
+BlockTagger BasicBlockTagger(std::istream &file) {
+  return std::move(BlockTagger{BasicFileTag(file),
+                               std::move(std::unique_ptr<PRF>(new DummyPRF))});
 }
 
 TEST(BlockTagger, EmptyFile) {

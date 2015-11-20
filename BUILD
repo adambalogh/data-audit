@@ -29,6 +29,7 @@ cc_test(
   deps = [
     "@gtest//:main",
     ":file_tag",
+    ":test_util",
     "//audit/third_party/openssl:openssl",
   ]
 )

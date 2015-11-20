@@ -34,6 +34,7 @@ cc_binary(
     ":block_tagger",
     "//audit:util",
     ":prf",
+    "//audit:test_util",
     "//audit/proto:cpor",
     "//audit/third_party/cryptopp:cryptopp",
     "//audit/third_party/openssl:openssl",
