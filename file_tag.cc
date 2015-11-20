@@ -1,5 +1,9 @@
 #include "audit/file_tag.h"
 
+#include "audit/common.h"
+#include "audit/proto/cpor.pb.h"
+#include "audit/util.h"
+
 namespace audit {
 
 FileTag::FileTag(std::istream& file, unsigned long num_sectors,
@@ -20,6 +24,12 @@ FileTag::FileTag(std::istream& file, unsigned long num_sectors,
   if (length % block_size != 0) {
     ++num_blocks_;
   }
+}
+
+void FileTag::MakeAlphas(RandomNumberGenerator* random_gen) {
+  std::generate_n(std::back_inserter(alphas_), num_sectors_, [&]() -> BN_ptr {
+    return std::move(random_gen->GenerateNumber(*p_));
+  });
 }
 
 proto::PrivateFileTag FileTag::PrivateProto() const {

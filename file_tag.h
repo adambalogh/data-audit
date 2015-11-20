@@ -49,11 +49,7 @@ class FileTag {
   }
 
  private:
-  void MakeAlphas(RandomNumberGenerator* random_gen) {
-    std::generate_n(std::back_inserter(alphas_), num_sectors_, [&]() -> BN_ptr {
-      return std::move(random_gen->GenerateNumber(*p_));
-    });
-  }
+  void MakeAlphas(RandomNumberGenerator* random_gen);
 
   std::istream& file_;
 
