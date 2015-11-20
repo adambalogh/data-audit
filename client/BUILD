@@ -6,7 +6,30 @@ cc_binary(
   deps = [
     ":block_tagger",
     ":prf",
-    "//audit:file_tag",
+    ":file_tag",
+  ]
+)
+
+cc_library(
+  name = "file_tag",
+  srcs = ["file_tag.cc"],
+  hdrs = ["file_tag.h"],
+  deps = [
+    "//audit:util",
+    "//audit/proto:cpor",
+    "//audit/third_party/cryptopp:cryptopp",
+    "//audit/third_party/openssl:openssl",
+  ]
+)
+
+cc_binary(
+  name = "file_tag_test",
+  srcs = ["file_tag_test.cc"],
+  deps = [
+    "@gtest//:main",
+    ":file_tag",
+    "//audit:test_util",
+    "//audit/third_party/openssl:openssl",
   ]
 )
 
@@ -16,7 +39,7 @@ cc_library(
   hdrs = ["block_tagger.h"],
   deps = [
     "//audit:common",
-    "//audit:file_tag",
+    ":file_tag",
     ":prf",
     "//audit:util",
     "//audit/proto:cpor",

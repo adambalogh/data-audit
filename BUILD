@@ -12,29 +12,6 @@ cc_library(
 )
 
 cc_library(
-  name = "file_tag",
-  srcs = ["file_tag.cc"],
-  hdrs = ["file_tag.h"],
-  deps = [
-    ":util",
-    "//audit/proto:cpor",
-    "//audit/third_party/cryptopp:cryptopp",
-    "//audit/third_party/openssl:openssl",
-  ]
-)
-
-cc_binary(
-  name = "file_tag_test",
-  srcs = ["file_tag_test.cc"],
-  deps = [
-    "@gtest//:main",
-    ":file_tag",
-    ":test_util",
-    "//audit/third_party/openssl:openssl",
-  ]
-)
-
-cc_library(
   name = "util",
   srcs = ["util.cc"],
   hdrs = ["util.h"],

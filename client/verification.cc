@@ -2,6 +2,7 @@
 
 #include "openssl/bn.h"
 
+#include "audit/common.h"
 #include "audit/client/prf.h"
 #include "audit/proto/cpor.pb.h"
 

@@ -6,8 +6,8 @@
 #include "openssl/bn.h"
 
 #include "audit/common.h"
-#include "audit/file_tag.h"
 #include "audit/util.h"
+#include "audit/client/file_tag.h"
 #include "audit/client/block_tagger.h"
 #include "audit/proto/cpor.pb.h"
 
