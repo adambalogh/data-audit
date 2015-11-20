@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include "audit/client/prf.h"
 #include "audit/proto/cpor.pb.h"
 

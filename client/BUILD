@@ -1,15 +1,5 @@
 package(default_visibility=["//visibility:public"])
 
-cc_binary(
-  name = "client",
-  srcs = ["client.cc"],
-  deps = [
-    ":block_tagger",
-    ":prf",
-    ":file_tag",
-  ]
-)
-
 cc_library(
   name = "file_tag",
   srcs = ["file_tag.cc"],
