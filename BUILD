@@ -55,3 +55,15 @@ cc_test(
     "//audit/third_party/openssl:openssl",
   ],
 )
+
+cc_library(
+  name = "test_util",
+  hdrs = ["test_util.h"],
+  srcs = ["test_util.cc"],
+  deps = [
+    ":util",
+    ":common",
+    "//audit/client:prf",
+  ]
+)
+

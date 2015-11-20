@@ -30,6 +30,7 @@ class HMACPRF : public PRF {
  public:
   HMACPRF(const unsigned char* key, int length)
       : PRF(key, length), hmac_(key_, length_) {}
+
   HMACPRF(const std::string& key)
       : HMACPRF((unsigned char*)key.data(), key.size()) {}
 
