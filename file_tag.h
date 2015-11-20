@@ -28,9 +28,6 @@ class FileTag {
   FileTag(std::istream& file, unsigned long num_sectors, size_t sector_size,
           BN_ptr p, RandomNumberGenerator* random_gen);
 
-  proto::PrivateFileTag PrivateProto() const;
-  proto::PublicFileTag PublicProto() const;
-
   std::istream& file() const { return file_; }
 
   unsigned long num_blocks() const { return num_blocks_; }
@@ -53,6 +50,9 @@ class FileTag {
   prf_key() const {
     return prf_key_;
   }
+
+  proto::PrivateFileTag PrivateProto() const;
+  proto::PublicFileTag PublicProto() const;
 
  private:
   void MakeAlphas(RandomNumberGenerator* random_gen);
