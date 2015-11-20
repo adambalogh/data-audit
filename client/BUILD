@@ -63,7 +63,7 @@ cc_library(
   ]
 )
 
-cc_test(
+cc_binary(
   name = "prf_test",
   srcs = ["prf_test.cc"],
   deps = [

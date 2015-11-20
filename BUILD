@@ -23,7 +23,7 @@ cc_library(
   ]
 )
 
-cc_test(
+cc_binary(
   name = "file_tag_test",
   srcs = ["file_tag_test.cc"],
   deps = [

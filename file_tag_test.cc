@@ -18,6 +18,15 @@ TEST(FileTag, NumBlocks) {
   EXPECT_EQ(5, tag.num_blocks());
 }
 
+TEST(FileTag, Alphas) {
+  std::stringstream file{"aaaaaaaaa"};
+  ConstantNumberGenerator<1> g;
+  BN_ptr p{BN_new(), ::BN_free};
+  FileTag tag{file, 2, 1, std::move(p), &g};
+
+  EXPECT_EQ(2, tag.alphas().size());
+}
+
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();

@@ -6,7 +6,7 @@
 
 using namespace audit;
 
-TEST(SiphashPRF, Same) {
+TEST(HMACPRF, Same) {
   HMACPRF prf_hello{"hello"};
   HMACPRF prf_hello2{"hello"};
 
