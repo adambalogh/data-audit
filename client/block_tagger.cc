@@ -37,7 +37,6 @@ bool BlockTagger::FillBuffer() {
 proto::BlockTag BlockTagger::GenerateTag() {
   BN_ptr sigma{BN_new(), ::BN_free};
   auto encoded_index = prf_->Encode(num_blocks_read_);
-
   // sigma = sigma + encoded_index
   BN_add(sigma.get(), sigma.get(), encoded_index.get());
 

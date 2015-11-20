@@ -55,11 +55,17 @@ int main(int argc, char** argv) {
       "/Applications/Firefox.app/Contents/MacOS/XUL",  // 150 MB
       "/Applications/BioShock3.app/Contents/GameData/XGame/Movies/"
       "BioshockInfinite_Credits.bik",  // 370 MB
+      "/Applications/BioShock3.app/Contents/GameData/DLC/DLCC/"
+      "CookedPCConsole_FR/WorldTextures0_DLCC.tfc",
   };
 
   double int_size = 4;
   for (auto file_name : files) {
-    std::ifstream file{file_name, std::ifstream::binary};
+    std::ifstream file;
+    // char buf[1000 * 1000];
+    // file.rdbuf()->pubsetbuf(buf, sizeof buf);
+    file.open(file_name, std::ifstream::binary);
+
     time(size(file), file);
     remove("test_file");
   }
