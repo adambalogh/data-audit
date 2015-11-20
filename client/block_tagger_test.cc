@@ -15,26 +15,6 @@
 
 using namespace audit;
 
-//// Random number generator that returns 1 all the time
-// class ConstantNumberGenerator : public RandomNumberGenerator {
-// public:
-//  BN_ptr GenerateNumber(const BIGNUM &) { return CryptoPP::Integer::One(); }
-//};
-
-//// Random number generator that returns the numbers from the given vector, in
-//// sequence
-// class DummyNumberGenerator : public RandomNumberGenerator {
-// public:
-//  DummyNumberGenerator(std::vector<int> nums) : nums_(nums) {}
-//  BN_ptr GenerateNumber(const BIGNUM &) override {
-//    return CryptoPP::Integer{nums_.at(index++)};
-//  }
-
-// private:
-//  int index{0};
-//  std::vector<int> nums_;
-//};
-
 bool operator==(const long &a, const BN_ptr &b) {
   BN_ptr other{BN_new(), ::BN_free};
   BN_set_word(other.get(), a);
