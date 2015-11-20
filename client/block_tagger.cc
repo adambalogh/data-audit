@@ -15,7 +15,7 @@
 
 namespace audit {
 
-bool BlockTagger::FillBuffer() {
+void BlockTagger::FillBuffer() {
   assert(!file_read_);
   auto bytes_left = end_ - start_;
 
@@ -31,7 +31,6 @@ bool BlockTagger::FillBuffer() {
   if (end_ != buffer.size()) {
     file_read_ = true;
   }
-  return end_ > 0;
 }
 
 proto::BlockTag BlockTagger::GenerateTag() {

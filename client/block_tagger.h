@@ -56,7 +56,7 @@ class BlockTagger {
   bool HasNext() const;
 
  private:
-  bool FillBuffer();
+  void FillBuffer();
 
   // Never call this if valid_ is false
   proto::BlockTag GenerateTag();
