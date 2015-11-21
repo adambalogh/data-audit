@@ -3,6 +3,7 @@
 #include <array>
 #include <iostream>
 #include <vector>
+#include <queue>
 
 #include "audit/common.h"
 #include "audit/util.h"
@@ -32,6 +33,32 @@ namespace audit {
 //   }
 //
 class BlockTagger {
+ private:
+  struct JobArgs {
+    JobArgs(const unsigned char* buffer, int length, BIGNUM* alpha)
+        : buffer(buffer), length(length), alpha(alpha) {}
+
+    const unsigned char* buffer;
+    int length;
+    BIGNUM* alpha;
+  };
+
+  class Worker {
+   public:
+    Worker(BIGNUM* sigma) : sigma_(sigma) {}
+
+    void AddJob(JobArgs job);
+    void operator()();
+
+   private:
+    void CalculateSigma(JobArgs job);
+
+    std::queue<JobArgs> jobs_;
+    BIGNUM* sigma_;
+    BN_ptr sector_{BN_new(), ::BN_free};
+    BN_CTX_ptr ctx_{BN_CTX_new(), ::BN_CTX_free};
+  };
+
  public:
   // Constructs a BlockTagger
   //
@@ -42,10 +69,7 @@ class BlockTagger {
   // @param prf: a unique_ptr to a PRF object used for encoding the index of
   //   each block
   //
-  BlockTagger(const FileTag& file_tag, std::unique_ptr<PRF> prf)
-      : file_tag_(file_tag), prf_(std::move(prf)) {
-    buffer.resize(std::max(file_tag.sector_size(), 1000ul * 1000));
-  }
+  BlockTagger(const FileTag& file_tag, std::unique_ptr<PRF> prf);
 
   // Returns the BlockTag for the next block from the file, should only be
   // called if HasNext() returns true
@@ -56,14 +80,13 @@ class BlockTagger {
   bool HasNext() const;
 
  private:
-  void FillBuffer();
+  void ReadBlock();
 
   // Never call this if valid_ is false
   proto::BlockTag GenerateTag();
 
   // Buffer for reading file
   std::vector<unsigned char> buffer;
-
   int start_{0};
   int end_{0};
 
@@ -79,5 +102,8 @@ class BlockTagger {
 
   // BN context used for computations
   BN_CTX_ptr ctx{BN_CTX_new(), ::BN_CTX_free};
+
+  std::vector<Worker> workers_;
+  std::vector<BN_ptr> worker_sigmas_;
 };
 }
