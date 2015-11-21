@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <queue>
+#include <thread>
 
 #include "audit/common.h"
 #include "audit/util.h"
@@ -48,7 +49,7 @@ class BlockTagger {
     Worker(BIGNUM* sigma) : sigma_(sigma) {}
 
     void AddJob(JobArgs job);
-    void operator()();
+    void Loop();
 
    private:
     void CalculateSigma(JobArgs job);
@@ -70,6 +71,8 @@ class BlockTagger {
   //   each block
   //
   BlockTagger(const FileTag& file_tag, std::unique_ptr<PRF> prf);
+
+  ~BlockTagger();
 
   // Returns the BlockTag for the next block from the file, should only be
   // called if HasNext() returns true
@@ -105,5 +108,6 @@ class BlockTagger {
 
   std::vector<Worker> workers_;
   std::vector<BN_ptr> worker_sigmas_;
+  std::vector<std::thread> worker_threads_;
 };
 }

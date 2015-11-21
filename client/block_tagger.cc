@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <queue>
+#include <thread>
 
 #include "cryptopp/integer.h"
 #include "openssl/bn.h"
@@ -18,7 +19,12 @@ namespace audit {
 
 void BlockTagger::Worker::AddJob(JobArgs job) { jobs_.push(job); }
 
-void BlockTagger::Worker::operator()() {}
+void BlockTagger::Worker::Loop() {
+  while (jobs_.size()) {
+    CalculateSigma(jobs_.front());
+    jobs_.pop();
+  }
+}
 
 void BlockTagger::Worker::CalculateSigma(JobArgs job) {
   BN_bin2bn(job.buffer, job.length, sector_.get());
@@ -34,6 +40,16 @@ BlockTagger::BlockTagger(const FileTag& file_tag, std::unique_ptr<PRF> prf)
     worker_sigmas_.push_back(BN_ptr{BN_new(), ::BN_free});
     workers_.push_back(Worker{worker_sigmas_.at(i).get()});
   }
+  worker_threads_.resize(10);
+  for (int i = 0; i < workers_.size(); ++i) {
+    worker_threads_[i] = std::thread(&Worker::Loop, &workers_[i]);
+  }
+}
+
+BlockTagger::~BlockTagger() {
+  for (int i = 0; i < workers_.size(); ++i) {
+    worker_threads_[i].join();
+  }
 }
 
 void BlockTagger::ReadBlock() {
@@ -41,7 +57,7 @@ void BlockTagger::ReadBlock() {
   end_ = file_tag_.file().gcount();
   if (end_ != file_tag_.block_size()) {
     file_read_ = true;
-    assert(num_blocks_read_ == file_tag_.num_blocks());
+    assert(num_blocks_read_ + 1 == file_tag_.num_blocks());
   }
 }
 
