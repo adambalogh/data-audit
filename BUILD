@@ -27,7 +27,7 @@ cc_test(
   srcs = ["util_test.cc"],
   deps = [
     "@gtest//:main",
-    "//audit:common",
+    ":common",
     ":util",
     "//audit/third_party/cryptopp:cryptopp",
     "//audit/third_party/openssl:openssl",
