@@ -58,7 +58,6 @@ class BlockTagger {
  private:
   void FillBuffer();
 
-  // Never call this if valid_ is false
   proto::BlockTag GenerateTag();
 
   // Buffer for reading file

@@ -33,34 +33,38 @@ void BlockTagger::FillBuffer() {
   }
 }
 
+/* The formula for calculating a Tag's sigma is as follows:
+ *
+ * sigma = 0
+ * sigma += PRF(tag_index)
+ * for (int i = 0; i < num_sectors; ++i) {
+ *   sigma += sectors[i] * alphas[i]
+ * }
+ * sigma = sigma % p
+ *
+ */
 proto::BlockTag BlockTagger::GenerateTag() {
   BN_ptr sigma{BN_new(), ::BN_free};
   auto encoded_index = prf_->Encode(num_blocks_read_);
-  // sigma = sigma + encoded_index
   BN_add(sigma.get(), sigma.get(), encoded_index.get());
 
   BN_ptr sector{BN_new(), ::BN_free};
 
-  // Go through each sector in block
   for (auto i = 0; i < file_tag_.num_sectors(); ++i) {
     if (file_read_ && start_ >= end_) break;
     if (start_ + file_tag_.sector_size() > end_ && !file_read_) {
       FillBuffer();
     }
-
     BN_bin2bn(buffer.data() + start_,
               std::min(file_tag_.sector_size(), (unsigned long)end_ - start_),
               sector.get());
-    // sector = sector * alpha[i]
     BN_mul(sector.get(), file_tag_.alphas().at(i).get(), sector.get(),
            ctx.get());
-    // sigma = sigma + sector
     BN_add(sigma.get(), sigma.get(), sector.get());
 
     start_ += file_tag_.sector_size();
     BN_clear(sector.get());
   }
-  // sigma = sigma % p
   BN_mod(sigma.get(), sigma.get(), file_tag_.p(), ctx.get());
 
   proto::BlockTag tag;
