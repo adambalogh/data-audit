@@ -71,9 +71,8 @@ TEST(Prover, Sigma) {
   item->set_weight(BignumToString(*weight2));
 
   DummyFetcher fetcher{file_tag, tags, file};
-  Prover prover;
-
-  auto proof = prover.Prove(fetcher, challenge);
+  Prover prover{fetcher, challenge};
+  auto proof = prover.Prove();
 
   BN_ptr sigma_sum{BN_new(), ::BN_free};
   BN_CTX_ptr ctx{BN_CTX_new(), ::BN_CTX_free};
