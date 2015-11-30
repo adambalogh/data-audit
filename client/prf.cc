@@ -12,6 +12,7 @@ namespace audit {
 BN_ptr HMACPRF::Encode(unsigned int i) {
   hmac_.Restart();
 
+  // Convert i to byte array
   unsigned char bytes[4];
   bytes[0] = (i >> 24) & 0xFF;
   bytes[1] = (i >> 16) & 0xFF;
