@@ -14,8 +14,10 @@ FileTag::FileTag(std::istream& file, unsigned long num_sectors,
       sector_size_(sector_size),
       p_(std::move(p)) {
   MakeAlphas(random_gen);
+  CalculateNumBlocks();
+}
 
-  // Calculate number of blocks
+void FileTag::CalculateNumBlocks() {
   file_.seekg(0, file_.end);
   auto length = file_.tellg();
   file_.seekg(0, file_.beg);

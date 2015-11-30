@@ -5,7 +5,7 @@
 #include "openssl/bn.h"
 
 #include "audit/test_util.h"
-#include "audit/file_tag.h"
+#include "audit/client/file_tag.h"
 
 using namespace audit;
 

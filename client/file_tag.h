@@ -19,12 +19,21 @@ namespace audit {
 // A FileTag must be created for each file we want to tag and upload.
 // It holds important information about the file and parameters to the tagging.
 //
+// The complexity of verifying a this file's integrity can be adjusted by
+// num_sectors and sector_size parameters. Storage overhead on the server side
+// can be lowered by increasing num_sectors. The storage overhead on the server
+// is equal to (1 / num_sectors), relative to the file's size. On the other
+// hand, as we increase num_sectors, the size of data that needs to be
+// retrieved for each verification increases linearly. It is up to the user to
+// decide which factor is more important.
+//
 // After we are done tagging the file. It should be serialized to a proto, by
 // using the PrivateProto() method and saved along with the file and tags, as
 // it will be used for verification later.
 //
 class FileTag {
  public:
+  // Read class documentation for explanation.
   FileTag(std::istream& file, unsigned long num_sectors, size_t sector_size,
           BN_ptr p, RandomNumberGenerator* random_gen);
 
@@ -56,15 +65,25 @@ class FileTag {
 
  private:
   void MakeAlphas(RandomNumberGenerator* random_gen);
+  void CalculateNumBlocks();
 
+  // The file we want to tag
   std::istream& file_;
 
-  // As documented in proto/cpor.proto
+  // The number of blocks in a file
   unsigned long num_blocks_{0};
+
+  // The number of sectors in a block
   unsigned long num_sectors_;
+
+  // The size of a sector in bytes
   size_t sector_size_;
 
+  // List of numbers that are used for generating tags,
+  // The size of this list must be equal to the number of sectors
   std::vector<BN_ptr> alphas_;
+
+  // p_ is a large prime number, its size should be equal to sector_size_
   BN_ptr p_;
 
   std::array<unsigned char, CryptoPP::HMAC<CryptoPP::SHA1>::DEFAULT_KEYLENGTH>
