@@ -6,10 +6,11 @@
 
 namespace audit {
 
-FileTag::FileTag(std::istream& file, unsigned long num_sectors,
-                 size_t sector_size, BN_ptr p,
+FileTag::FileTag(std::istream& file, const std::string& file_name,
+                 unsigned long num_sectors, size_t sector_size, BN_ptr p,
                  RandomNumberGenerator* random_gen)
     : file_(file),
+      file_name_(file_name),
       num_sectors_(num_sectors),
       sector_size_(sector_size),
       p_(std::move(p)) {
@@ -49,6 +50,7 @@ proto::PublicFileTag FileTag::PublicProto() const {
   file_tag.set_num_sectors(num_sectors_);
   file_tag.set_num_blocks(num_blocks_);
   file_tag.set_sector_size(sector_size_);
+  file_tag.set_file_name(file_name_);
   BignumToString(*p_, file_tag.mutable_p());
   return file_tag;
 }

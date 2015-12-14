@@ -34,7 +34,8 @@ class BlockTaggerTest : public ::testing::Test {
     delete file_tag;
     BN_ptr p{BN_new(), ::BN_free};
     BN_set_word(p.get(), p_int);
-    file_tag = new FileTag{file, num_sectors, sector_size, std::move(p), gen};
+    file_tag =
+        new FileTag{file, "", num_sectors, sector_size, std::move(p), gen};
   }
 
   BlockTagger MakeBlockTagger(std::istream &file, RandomNumberGenerator *gen,

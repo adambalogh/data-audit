@@ -34,8 +34,9 @@ namespace audit {
 class FileTag {
  public:
   // Read class documentation for explanation.
-  FileTag(std::istream& file, unsigned long num_sectors, size_t sector_size,
-          BN_ptr p, RandomNumberGenerator* random_gen);
+  FileTag(std::istream& file, const std::string& file_name,
+          unsigned long num_sectors, size_t sector_size, BN_ptr p,
+          RandomNumberGenerator* random_gen);
 
   std::istream& file() const { return file_; }
 
@@ -69,6 +70,9 @@ class FileTag {
 
   // The file we want to tag
   std::istream& file_;
+
+  // The name of the file we're tagging
+  std::string file_name_;
 
   // The number of blocks in a file
   unsigned long num_blocks_{0};

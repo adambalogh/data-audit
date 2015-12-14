@@ -60,7 +60,22 @@ cc_library(
   hdrs = ["verification.h"],
   deps = [
     ":prf",
+    "//audit:common",
+    "//audit:util",
     "//audit/proto:cpor",
+    "//audit/third_party/openssl:openssl",
+  ]
+)
+
+
+cc_binary(
+  name = "verification_test",
+  srcs = ["verification_test.cc"],
+  deps = [
+    "@gtest//:main",
+    ":verification",
+    "//audit/proto:cpor",
+    "//audit:util",
     "//audit/third_party/openssl:openssl",
   ]
 )
