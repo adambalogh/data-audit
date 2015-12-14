@@ -11,6 +11,6 @@ class Verification {
  public:
   bool Verify(const proto::PrivateFileTag& file_tag,
               const proto::Challenge& challenge, const proto::Proof& proof,
-              PRF& prf);
+              std::unique_ptr<PRF> prf);
 };
 }
