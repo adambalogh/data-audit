@@ -1,3 +1,5 @@
+package(default_visibility=["//visibility:public"])
+
 cc_library(
   name = "fetcher",
   hdrs = ["fetcher.h"],
@@ -53,7 +55,7 @@ cc_binary(
     ":local_disk_fetcher",
     "//audit/proto:cpor",
     "//audit:common",
-    "//audit:util",
     "//audit/third_party/openssl:openssl",
+    "//audit/test:test_client",
   ]
 )
