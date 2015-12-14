@@ -7,7 +7,7 @@
 
 namespace audit {
 
-// Fetches individual blocks and block tags of a file
+// Fetches individual blocks and tags of a file
 class Fetcher {
  public:
   // Returns the content of the block at index

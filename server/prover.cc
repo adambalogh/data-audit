@@ -43,11 +43,15 @@ void Prover::ProcessChallenge(const proto::ChallengeItem& challenge) {
 
   for (int i = 0; i < file_tag_.num_sectors(); ++i) {
     block_stream.read((char*)block.data(), file_tag_.sector_size());
-    assert(block_stream.gcount() == file_tag_.sector_size() ||
-           i + 1 == file_tag_.num_sectors());
+    if (!block_stream.gcount()) {
+      break;
+    }
     BN_bin2bn(&block[0], block_stream.gcount(), content.get());
     BN_mul(content.get(), content.get(), weight.get(), ctx_.get());
     BN_add(mus_.at(i).get(), mus_.at(i).get(), content.get());
+    if (block_stream.gcount() < file_tag_.sector_size()) {
+      break;
+    }
   }
 }
 
