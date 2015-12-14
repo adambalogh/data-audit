@@ -17,12 +17,12 @@ namespace audit {
 class TestClient {
  public:
   TestClient(const std::string& content) {
-    {
-      std::ofstream test_file{file_name_};
-      files_to_delete.push_back(file_name_);
-      test_file << content;
-    }
+    std::ofstream test_file{file_name_};
+    files_to_delete.push_back(file_name_);
+    test_file << content;
+  }
 
+  void Run() {
     std::ifstream test_file{file_name_};
 
     ConstantNumberGenerator<10> gen;
@@ -45,9 +45,7 @@ class TestClient {
     }
     file_tag = tag.PublicProto();
     private_file_tag = tag.PrivateProto();
-  }
 
-  void Run() {
     proto::Challenge challenge;
     *(challenge.mutable_file_tag()) = file_tag;
 
@@ -61,14 +59,14 @@ class TestClient {
       BignumToString(*weight, item->mutable_weight());
     }
 
-    LocalDiskFetcher f{file_tag};
+    LocalDiskFetcher f{file_tag, file_path_};
     Prover prover{f, challenge};
 
     auto proof = prover.Prove();
 
     Verification v;
-    std::unique_ptr<PRF> prf{new HMACPRF{"hello"}};
-    std::cout << v.Verify(private_file_tag, challenge, proof, std::move(prf))
+    std::unique_ptr<PRF> prf2{new HMACPRF{"hello"}};
+    std::cout << v.Verify(private_file_tag, challenge, proof, std::move(prf2))
               << std::endl;
   }
 
