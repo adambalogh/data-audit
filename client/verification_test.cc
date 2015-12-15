@@ -2,66 +2,91 @@
 #include "audit/client/verification.h"
 
 #include <sstream>
+#include <vector>
 
 #include "openssl/bn.h"
 
 #include "audit/proto/cpor.pb.h"
+#include "audit/client/file_tag.h"
+#include "audit/client/block_tagger.h"
+#include "audit/server/prover.h"
 #include "audit/util.h"
 #include "audit/common.h"
 #include "audit/test_util.h"
 
 using namespace audit;
 
-TEST(Verification, Verify) {
-  unsigned int alphas[] = {53};
+// TODO cleanup
+TEST(Verification, Successful) {
+  std::stringstream file{"abcdefgh"};
+  unsigned int p = 7883;
+  std::vector<unsigned int> alphas{342, 53};
+  std::vector<unsigned int> blocks{0, 1};
+  std::vector<unsigned int> weights{43, 89};
 
-  // Consturct Public File Tag
-  proto::PublicFileTag public_file_tag;
-  public_file_tag.set_num_blocks(1);
-  public_file_tag.set_num_sectors(1);
-  public_file_tag.set_sector_size(1);
-  auto p = BN_new_ptr(7883);
-  BignumToString(*p, public_file_tag.mutable_p());
+  FileTag file_tag{file, "", 2, 1, make_BN_vector(alphas), BN_new_ptr(p)};
+  proto::PublicFileTag public_file_tag = file_tag.PublicProto();
+  proto::PrivateFileTag private_file_tag = file_tag.PrivateProto();
 
-  // Construct Alphas
-  auto alpha_1 = BN_new_ptr(alphas[0]);
-
-  // Construct Private File Tag
-  proto::PrivateFileTag private_file_tag;
-  private_file_tag.set_allocated_public_tag(
-      new proto::PublicFileTag{public_file_tag});
-  *(private_file_tag.add_alphas()) = BignumToString(*alpha_1);
-
-  // Construct Challenge
   proto::Challenge challenge;
   challenge.set_allocated_file_tag(new proto::PublicFileTag(public_file_tag));
-  BN_ptr weight{BN_new(), ::BN_free};
-  auto item = challenge.add_items();
-  item->set_index(0);
-  BN_set_word(weight.get(), 13);
-  item->set_weight(BignumToString(*weight));
+  for (int i = 0; i < blocks.size(); ++i) {
+    auto item = challenge.add_items();
+    item->set_index(blocks[i]);
+    item->set_weight(BignumToString(*BN_new_ptr(weights[i])));
+  }
 
-  HMACPRF prf{"code"};
+  BlockTagger tagger{file_tag, std::unique_ptr<PRF>{new HMACPRF{"hello"}}};
+  std::vector<proto::BlockTag> tags;
+  while (tagger.HasNext()) {
+    tags.push_back(tagger.GetNext());
+  }
 
-  // Construct Proof
-  proto::Proof proof;
-  unsigned int file = 100000;
-  auto sigma = prf.Encode(0);
-  sigma += file * alphas[0];
-  sigma %= 7883;
-  sigma *= 13;
-  sigma %= 7883;
-  auto mu = BN_new_ptr(13 * file);
-  mu %= 7883;
-  BignumToString(*mu, proof.add_mus());
-  BignumToString(*sigma, proof.mutable_sigma());
+  MemoryFetcher fetcher{file_tag, tags, file};
+  Prover prover{fetcher, challenge};
+  auto proof = prover.Prove();
 
   Verification v;
   EXPECT_TRUE(v.Verify(private_file_tag, challenge, proof,
-                       std::unique_ptr<PRF>(new HMACPRF{"code"})));
+                       std::unique_ptr<PRF>{new HMACPRF{"hello"}}));
 }
 
-int main(int argc, char **argv) {
+TEST(Verification, FileHasChanged) {
+  std::stringstream file{"abcd"};
+  unsigned int p = 7883;
+  std::vector<unsigned int> alphas{342, 53};
+  std::vector<unsigned int> blocks{0, 1};
+  std::vector<unsigned int> weights{43, 89};
+
+  FileTag file_tag{file, "", 2, 1, make_BN_vector(alphas), BN_new_ptr(p)};
+  proto::PublicFileTag public_file_tag = file_tag.PublicProto();
+  proto::PrivateFileTag private_file_tag = file_tag.PrivateProto();
+
+  proto::Challenge challenge;
+  challenge.set_allocated_file_tag(new proto::PublicFileTag(public_file_tag));
+  for (int i = 0; i < blocks.size(); ++i) {
+    auto item = challenge.add_items();
+    item->set_index(blocks[i]);
+    item->set_weight(BignumToString(*BN_new_ptr(weights[i])));
+  }
+
+  BlockTagger tagger{file_tag, std::unique_ptr<PRF>{new HMACPRF{"hello"}}};
+  std::vector<proto::BlockTag> tags;
+  while (tagger.HasNext()) {
+    tags.push_back(tagger.GetNext());
+  }
+
+  std::stringstream corrupted_file{"bbcd"};
+  MemoryFetcher fetcher{file_tag, tags, corrupted_file};
+  Prover prover{fetcher, challenge};
+  auto proof = prover.Prove();
+
+  Verification v;
+  EXPECT_FALSE(v.Verify(private_file_tag, challenge, proof,
+                        std::unique_ptr<PRF>{new HMACPRF{"hello"}}));
+}
+
+int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 }
