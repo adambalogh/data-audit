@@ -26,16 +26,24 @@ std::vector<BN_ptr> make_BN_vector(const std::vector<unsigned int> &nums) {
   return result;
 }
 
+bool operator==(const BN_ptr &a, const BN_ptr &b) {
+  return BN_cmp(b.get(), b.get()) == 0;
+}
+
 bool operator==(const long &a, const BN_ptr &b) {
-  BN_ptr other{BN_new(), ::BN_free};
-  BN_set_word(other.get(), a);
-  return BN_cmp(b.get(), other.get()) == 0;
+  BN_ptr second{BN_new(), ::BN_free};
+  BN_set_word(second.get(), a);
+  return b == second;
+}
+
+void operator*=(BN_ptr &a, const BN_ptr &b) {
+  BN_CTX_ptr ctx{BN_CTX_new(), ::BN_CTX_free};
+  BN_mul(a.get(), a.get(), b.get(), ctx.get());
 }
 
 void operator*=(BN_ptr &a, unsigned int b) {
-  BN_CTX_ptr ctx{BN_CTX_new(), ::BN_CTX_free};
   auto second = BN_new_ptr(b);
-  BN_mul(a.get(), a.get(), second.get(), ctx.get());
+  a *= second;
 }
 
 void operator+=(BN_ptr &a, const BN_ptr &b) {
@@ -47,10 +55,14 @@ void operator+=(BN_ptr &a, unsigned int b) {
   a += second;
 }
 
+void operator%=(BN_ptr &a, const BN_ptr &b) {
+  BN_CTX_ptr ctx{BN_CTX_new(), ::BN_CTX_free};
+  BN_mod(a.get(), a.get(), b.get(), ctx.get());
+}
+
 void operator%=(BN_ptr &a, unsigned int b) {
   auto second = BN_new_ptr(b);
-  BN_CTX_ptr ctx{BN_CTX_new(), ::BN_CTX_free};
-  BN_mod(a.get(), a.get(), second.get(), ctx.get());
+  a %= second;
 }
 
 class DummyPRF : public PRF {
