@@ -10,9 +10,8 @@
 #include "cryptopp/aes.h"
 #include "openssl/bn.h"
 
-#include "audit/proto/cpor.pb.h"
 #include "audit/common.h"
-#include "audit/util.h"
+#include "audit/proto/cpor.pb.h"
 
 namespace audit {
 

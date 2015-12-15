@@ -34,8 +34,13 @@ class BlockTaggerTest : public ::testing::Test {
     delete file_tag;
     BN_ptr p{BN_new(), ::BN_free};
     BN_set_word(p.get(), p_int);
-    file_tag =
-        new FileTag{file, "", num_sectors, sector_size, std::move(p), gen};
+    std::vector<BN_ptr> alphas;
+    for (int i = 0; i < num_sectors; ++i) {
+      alphas.push_back(gen->GenerateNumber(*p));
+    }
+    // TODO remove random number generators
+    file_tag = new FileTag{file, "", num_sectors, sector_size,
+                           std::move(alphas), std::move(p)};
   }
 
   BlockTagger MakeBlockTagger(std::istream &file, RandomNumberGenerator *gen,
