@@ -7,6 +7,7 @@
 #include "audit/common.h"
 
 namespace audit {
+
 inline void BignumToString(const BIGNUM& number, std::string* out) {
   out->resize(BN_num_bytes(&number));
   BN_bn2bin(&number, (unsigned char*)out->data());

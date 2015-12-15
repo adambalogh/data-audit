@@ -22,7 +22,7 @@ bool operator==(const long &a, const BN_ptr &b) {
 
 class DummyPRF : public PRF {
  public:
-  DummyPRF() : PRF(0, 1) {}
+  DummyPRF() : PRF("") {}
   BN_ptr Encode(unsigned int i) { return BN_new_ptr(i); }
 };
 
