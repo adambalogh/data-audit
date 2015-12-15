@@ -12,7 +12,7 @@ using namespace audit;
 TEST(FileTag, NumBlocks) {
   std::stringstream file{"aaaaaaaaa"};
   BN_ptr p{BN_new(), ::BN_free};
-  FileTag tag{file, "", 2, 1, make_BN_vector({1}), std::move(p)};
+  FileTag tag{file, "", 2, 1, make_BN_vector({1, 1}), std::move(p)};
 
   EXPECT_EQ(5, tag.num_blocks());
 }
@@ -30,7 +30,7 @@ TEST(FileTag, Alphas) {
 TEST(FileTag, BlockSize) {
   std::stringstream file;
   BN_ptr p{BN_new(), ::BN_free};
-  FileTag tag{file, "", 2, 5, make_BN_vector({1}), std::move(p)};
+  FileTag tag{file, "", 2, 5, make_BN_vector({1, 1}), std::move(p)};
 
   EXPECT_EQ(10, tag.block_size());
 }

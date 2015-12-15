@@ -6,6 +6,7 @@
 
 namespace audit {
 
+// TODO make sure alphas has right size
 FileTag::FileTag(std::istream& file, const std::string& file_name,
                  unsigned long num_sectors, size_t sector_size,
                  std::vector<BN_ptr> alphas, BN_ptr p)
@@ -16,6 +17,12 @@ FileTag::FileTag(std::istream& file, const std::string& file_name,
       alphas_(std::move(alphas)),
       p_(std::move(p)) {
   CalculateNumBlocks();
+  if (alphas_.size() != num_sectors) {
+    throw std::length_error(
+        "The size of alphas must be equal to num_sectors (" +
+        std::to_string(alphas_.size()) + " != " + std::to_string(num_sectors) +
+        ")");
+  }
 }
 
 void FileTag::CalculateNumBlocks() {

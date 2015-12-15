@@ -82,7 +82,7 @@ class FileTag {
 
   // List of numbers that are used for generating tags,
   // The size of this list must be equal to the number of sectors
-  std::vector<BN_ptr> alphas_;
+  const std::vector<BN_ptr> alphas_;
 
   // p_ is a large prime number, its size should be equal to sector_size_
   BN_ptr p_;
