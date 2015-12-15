@@ -6,7 +6,6 @@
 
 namespace audit {
 
-// TODO make sure alphas has right size
 FileTag::FileTag(std::istream& file, const std::string& file_name,
                  unsigned long num_sectors, size_t sector_size,
                  std::vector<BN_ptr> alphas, BN_ptr p)

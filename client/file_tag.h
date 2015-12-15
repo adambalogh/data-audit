@@ -32,6 +32,15 @@ namespace audit {
 //
 class FileTag {
  public:
+  // Constructs a FileTag.
+  //
+  // @params file: the file we want to work with
+  // @params file_name: a name that uniquely identifies the file, and can later
+  //   be used to retrieve the file from the cloud
+  // @params num_sectors: the number of sectors in a block
+  // @params sector_size: the size of a single sector in bytes
+  // @params alphas: list of Bignumbers, the size must be equal to num_sectors
+  // @params p: a large prime number
   FileTag(std::istream& file, const std::string& file_name,
           unsigned long num_sectors, size_t sector_size,
           std::vector<BN_ptr> alphas, BN_ptr p);
