@@ -78,7 +78,6 @@ class ConstantPRF : public PRF {
   BN_ptr Encode(unsigned int i) { return BN_new_ptr(n); }
 };
 
-// Random number generator that returns 1 all the time
 template <int n>
 class ConstantNumberGenerator : public RandomNumberGenerator {
  public:

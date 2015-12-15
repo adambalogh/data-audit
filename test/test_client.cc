@@ -1,5 +1,8 @@
 #include "test_client.h"
 
+#include <vector>
+#include <fstream>
+
 #include "audit/common.h"
 #include "audit/test_util.h"
 #include "audit/util.h"
@@ -26,12 +29,21 @@ TestClient::~TestClient() {
 }
 
 void TestClient::Run() {
-  std::ifstream test_file{full_file_name_};
+  unsigned int num_sectors = 3;
+  size_t sector_size = 2;
 
-  CryptoNumberGenerator gen;
+  std::ifstream test_file{full_file_name_};
   BN_ptr p{BN_new(), ::BN_free};
   BN_set_word(p.get(), 295075147);
-  FileTag tag{test_file, "test_file", 3, 2, std::move(p), &gen};
+
+  CryptoNumberGenerator gen;
+  std::vector<BN_ptr> alphas;
+  for (int i = 0; i < num_sectors; ++i) {
+    alphas.push_back(gen.GenerateNumber(*p));
+  }
+
+  FileTag tag{test_file,   "test_file",       num_sectors,
+              sector_size, std::move(alphas), std::move(p)};
   std::unique_ptr<PRF> prf{new HMACPRF{"hello"}};
   BlockTagger tagger{tag, std::move(prf)};
 
