@@ -20,10 +20,34 @@ bool operator==(const long &a, const BN_ptr &b) {
   return BN_cmp(b.get(), other.get()) == 0;
 }
 
+void operator*=(BN_ptr &a, unsigned int b) {
+  BN_CTX_ptr ctx{BN_CTX_new(), ::BN_CTX_free};
+  auto second = BN_new_ptr(b);
+  BN_mul(a.get(), a.get(), second.get(), ctx.get());
+}
+
+void operator+=(BN_ptr &a, unsigned int b) {
+  auto second = BN_new_ptr(b);
+  BN_add(a.get(), a.get(), second.get());
+}
+
+void operator%=(BN_ptr &a, unsigned int b) {
+  auto second = BN_new_ptr(b);
+  BN_CTX_ptr ctx{BN_CTX_new(), ::BN_CTX_free};
+  BN_mod(a.get(), a.get(), second.get(), ctx.get());
+}
+
 class DummyPRF : public PRF {
  public:
   DummyPRF() : PRF("") {}
   BN_ptr Encode(unsigned int i) { return BN_new_ptr(i); }
+};
+
+template <int n>
+class ConstantPRF : public PRF {
+ public:
+  ConstantPRF() : PRF("") {}
+  BN_ptr Encode(unsigned int i) { return BN_new_ptr(n); }
 };
 
 // Random number generator that returns 1 all the time

@@ -75,6 +75,7 @@ cc_binary(
     "@gtest//:main",
     ":verification",
     "//audit/proto:cpor",
+    "//audit:test_util",
     "//audit:util",
     "//audit/third_party/openssl:openssl",
   ]
