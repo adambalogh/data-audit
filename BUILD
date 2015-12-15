@@ -41,6 +41,9 @@ cc_library(
   deps = [
     ":util",
     ":common",
+    "//audit/server:fetcher",
+    "//audit/client:file_tag",
+    "//audit/proto:cpor",
     "//audit/client:prf",
   ]
 )

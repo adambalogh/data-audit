@@ -1,10 +1,14 @@
 #pragma once
 
 #include <vector>
+#include <sstream>
 
 #include "audit/common.h"
 #include "audit/client/prf.h"
 #include "audit/util.h"
+#include "audit/server/fetcher.h"
+#include "audit/client/file_tag.h"
+#include "audit/proto/cpor.pb.h"
 
 using namespace audit;
 
@@ -87,4 +91,28 @@ class DummyNumberGenerator : public RandomNumberGenerator {
  private:
   int index{0};
   std::vector<int> nums_;
+};
+
+class MemoryFetcher : public Fetcher {
+ public:
+  MemoryFetcher(const FileTag &file_tag, std::vector<proto::BlockTag> &tags,
+                std::stringstream &s)
+      : file_tag_(file_tag), tags_(tags), s_(s) {}
+  std::basic_istream<char, std::char_traits<char>> &FetchBlock(
+      unsigned long index) {
+    std::string block{
+        s_.str().data() + file_tag_.block_size() * index,
+        std::min(file_tag_.block_size(),
+                 s_.str().size() - (file_tag_.block_size() * index))};
+    stream.str(block);
+    return stream;
+  }
+
+  proto::BlockTag FetchBlockTag(unsigned long index) { return tags_.at(index); }
+
+ private:
+  const FileTag &file_tag_;
+  std::istringstream stream;
+  std::vector<proto::BlockTag> &tags_;
+  std::stringstream &s_;
 };

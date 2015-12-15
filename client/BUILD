@@ -74,8 +74,11 @@ cc_binary(
   deps = [
     "@gtest//:main",
     ":verification",
+    ":file_tag",
+    ":block_tagger",
     "//audit/proto:cpor",
     "//audit:test_util",
+    "//audit/server:prover",
     "//audit:util",
     "//audit/third_party/openssl:openssl",
   ]
