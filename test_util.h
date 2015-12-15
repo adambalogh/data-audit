@@ -14,6 +14,14 @@ BN_ptr BN_new_ptr(unsigned int i) {
   return std::move(num);
 }
 
+std::vector<BN_ptr> make_BN_vector(const std::vector<unsigned int> &nums) {
+  std::vector<BN_ptr> result;
+  for (auto num : nums) {
+    result.push_back(BN_new_ptr(num));
+  }
+  return result;
+}
+
 bool operator==(const long &a, const BN_ptr &b) {
   BN_ptr other{BN_new(), ::BN_free};
   BN_set_word(other.get(), a);
@@ -26,9 +34,13 @@ void operator*=(BN_ptr &a, unsigned int b) {
   BN_mul(a.get(), a.get(), second.get(), ctx.get());
 }
 
+void operator+=(BN_ptr &a, const BN_ptr &b) {
+  BN_add(a.get(), a.get(), b.get());
+}
+
 void operator+=(BN_ptr &a, unsigned int b) {
   auto second = BN_new_ptr(b);
-  BN_add(a.get(), a.get(), second.get());
+  a += second;
 }
 
 void operator%=(BN_ptr &a, unsigned int b) {

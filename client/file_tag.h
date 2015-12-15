@@ -33,10 +33,9 @@ namespace audit {
 //
 class FileTag {
  public:
-  // Read class documentation for explanation.
   FileTag(std::istream& file, const std::string& file_name,
-          unsigned long num_sectors, size_t sector_size, BN_ptr p,
-          RandomNumberGenerator* random_gen);
+          unsigned long num_sectors, size_t sector_size,
+          std::vector<BN_ptr> alphas, BN_ptr p);
 
   std::istream& file() const { return file_; }
 
@@ -65,7 +64,6 @@ class FileTag {
   proto::PublicFileTag PublicProto() const;
 
  private:
-  void MakeAlphas(RandomNumberGenerator* random_gen);
   void CalculateNumBlocks();
 
   // The file we want to tag

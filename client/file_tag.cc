@@ -7,14 +7,14 @@
 namespace audit {
 
 FileTag::FileTag(std::istream& file, const std::string& file_name,
-                 unsigned long num_sectors, size_t sector_size, BN_ptr p,
-                 RandomNumberGenerator* random_gen)
+                 unsigned long num_sectors, size_t sector_size,
+                 std::vector<BN_ptr> alphas, BN_ptr p)
     : file_(file),
       file_name_(file_name),
       num_sectors_(num_sectors),
       sector_size_(sector_size),
+      alphas_(std::move(alphas)),
       p_(std::move(p)) {
-  MakeAlphas(random_gen);
   CalculateNumBlocks();
 }
 
@@ -27,12 +27,6 @@ void FileTag::CalculateNumBlocks() {
   if (length % block_size != 0) {
     ++num_blocks_;
   }
-}
-
-void FileTag::MakeAlphas(RandomNumberGenerator* random_gen) {
-  std::generate_n(std::back_inserter(alphas_), num_sectors_, [&]() -> BN_ptr {
-    return std::move(random_gen->GenerateNumber(*p_));
-  });
 }
 
 proto::PrivateFileTag FileTag::PrivateProto() const {
