@@ -67,15 +67,17 @@ void operator%=(BN_ptr &a, unsigned int b) {
 
 class DummyPRF : public PRF {
  public:
-  DummyPRF() : PRF("") {}
+  DummyPRF() {}
   BN_ptr Encode(unsigned int i) { return BN_new_ptr(i); }
+  void SetKey(const unsigned char *key, size_t size) {}
 };
 
 template <int n>
 class ConstantPRF : public PRF {
  public:
-  ConstantPRF() : PRF("") {}
+  ConstantPRF() {}
   BN_ptr Encode(unsigned int i) { return BN_new_ptr(n); }
+  void SetKey(const unsigned char *key, size_t size) {}
 };
 
 template <int n>

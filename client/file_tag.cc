@@ -15,13 +15,18 @@ FileTag::FileTag(std::istream& file, const std::string& file_name,
       sector_size_(sector_size),
       alphas_(std::move(alphas)),
       p_(std::move(p)) {
-  CalculateNumBlocks();
   if (alphas_.size() != num_sectors) {
     throw std::length_error(
         "The size of alphas must be equal to num_sectors (" +
         std::to_string(alphas_.size()) + " != " + std::to_string(num_sectors) +
         ")");
   }
+  CalculateNumBlocks();
+
+  // Generate Secret keys
+  BN_ptr prf_key{BN_new(), ::BN_free};
+  BN_rand(prf_key.get(), prf_key_.size(), 0, 1);
+  BN_bn2bin(prf_key.get(), &prf_key_[0]);
 }
 
 void FileTag::CalculateNumBlocks() {

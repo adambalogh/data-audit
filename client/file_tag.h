@@ -58,11 +58,6 @@ class FileTag {
   const BIGNUM* p() const { return p_.get(); }
 
   const std::array<unsigned char,
-                   CryptoPP::HMAC<CryptoPP::SHA512>::DEFAULT_KEYLENGTH>&
-  hmac_key() const {
-    return hmac_key_;
-  }
-  const std::array<unsigned char,
                    CryptoPP::HMAC<CryptoPP::SHA1>::DEFAULT_KEYLENGTH>&
   prf_key() const {
     return prf_key_;
@@ -96,8 +91,6 @@ class FileTag {
   // p_ is a large prime number, its size should be equal to sector_size_
   BN_ptr p_;
 
-  std::array<unsigned char, CryptoPP::HMAC<CryptoPP::SHA1>::DEFAULT_KEYLENGTH>
-      hmac_key_;
   std::array<unsigned char, CryptoPP::HMAC<CryptoPP::SHA256>::DEFAULT_KEYLENGTH>
       prf_key_;
 };

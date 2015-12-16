@@ -45,6 +45,7 @@ class BlockTagger {
   BlockTagger(const FileTag& file_tag, std::unique_ptr<PRF> prf)
       : file_tag_(file_tag), prf_(std::move(prf)) {
     buffer.resize(std::max(file_tag.sector_size(), 1000ul * 1000));
+    prf_->SetKey(file_tag.prf_key().data(), file_tag.prf_key().size());
   }
 
   // Returns the BlockTag for the next block from the file, should only be
