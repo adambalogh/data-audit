@@ -7,6 +7,7 @@
 
 namespace audit {
 
+// Storage implementation that stores all the data on the local disk.
 class LocalDiskStorage : public StorageUsingFileName {
  public:
   LocalDiskStorage(const std::string& file_name)
@@ -17,6 +18,7 @@ class LocalDiskStorage : public StorageUsingFileName {
   virtual void StoreFile(std::istream& file) override;
 
  private:
+  // Everything is stored under this directiry
   std::string file_dir_{"/users/adambalogh/Developer/audit/files_dir/"};
 };
 }

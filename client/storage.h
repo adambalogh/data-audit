@@ -7,6 +7,11 @@
 
 namespace audit {
 
+// Storage is an interface for storing the original File, the File Tag and the
+// Block Tags.
+//
+// All the files and tags should be stored in a way, so that they can be
+// retrieved later using a Fetcher.
 class Storage {
  public:
   virtual void StoreBlockTag(const proto::BlockTag& tag) = 0;
