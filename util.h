@@ -40,7 +40,6 @@ class RandomNumberGenerator {
 // RandomNumberGenerator implementation using CryptoPP
 class CryptoNumberGenerator : public RandomNumberGenerator {
  public:
-  CryptoNumberGenerator();
   BN_ptr GenerateNumber(const BIGNUM& max) override;
 };
 }
