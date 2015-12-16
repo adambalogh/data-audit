@@ -8,6 +8,8 @@
 namespace audit {
 
 // Storage implementation that stores all the data on the local disk.
+//
+// It is only created for testing purposes.
 class LocalDiskStorage : public StorageUsingFileName {
  public:
   LocalDiskStorage(const std::string& file_name)
