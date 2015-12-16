@@ -7,6 +7,7 @@
 
 #include "openssl/bn.h"
 
+#include "audit/common.h"
 #include "audit/client/block_tagger.h"
 #include "audit/client/prf.h"
 #include "audit/client/file_tag.h"
@@ -26,8 +27,13 @@ int time(double size, std::istream& file) {
       "afewf32432GrggwGWQGOKgejo23hr43goregh ihroihofiewhfo "
       "ihwoiehoegirhge;h"}};
 
+  std::vector<audit::BN_ptr> alphas;
+  for (int i = 0; i < 5; ++i) {
+    alphas.push_back(g.GenerateNumber(*p));
+  }
+
   t = clock();
-  audit::FileTag f{file, 5, 128, std::move(p), &g};
+  audit::FileTag f{file, "", 5, 128, std::move(alphas), std::move(p)};
   audit::BlockTagger block_tagger{f, std::move(prf)};
   while (block_tagger.HasNext()) {
     auto tag = block_tagger.GetNext();
@@ -47,7 +53,7 @@ double size(std::ifstream& file) {
 
 int main(int argc, char** argv) {
   std::string seed{"oewihoaihfoiqdhg;ierh;oifeh"};
-  RAND_seed(seed.c_str(), seed.size());
+  // RAND_seed(seed.c_str(), seed.size());
 
   std::vector<std::string> files{
       "/Applications/iMovie.app/Contents/Frameworks/"
@@ -62,10 +68,7 @@ int main(int argc, char** argv) {
   double int_size = 4;
   for (auto file_name : files) {
     std::ifstream file;
-    // char buf[1000 * 1000];
-    // file.rdbuf()->pubsetbuf(buf, sizeof buf);
     file.open(file_name, std::ifstream::binary);
-
     time(size(file), file);
     remove("test_file");
   }
