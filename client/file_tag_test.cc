@@ -10,6 +10,14 @@
 using namespace audit;
 
 TEST(FileTag, NumBlocks) {
+  std::stringstream file{"aaaaaaaaaa"};
+  BN_ptr p{BN_new(), ::BN_free};
+  FileTag tag{file, "", 2, 1, make_BN_vector({1, 1}), std::move(p)};
+
+  EXPECT_EQ(5, tag.num_blocks());
+}
+
+TEST(FileTag, NumBlocksLastBlockNotFull) {
   std::stringstream file{"aaaaaaaaa"};
   BN_ptr p{BN_new(), ::BN_free};
   FileTag tag{file, "", 2, 1, make_BN_vector({1, 1}), std::move(p)};

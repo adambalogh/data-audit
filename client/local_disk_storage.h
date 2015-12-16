@@ -20,7 +20,7 @@ class LocalDiskStorage : public StorageUsingFileName {
   virtual void StoreFile(std::istream& file) override;
 
  private:
-  // Everything is stored under this directiry
+  // Everything is stored under this directory
   std::string file_dir_{"/users/adambalogh/Developer/audit/files_dir/"};
 };
 }
