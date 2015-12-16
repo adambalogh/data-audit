@@ -16,6 +16,7 @@ cc_binary(
     "//audit/client:local_disk_storage",
     "//audit/client:storage",
     "//audit/client:tagger",
+    "//audit/proto:cpor",
   ]
 )
 

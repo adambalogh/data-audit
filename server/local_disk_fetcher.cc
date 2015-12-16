@@ -4,6 +4,7 @@
 
 namespace audit {
 
+// TODO Check if index is not out of range
 std::basic_istream<char, std::char_traits<char>>& LocalDiskFetcher::FetchBlock(
     unsigned long index) {
   file_.seekg(index * (file_tag_.num_sectors() * file_tag_.sector_size()));
