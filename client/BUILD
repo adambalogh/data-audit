@@ -106,3 +106,21 @@ cc_binary(
     "//audit/third_party/openssl:openssl",
   ],
 )
+
+cc_library(
+  name = "workflow",
+  hdrs = ["workflow.h"],
+  deps = [
+    "//audit/proto:cpor",
+  ]
+)
+
+cc_library(
+  name = "local_disk_workflow",
+  srcs = ["local_disk_workflow.cc"],
+  hdrs = ["local_disk_workflow.h"],
+  deps = [
+    ":workflow",
+    "//audit/proto:cpor",
+  ]
+)
