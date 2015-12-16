@@ -40,6 +40,6 @@ class HMACPRF : public PRF {
   BN_ptr Encode(unsigned int i);
 
  private:
-  CryptoPP::HMAC<CryptoPP::SHA1> hmac_;
+  CryptoPP::HMAC<CryptoPP::SHA1> hmac_{0, 0};
 };
 }

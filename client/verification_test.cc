@@ -36,7 +36,7 @@ TEST(Verification, Successful) {
     item->set_weight(BignumToString(*BN_new_ptr(weights[i])));
   }
 
-  BlockTagger tagger{file_tag, std::unique_ptr<PRF>{new HMACPRF{"hello"}}};
+  BlockTagger tagger{file_tag, std::unique_ptr<PRF>{new HMACPRF}};
   std::vector<proto::BlockTag> tags;
   while (tagger.HasNext()) {
     tags.push_back(tagger.GetNext());
@@ -48,7 +48,7 @@ TEST(Verification, Successful) {
 
   Verification v;
   EXPECT_TRUE(v.Verify(private_file_tag, challenge, proof,
-                       std::unique_ptr<PRF>{new HMACPRF{"hello"}}));
+                       std::unique_ptr<PRF>{new HMACPRF}));
 }
 
 TEST(Verification, FileHasChanged) {
@@ -70,7 +70,7 @@ TEST(Verification, FileHasChanged) {
     item->set_weight(BignumToString(*BN_new_ptr(weights[i])));
   }
 
-  BlockTagger tagger{file_tag, std::unique_ptr<PRF>{new HMACPRF{"hello"}}};
+  BlockTagger tagger{file_tag, std::unique_ptr<PRF>{new HMACPRF}};
   std::vector<proto::BlockTag> tags;
   while (tagger.HasNext()) {
     tags.push_back(tagger.GetNext());
@@ -83,7 +83,7 @@ TEST(Verification, FileHasChanged) {
 
   Verification v;
   EXPECT_FALSE(v.Verify(private_file_tag, challenge, proof,
-                        std::unique_ptr<PRF>{new HMACPRF{"hello"}}));
+                        std::unique_ptr<PRF>{new HMACPRF}));
 }
 
 int main(int argc, char** argv) {
