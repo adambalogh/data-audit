@@ -25,7 +25,7 @@ FileTag::FileTag(std::istream& file, const std::string& file_name,
 
   // Generate Secret keys
   BN_ptr prf_key{BN_new(), ::BN_free};
-  BN_rand(prf_key.get(), prf_key_.size(), 0, 1);
+  BN_rand(prf_key.get(), prf_key_.size() * 8, 0, 1);
   BN_bn2bin(prf_key.get(), &prf_key_[0]);
 }
 
@@ -45,7 +45,7 @@ proto::PrivateFileTag FileTag::PrivateProto() const {
   for (auto& alpha : alphas_) {
     tag.add_alphas(BignumToString(*alpha));
   }
-  // TODO add keys
+  tag.set_prf_key(prf_key_.begin(), prf_key_.size());
   *tag.mutable_public_tag() = std::move(PublicProto());
   return tag;
 }

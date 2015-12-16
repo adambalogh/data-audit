@@ -91,7 +91,8 @@ class FileTag {
   // p_ is a large prime number, its size should be equal to sector_size_
   BN_ptr p_;
 
-  std::array<unsigned char, CryptoPP::HMAC<CryptoPP::SHA256>::DEFAULT_KEYLENGTH>
+  // TODO make it flexible
+  std::array<unsigned char, CryptoPP::HMAC<CryptoPP::SHA1>::DEFAULT_KEYLENGTH>
       prf_key_;
 };
 }
