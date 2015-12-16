@@ -14,6 +14,7 @@ class LocalDiskStorage : public StorageUsingFileName {
 
   virtual void StoreBlockTag(const proto::BlockTag& tag) override;
   virtual void StoreFileTag(const proto::PrivateFileTag& file_tag) override;
+  virtual void StoreFile(std::istream& file) override;
 
  private:
   std::string file_dir_{"/users/adambalogh/Developer/audit/files_dir/"};

@@ -124,3 +124,17 @@ cc_library(
     "//audit/proto:cpor",
   ]
 )
+
+cc_library(
+  name = "tagger",
+  srcs = ["tagger.cc"],
+  hdrs = ["tagger.h"],
+  deps = [
+    ":storage",
+    ":file_tag",
+    ":block_tagger",
+    "//audit:util",
+    "//audit/third_party/openssl:openssl",
+  ]
+ )
+

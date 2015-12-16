@@ -1,5 +1,6 @@
 #pragma once
 
+#include <istream>
 #include <string>
 
 #include "audit/proto/cpor.pb.h"
@@ -10,6 +11,7 @@ class Storage {
  public:
   virtual void StoreBlockTag(const proto::BlockTag& tag) = 0;
   virtual void StoreFileTag(const proto::PrivateFileTag& file_tag) = 0;
+  virtual void StoreFile(std::istream& file) = 0;
 
   virtual ~Storage() {}
 };
