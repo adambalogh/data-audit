@@ -7,8 +7,11 @@
 using namespace audit;
 
 TEST(HMACPRF, Same) {
-  HMACPRF prf_hello{"hello"};
-  HMACPRF prf_hello2{"hello"};
+  HMACPRF prf_hello;
+  prf_hello.SetKey("hello");
+
+  HMACPRF prf_hello2;
+  prf_hello2.SetKey("hello");
 
   auto a = prf_hello.Encode(10);
   auto b = prf_hello.Encode(10);

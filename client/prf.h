@@ -15,8 +15,13 @@ namespace audit {
 // secret key.
 class PRF {
  public:
-  PRF(const std::string& key) : key_(key) {}
   virtual BN_ptr Encode(unsigned int i) = 0;
+  virtual void SetKey(const unsigned char* key, size_t size) = 0;
+
+  void SetKey(const std::string& key) {
+    SetKey((unsigned char*)key.data(), key.size());
+  }
+
   virtual ~PRF() {}
 
  protected:
@@ -26,12 +31,15 @@ class PRF {
 // HMAC-SHA1 based PRF implementation
 class HMACPRF : public PRF {
  public:
-  HMACPRF(const std::string& key) : PRF(key) {}
+  using PRF::SetKey;
+
+  void SetKey(const unsigned char* key, size_t size) {
+    hmac_.SetKey(key, size);
+  }
 
   BN_ptr Encode(unsigned int i);
 
  private:
-  CryptoPP::HMAC<CryptoPP::SHA1> hmac_{(unsigned char*)key_.data(),
-                                       key_.size()};
+  CryptoPP::HMAC<CryptoPP::SHA1> hmac_;
 };
 }
