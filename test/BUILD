@@ -4,6 +4,7 @@ cc_binary(
   name = "main",
   srcs = ["main.cc"],
   deps = [
+    "//audit/third_party/openssl:openssl",
     "//audit:common",
     "//audit:util",
     "//audit:test_util",

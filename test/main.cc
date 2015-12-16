@@ -1,6 +1,8 @@
 #include <iostream>
 #include <sstream>
 
+#include "openssl/rand.h"
+
 #include "audit/util.h"
 #include "audit/client/tagger.h"
 #include "audit/client/local_disk_storage.h"
@@ -25,10 +27,14 @@ proto::PrivateFileTag GetFileTag(const std::string& file_name) {
 }
 
 int main() {
+  if (RAND_load_file("/dev/urandom", 128) != 128) {
+    return -1;
+  }
+
   Tagger tagger{
       std::unique_ptr<Storage>{new LocalDiskStorage{"test"}},
       std::unique_ptr<RandomNumberGenerator>{new CryptoNumberGenerator},
-      std::unique_ptr<PRF>{new HMACPRF{"code"}}};
+      std::unique_ptr<PRF>{new HMACPRF}};
 
   std::stringstream file{
       "aejfwoigjqogijwer;goit43io;h5w3[94thg39wa;wighe;oiw4h3;"
@@ -54,8 +60,7 @@ int main() {
   auto proof = prover.Prove();
 
   Verification v;
-  if (v.Verify(tag, challenge, proof,
-               std::unique_ptr<PRF>{new HMACPRF{"code"}})) {
+  if (v.Verify(tag, challenge, proof, std::unique_ptr<PRF>{new HMACPRF})) {
     std::cout << "passed!!!" << std::endl;
   } else {
     std::cout << "failed" << std::endl;
