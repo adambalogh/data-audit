@@ -14,7 +14,7 @@ void Tagger::Run(std::istream& file, const std::string& file_name) {
   size_t sector_size = 128;
 
   BN_ptr p{BN_new(), ::BN_free};
-  BN_generate_prime_ex(p.get(), sector_size, false, NULL, NULL, NULL);
+  BN_generate_prime_ex(p.get(), sector_size * 8, false, NULL, NULL, NULL);
 
   std::vector<BN_ptr> alphas;
   for (int i = 0; i < num_sectors; ++i) {
