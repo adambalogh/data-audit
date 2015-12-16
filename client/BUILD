@@ -108,19 +108,19 @@ cc_binary(
 )
 
 cc_library(
-  name = "workflow",
-  hdrs = ["workflow.h"],
+  name = "storage",
+  hdrs = ["storage.h"],
   deps = [
     "//audit/proto:cpor",
   ]
 )
 
 cc_library(
-  name = "local_disk_workflow",
-  srcs = ["local_disk_workflow.cc"],
-  hdrs = ["local_disk_workflow.h"],
+  name = "local_disk_storage",
+  srcs = ["local_disk_storage.cc"],
+  hdrs = ["local_disk_storage.h"],
   deps = [
-    ":workflow",
+    ":storage",
     "//audit/proto:cpor",
   ]
 )
