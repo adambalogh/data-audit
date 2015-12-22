@@ -138,3 +138,13 @@ cc_library(
   ]
  )
 
+
+cc_library(
+  name = "amazon_s3_storage",
+  hdrs = ["amazon_s3_storage.h"],
+  srcs = ["amazon_s3_storage.cc"],
+  deps = [
+    ":storage",
+    "//audit/proto:cpor",
+  ]
+)
