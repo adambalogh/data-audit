@@ -1,16 +1,9 @@
-<button id="upload">Upload File</button>
-
-<script>
-  var remote = require('remote'); 
-  var dialog = remote.require('dialog');  
-  var upload = require('bindings')('upload');
-
-  var uploadButton = document.getElementById("upload");
-  uploadButton.onclick = function() {
-    dialog.showOpenDialog(function(files) {
-      upload.upload(files[0], function(a) {
-        alert(a);
-      });
-    });
-  }
-</script>
+<html>
+  <head>
+    <link href="main.css" rel="stylesheet" />
+     <script src="upload.js"></script>
+  </head>
+  <body>
+    <button id="upload">Upload File</button>
+  </body>
+</html>

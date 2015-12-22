@@ -1,4 +1,4 @@
-build:
+install:
 	node-gyp build
 
 run:

@@ -1,0 +1,49 @@
+body {
+  background: #2c3e50;
+  padding: 15px;
+  color: #eee;
+  font-family: 'Arial';
+}
+
+button {
+  font-size: 14px;
+  padding: 10px 14px 10px 14px;
+  margin: 0px;
+  border: 0px;
+  background: #ecf0f1;
+  color: #333;
+  border-radius: 3px;
+  outline: 0;
+}
+
+button:hover {
+  cursor: pointer;
+  color: #666;
+}
+
+button:active {
+  background: #bbb ;
+}
+
+a.main {
+  width:auto;
+  text-decoration: none;
+  text-align:center;
+  color: inherit;
+  display: block;
+  margin:10px 40px 10px 40px;
+  padding:10px;
+  font-size:18px;
+}
+
+a.main:hover {
+  text-decoration: underline;
+}
+
+a.main:visited {
+  color: inherit;
+}
+
+*:focus {
+    outline: 0;
+}
