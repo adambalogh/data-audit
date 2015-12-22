@@ -15,6 +15,9 @@ FileTag::FileTag(std::istream& file, const std::string& file_name,
       sector_size_(sector_size),
       alphas_(std::move(alphas)),
       p_(std::move(p)) {
+  if (file) {
+    throw std::runtime_error("The given file cannot be read from.");
+  }
   if (alphas_.size() != num_sectors) {
     throw std::length_error(
         "The size of alphas must be equal to num_sectors (" +
