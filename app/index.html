@@ -1,19 +1,16 @@
-<html>
-  <head>
-  </head>
-  <body>
-    <button id="upload">Upload File</button>
-  </body>
-</html>
+<button id="upload">Upload File</button>
 
 <script>
   var remote = require('remote'); 
-  var dialog = remote.require('dialog'); 
+  var dialog = remote.require('dialog');  
+  var upload = require('bindings')('upload');
 
-  var upload = document.getElementById("upload");
-  upload.onclick = function() {
-    dialog.showOpenDialog({title:'Select file to upload'}, function(files) {
-      alert(files);
+  var uploadButton = document.getElementById("upload");
+  uploadButton.onclick = function() {
+    dialog.showOpenDialog(function(files) {
+      upload.upload(files[0], function(a) {
+        alert(a);
+      });
     });
   }
 </script>
