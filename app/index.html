@@ -2,6 +2,18 @@
   <head>
   </head>
   <body>
-    Hello World
+    <button id="upload">Upload File</button>
   </body>
 </html>
+
+<script>
+  var remote = require('remote'); 
+  var dialog = remote.require('dialog'); 
+
+  var upload = document.getElementById("upload");
+  upload.onclick = function() {
+    dialog.showOpenDialog({title:'Select file to upload'}, function(files) {
+      alert(files);
+    });
+  }
+</script>
