@@ -6,7 +6,7 @@
 
 #include "audit/common.h"
 #include "audit/util.h"
-#include "audit/client/file_tag.h"
+#include "audit/client/file.h"
 #include "audit/client/prf.h"
 #include "audit/proto/cpor.pb.h"
 
@@ -33,19 +33,16 @@ namespace audit {
 //
 class BlockTagger {
  public:
-  // Constructs a BlockTagger
+  // Constructs a BlockTagger.
   //
-  // @param file: an istream object whose blocks are going to be tagger.
-  //   It must point to the beggining of the stream
-  // @param file_tag: a FileTag object, where the num_blocks field doesn't
-  //   have to be set. It will be set to the correct value by BlockTagger
-  // @param prf: a unique_ptr to a PRF object used for encoding the index of
-  //   each block
+  // @param file: The file's content will be tagged. This object must outlive
+  //   the BlockTagger.
+  // @param prf: A PRF that will be used for making the tags secure.
   //
-  BlockTagger(const FileTag& file_tag, std::unique_ptr<PRF> prf)
-      : file_tag_(file_tag), prf_(std::move(prf)) {
-    buffer.resize(std::max(file_tag.sector_size(), 1000ul * 1000));
-    prf_->SetKey(file_tag.prf_key().data(), file_tag.prf_key().size());
+  BlockTagger(const File& file, std::unique_ptr<PRF> prf)
+      : file_(file), prf_(std::move(prf)) {
+    buffer.resize(
+        std::max(file_.sector_size(), static_cast<size_t>(1000) * 1000));
   }
 
   // Returns the BlockTag for the next block from the file, should only be
@@ -72,7 +69,7 @@ class BlockTagger {
   bool file_read_{false};
 
   // Pointer to the FileTag of the file being tagged
-  const FileTag& file_tag_;
+  const File& file_;
 
   // Pointer to a pseudorandom function
   std::unique_ptr<PRF> prf_;

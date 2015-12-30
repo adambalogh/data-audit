@@ -1,9 +1,9 @@
 package(default_visibility=["//visibility:public"])
 
 cc_library(
-  name = "file_tag",
-  srcs = ["file_tag.cc"],
-  hdrs = ["file_tag.h"],
+  name = "file",
+  srcs = ["file.cc"],
+  hdrs = ["file.h"],
   deps = [
     "//audit:util",
     "//audit/proto:cpor",
@@ -13,11 +13,11 @@ cc_library(
 )
 
 cc_binary(
-  name = "file_tag_test",
-  srcs = ["file_tag_test.cc"],
+  name = "file_test",
+  srcs = ["file_test.cc"],
   deps = [
     "@gtest//:main",
-    ":file_tag",
+    ":file",
     "//audit:test_util",
     "//audit/third_party/openssl:openssl",
   ]
@@ -29,7 +29,7 @@ cc_library(
   hdrs = ["block_tagger.h"],
   deps = [
     "//audit:common",
-    ":file_tag",
+    ":file",
     ":prf",
     "//audit:util",
     "//audit/proto:cpor",
@@ -74,7 +74,7 @@ cc_binary(
   deps = [
     "@gtest//:main",
     ":verification",
-    ":file_tag",
+    ":file",
     ":block_tagger",
     "//audit/proto:cpor",
     "//audit:test_util",
@@ -131,7 +131,7 @@ cc_library(
   hdrs = ["tagger.h"],
   deps = [
     ":storage",
-    ":file_tag",
+    ":file",
     ":block_tagger",
     "//audit:util",
     "//audit/third_party/openssl:openssl",

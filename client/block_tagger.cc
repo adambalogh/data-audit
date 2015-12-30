@@ -9,7 +9,7 @@
 
 #include "audit/common.h"
 #include "audit/util.h"
-#include "audit/client/file_tag.h"
+#include "audit/client/file.h"
 #include "audit/client/prf.h"
 #include "audit/proto/cpor.pb.h"
 
@@ -24,10 +24,10 @@ void BlockTagger::FillBuffer() {
   std::copy(std::begin(buffer) + start_, std::begin(buffer) + end_,
             std::begin(buffer));
 
-  file_tag_.file().read((char*)buffer.data() + bytes_left,
-                        buffer.size() - bytes_left);
+  file_.stream().read((char*)buffer.data() + bytes_left,
+                      buffer.size() - bytes_left);
   start_ = 0;
-  end_ = bytes_left + file_tag_.file().gcount();
+  end_ = bytes_left + file_.stream().gcount();
   if (end_ != buffer.size()) {
     file_read_ = true;
   }
@@ -50,22 +50,21 @@ proto::BlockTag BlockTagger::GenerateTag() {
 
   BN_ptr sector{BN_new(), ::BN_free};
 
-  for (auto i = 0; i < file_tag_.num_sectors(); ++i) {
+  for (auto i = 0; i < file_.num_sectors(); ++i) {
     if (file_read_ && start_ >= end_) break;
-    if (start_ + file_tag_.sector_size() > end_ && !file_read_) {
+    if (start_ + file_.sector_size() > end_ && !file_read_) {
       FillBuffer();
     }
     BN_bin2bn(buffer.data() + start_,
-              std::min(file_tag_.sector_size(), (unsigned long)end_ - start_),
+              std::min(file_.sector_size(), (unsigned long)end_ - start_),
               sector.get());
-    BN_mul(sector.get(), file_tag_.alphas().at(i).get(), sector.get(),
-           ctx.get());
+    BN_mul(sector.get(), file_.alphas().at(i).get(), sector.get(), ctx.get());
     BN_add(sigma.get(), sigma.get(), sector.get());
 
-    start_ += file_tag_.sector_size();
+    start_ += file_.sector_size();
     BN_clear(sector.get());
   }
-  BN_mod(sigma.get(), sigma.get(), file_tag_.p(), ctx.get());
+  BN_mod(sigma.get(), sigma.get(), file_.p(), ctx.get());
 
   proto::BlockTag tag;
   tag.set_index(num_blocks_read_++);
@@ -77,6 +76,6 @@ proto::BlockTag BlockTagger::GenerateTag() {
 proto::BlockTag BlockTagger::GetNext() { return GenerateTag(); }
 
 bool BlockTagger::HasNext() const {
-  return num_blocks_read_ < file_tag_.num_blocks();
+  return num_blocks_read_ < file_.num_blocks();
 }
 }

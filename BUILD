@@ -42,7 +42,7 @@ cc_library(
     ":util",
     ":common",
     "//audit/server:fetcher",
-    "//audit/client:file_tag",
+    "//audit/client:file",
     "//audit/proto:cpor",
     "//audit/client:prf",
   ]
