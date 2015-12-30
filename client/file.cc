@@ -13,7 +13,7 @@ File::File(std::istream& stream, int num_sectors, size_t sector_size,
       sector_size_(sector_size),
       alphas_(std::move(alphas)),
       p_(std::move(p)) {
-  if (stream_) {
+  if (!stream_) {
     throw std::runtime_error("The given file cannot be read from.");
   }
   if (alphas_.size() != num_sectors) {

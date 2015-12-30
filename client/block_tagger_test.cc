@@ -26,12 +26,11 @@ void ExpectProtosEqual(std::vector<proto::BlockTag> &expected,
 
 class BlockTaggerTest : public ::testing::Test {
  protected:
-  ~BlockTaggerTest() { delete file_tag; }
+  ~BlockTaggerTest() { delete file; }
 
-  void BasicFileTag(std::istream &file, unsigned long num_sectors,
-                    unsigned long sector_size, int p_int,
-                    RandomNumberGenerator *gen) {
-    delete file_tag;
+  void BasicFile(std::istream &stream, int num_sectors, size_t sector_size,
+                 int p_int, RandomNumberGenerator *gen) {
+    delete file;
     BN_ptr p{BN_new(), ::BN_free};
     BN_set_word(p.get(), p_int);
     std::vector<BN_ptr> alphas;
@@ -39,20 +38,20 @@ class BlockTaggerTest : public ::testing::Test {
       alphas.push_back(gen->GenerateNumber(*p));
     }
     // TODO remove random number generators
-    file_tag = new FileTag{file, "", num_sectors, sector_size,
-                           std::move(alphas), std::move(p)};
+    file = new File{stream, num_sectors, sector_size, std::move(alphas),
+                    std::move(p)};
   }
 
-  BlockTagger MakeBlockTagger(std::istream &file, RandomNumberGenerator *gen,
-                              unsigned long num_sectors = 1,
-                              unsigned long sector_size = 1, int p = 32452867) {
-    BasicFileTag(file, num_sectors, sector_size, p, gen);
+  BlockTagger MakeBlockTagger(std::istream &stream, RandomNumberGenerator *gen,
+                              int num_sectors = 1, size_t sector_size = 1,
+                              int p = 32452867) {
+    BasicFile(stream, num_sectors, sector_size, p, gen);
     return std::move(
-        BlockTagger{*file_tag, std::move(std::unique_ptr<PRF>(new DummyPRF))});
+        BlockTagger{*file, std::move(std::unique_ptr<PRF>(new DummyPRF))});
   }
 
   ConstantNumberGenerator<1> const_gen;
-  FileTag *file_tag{nullptr};
+  File *file{nullptr};
   int p_const = 32452867;
 };
 
