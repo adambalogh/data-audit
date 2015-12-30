@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <string>
 
 #include "cryptopp/integer.h"
@@ -16,30 +17,25 @@ namespace audit {
 class PRF {
  public:
   virtual BN_ptr Encode(unsigned int i) = 0;
-  virtual void SetKey(const unsigned char* key, size_t size) = 0;
-
-  void SetKey(const std::string& key) {
-    SetKey((unsigned char*)key.data(), key.size());
-  }
 
   virtual ~PRF() {}
-
- protected:
-  std::string key_;
 };
 
 // HMAC-SHA1 based PRF implementation
 class HMACPRF : public PRF {
  public:
-  using PRF::SetKey;
+  typedef std::array<unsigned char,
+                     CryptoPP::HMAC<CryptoPP::SHA1>::DEFAULT_KEYLENGTH> KeyType;
 
-  void SetKey(const unsigned char* key, size_t size) {
-    hmac_.SetKey(key, size);
-  }
+  HMACPRF(KeyType key) : key_(key), hmac_{&key[0], key.size()} {}
 
   BN_ptr Encode(unsigned int i);
 
  private:
-  CryptoPP::HMAC<CryptoPP::SHA1> hmac_{0, 0};
+  // Hash-based MAC using SHA-1
+  CryptoPP::HMAC<CryptoPP::SHA1> hmac_;
+
+  // Secret key for hmac
+  KeyType key_;
 };
 }
