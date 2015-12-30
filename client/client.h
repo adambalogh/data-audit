@@ -12,16 +12,16 @@
 
 namespace audit {
 
-class Tagger {
+class Client {
  public:
-  Tagger(std::unique_ptr<Storage> storage,
+  Client(std::unique_ptr<Storage> storage,
          std::unique_ptr<RandomNumberGenerator> random_gen,
          std::unique_ptr<PRF> prf)
       : storage_(std::move(storage)),
         random_gen_(std::move(random_gen)),
         prf_(std::move(prf)) {}
 
-  void Run(std::istream& file, const std::string& file_name);
+  void Upload(std::istream& file, const std::string& file_name);
 
  private:
   std::unique_ptr<Storage> storage_;

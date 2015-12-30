@@ -1,4 +1,4 @@
-#include "audit/client/tagger.h"
+#include "audit/client/client.h"
 
 #include "openssl/bn.h"
 
@@ -9,7 +9,7 @@
 
 namespace audit {
 
-void Tagger::Run(std::istream& file, const std::string& file_name) {
+void Client::Upload(std::istream& file, const std::string& file_name) {
   unsigned long num_sectors = 10;
   size_t sector_size = 128;
 
