@@ -4,13 +4,16 @@
 
 #include "audit/util.h"
 #include "audit/client/block_tagger.h"
-#include "audit/client/file_tag.h"
+#include "audit/client/file.h"
 #include "audit/client/storage.h"
+#include "audit/proto/cpor.pb.h"
 
 namespace audit {
 
-void Client::Upload(std::istream& file, const std::string& file_name) {
-  unsigned long num_sectors = 10;
+void Client::Upload(std::istream& stream, const std::string& file_name) {
+  proto::PrivateFileTag file_tag;
+
+  int num_sectors = 10;
   size_t sector_size = 128;
 
   BN_ptr p{BN_new(), ::BN_free};
@@ -21,18 +24,17 @@ void Client::Upload(std::istream& file, const std::string& file_name) {
     alphas.push_back(random_gen_->GenerateNumber(*p));
   }
 
-  FileTag file_tag{file, file_name, num_sectors, sector_size, std::move(alphas),
-                   std::move(p)};
+  File file{stream, num_sectors, sector_size, std::move(alphas), std::move(p)};
 
-  BlockTagger tagger{file_tag, std::move(prf_)};
+  BlockTagger tagger{file, std::move(prf_)};
   while (tagger.HasNext()) {
     storage_->StoreBlockTag(tagger.GetNext());
   }
 
-  storage_->StoreFileTag(file_tag.PrivateProto());
+  storage_->StoreFileTag(file_tag);
 
-  file.clear();
-  file.seekg(0, file.beg);
-  storage_->StoreFile(file);
+  stream.clear();
+  stream.seekg(0, stream.beg);
+  storage_->StoreFile(stream);
 }
 }

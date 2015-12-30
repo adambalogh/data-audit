@@ -75,7 +75,7 @@ cc_binary(
     "@gtest//:main",
     ":verification",
     ":file",
-    ":block_tagger",
+    ":block_client",
     "//audit/proto:cpor",
     "//audit:test_util",
     "//audit/server:prover",
@@ -126,13 +126,14 @@ cc_library(
 )
 
 cc_library(
-  name = "tagger",
-  srcs = ["tagger.cc"],
-  hdrs = ["tagger.h"],
+  name = "client",
+  srcs = ["client.cc"],
+  hdrs = ["client.h"],
   deps = [
     ":storage",
     ":file",
     ":block_tagger",
+    "//audit/proto:cpor",
     "//audit:util",
     "//audit/third_party/openssl:openssl",
   ]

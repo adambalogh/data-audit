@@ -7,7 +7,7 @@
 
 #include "audit/util.h"
 #include "audit/client/block_tagger.h"
-#include "audit/client/file_tag.h"
+#include "audit/client/file.h"
 #include "audit/client/storage.h"
 
 namespace audit {
