@@ -34,34 +34,25 @@ class FileTag {
  public:
   // Constructs a FileTag.
   //
-  // @params file: the file we want to work with
-  // @params file_name: a name that uniquely identifies the file, and can later
+  // @param file: the file we want to work with
+  // @param file_name: a name that uniquely identifies the file, and can later
   //   be used to retrieve the file from the cloud
-  // @params num_sectors: the number of sectors in a block
-  // @params sector_size: the size of a single sector in bytes
-  // @params alphas: list of Bignumbers, the size must be equal to num_sectors
-  // @params p: a large prime number
-  FileTag(std::istream& file, const std::string& file_name,
-          unsigned long num_sectors, size_t sector_size,
-          std::vector<BN_ptr> alphas, BN_ptr p);
+  // @param num_sectors: the number of sectors in a block
+  // @param sector_size: the size of a single sector in bytes
+  // @param alphas: list of Bignumbers, the size must be equal to num_sectors
+  // @param p: a large prime number
+  FileTag(std::istream& file, const std::string& file_id, int num_sectors,
+          size_t sector_size, std::vector<BN_ptr> alphas, BN_ptr p);
 
   std::istream& file() const { return file_; }
 
-  unsigned long num_blocks() const { return num_blocks_; }
-  unsigned long num_sectors() const { return num_sectors_; }
+  int num_blocks() const { return num_blocks_; }
+  int num_sectors() const { return num_sectors_; }
   size_t sector_size() const { return sector_size_; }
-  unsigned long block_size() const {
-    return num_sectors_ * static_cast<unsigned long>(sector_size_);
-  }
+  size_t block_size() const { return num_sectors_ * sector_size_; }
 
   const std::vector<BN_ptr>& alphas() const { return alphas_; }
   const BIGNUM* p() const { return p_.get(); }
-
-  const std::array<unsigned char,
-                   CryptoPP::HMAC<CryptoPP::SHA1>::DEFAULT_KEYLENGTH>&
-  prf_key() const {
-    return prf_key_;
-  }
 
   proto::PrivateFileTag PrivateProto() const;
   proto::PublicFileTag PublicProto() const;
@@ -72,14 +63,14 @@ class FileTag {
   // The file we want to tag
   std::istream& file_;
 
-  // The name of the file we're tagging
-  std::string file_name_;
+  // The unique name of the file
+  std::string file_path_;
 
   // The number of blocks in a file
-  unsigned long num_blocks_{0};
+  int num_blocks_{0};
 
   // The number of sectors in a block
-  unsigned long num_sectors_;
+  int num_sectors_;
 
   // The size of a sector in bytes
   size_t sector_size_;
@@ -90,9 +81,5 @@ class FileTag {
 
   // p_ is a large prime number, its size should be equal to sector_size_
   BN_ptr p_;
-
-  // TODO make it flexible
-  std::array<unsigned char, CryptoPP::HMAC<CryptoPP::SHA1>::DEFAULT_KEYLENGTH>
-      prf_key_;
 };
 }
