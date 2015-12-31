@@ -6,33 +6,56 @@
 
 namespace audit {
 
-File::File(std::istream& stream, int num_sectors, size_t sector_size,
-           std::vector<BN_ptr> alphas, BN_ptr p)
-    : stream_(stream),
-      num_sectors_(num_sectors),
-      sector_size_(sector_size),
-      alphas_(std::move(alphas)),
-      p_(std::move(p)) {
-  if (!stream_) {
-    throw std::runtime_error("The given file cannot be read from.");
+File::File(std::istream& stream, const std::string& file_full_path)
+    : stream(stream), file_full_path(file_full_path) {
+  if (!stream) {
+    throw std::runtime_error("The given stream cannot be read from.");
   }
-  if (alphas_.size() != num_sectors) {
-    throw std::length_error(
-        "The size of alphas must be equal to num_sectors (" +
-        std::to_string(alphas_.size()) + " != " + std::to_string(num_sectors) +
-        ")");
-  }
-  CalculateNumBlocks();
 }
 
-void File::CalculateNumBlocks() {
-  stream_.seekg(0, stream_.end);
-  auto length = stream_.tellg();
-  stream_.seekg(0, stream_.beg);
-  auto block_size = sector_size_ * num_sectors_;
-  num_blocks_ = length / block_size;
-  if (length % block_size != 0) {
-    ++num_blocks_;
+FileContext::FileContext(const File& file, const TaggingParameters& parameters,
+                         std::vector<BN_ptr> alphas, BN_ptr p,
+                         std::unique_ptr<PRF> prf)
+    : file_(file),
+      parameters_(parameters),
+      num_blocks_(CalculateNumBlocks()),
+      alphas_(std::move(alphas)),
+      p_(std::move(p)),
+      prf_(std::move(prf)) {
+  if (alphas_.size() != parameters_.sector_size) {
+    throw std::length_error(
+        "The size of alphas must be equal to num_sectors (" +
+        std::to_string(alphas_.size()) + " != " +
+        std::to_string(parameters_.num_sectors) + ")");
   }
+}
+
+int FileContext::CalculateNumBlocks() {
+  auto file_size = file_.size();
+  auto block_size = parameters_.block_size();
+
+  int num_blocks = file_size / block_size;
+  if (file_size % block_size != 0) {
+    ++num_blocks;
+  }
+  return num_blocks;
+}
+
+proto::PrivateFileTag FileContext::Proto() const {
+  proto::PrivateFileTag private_tag;
+
+  for (auto& alpha : alphas_) {
+    BignumToString(*alpha, private_tag.add_alphas());
+  }
+  *private_tag.mutable_prf_key() = prf_->Key();
+
+  auto public_tag = private_tag.public_tag();
+  public_tag.set_num_sectors(parameters_.num_sectors);
+  public_tag.set_sector_size(parameters_.sector_size);
+  public_tag.set_num_blocks(num_blocks_);
+  BignumToString(*p_, public_tag.mutable_p());
+  *public_tag.mutable_file_full_path() = file_.file_full_path;
+
+  return private_tag;
 }
 }
