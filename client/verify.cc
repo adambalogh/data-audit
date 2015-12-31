@@ -11,9 +11,9 @@
 
 namespace audit {
 
-bool Verification::Verify(const proto::PrivateFileTag& file_tag,
-                          const proto::Challenge& challenge,
-                          const proto::Proof& proof, std::unique_ptr<PRF> prf) {
+bool Verify(const proto::PrivateFileTag& file_tag,
+            const proto::Challenge& challenge, const proto::Proof& proof,
+            std::unique_ptr<PRF> prf) {
   prf->SetKey((unsigned char*)file_tag.prf_key().data(),
               file_tag.prf_key().size());
   BN_ptr sigma_sum{BN_new(), ::BN_free};
