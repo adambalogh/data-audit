@@ -16,7 +16,7 @@ namespace audit {
 // secret key.
 class PRF {
  public:
-  virtual BN_ptr Encode(unsigned int i) = 0;
+  virtual BN_ptr Encode(unsigned int i) const = 0;
 
   // Returns the secret key
   virtual std::string Key() const = 0;
@@ -34,12 +34,12 @@ class HMACPRF : public PRF {
 
   std::string Key() const;
 
-  BN_ptr Encode(unsigned int i);
+  BN_ptr Encode(unsigned int i) const;
 
  private:
   // Secret key for hmac
   KeyType key_;
 
-  CryptoPP::HMAC<CryptoPP::SHA1> hmac_;
+  mutable CryptoPP::HMAC<CryptoPP::SHA1> hmac_;
 };
 }

@@ -19,7 +19,7 @@ HMACPRF::HMACPRF()
       }()),
       hmac_(&key_[0], key_.size()) {}
 
-BN_ptr HMACPRF::Encode(unsigned int i) {
+BN_ptr HMACPRF::Encode(unsigned int i) const {
   hmac_.Restart();
 
   // Convert i to byte array
