@@ -19,7 +19,7 @@ message PublicFileTag {
 
   bytes p = 4;
 
-  string file_name = 5;
+  string file_full_path = 5;
 }
 
 message PrivateFileTag {
