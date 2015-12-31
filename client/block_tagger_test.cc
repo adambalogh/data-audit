@@ -16,7 +16,7 @@
 
 using namespace audit;
 
-void ExpectProtosEqual(std::vector<proto::BlockTag> &expected,
+void ExpectBlocksEqual(std::vector<proto::BlockTag> &expected,
                        std::vector<proto::BlockTag> &actual) {
   EXPECT_EQ(expected.size(), actual.size());
   for (int i = 0; i < expected.size(); i++) {
@@ -26,51 +26,49 @@ void ExpectProtosEqual(std::vector<proto::BlockTag> &expected,
 
 class BlockTaggerTest : public ::testing::Test {
  protected:
-  ~BlockTaggerTest() { delete file; }
+  ~BlockTaggerTest() { delete context; }
 
-  void BasicFile(std::istream &stream, int num_sectors, size_t sector_size,
-                 int p_int, RandomNumberGenerator *gen) {
-    delete file;
-    BN_ptr p{BN_new(), ::BN_free};
-    BN_set_word(p.get(), p_int);
+  BlockTagger MakeBlockTagger(std::istream &stream,
+                              std::vector<unsigned int> alphas_int,
+                              int num_sectors = 1, size_t sector_size = 1,
+                              int p_int = 32452867) {
+    auto p = BN_new_ptr(p_int);
     std::vector<BN_ptr> alphas;
     for (int i = 0; i < num_sectors; ++i) {
-      alphas.push_back(gen->GenerateNumber(*p));
+      alphas.push_back(BN_new_ptr(alphas_int[i]));
     }
-    // TODO remove random number generators
-    file = new File{stream, num_sectors, sector_size, std::move(alphas),
-                    std::move(p)};
+    File file{stream, ""};
+    TaggingParameters params{num_sectors, sector_size};
+    context = new FileContext{file, params, std::move(alphas), std::move(p),
+                              std::move(std::unique_ptr<PRF>(new DummyPRF))};
+    return BlockTagger{*context};
   }
 
-  BlockTagger MakeBlockTagger(std::istream &stream, RandomNumberGenerator *gen,
-                              int num_sectors = 1, size_t sector_size = 1,
-                              int p = 32452867) {
-    BasicFile(stream, num_sectors, sector_size, p, gen);
-    return std::move(
-        BlockTagger{*file, std::move(std::unique_ptr<PRF>(new DummyPRF))});
+  BlockTagger MakeBlockTagger(std::istream &stream,
+                              unsigned int const_alpha = 1, int num_sectors = 1,
+                              size_t sector_size = 1, int p_int = 32452867) {
+    std::vector<unsigned int> alphas(num_sectors, const_alpha);
+    return MakeBlockTagger(stream, alphas, num_sectors, sector_size, p_int);
   }
 
-  ConstantNumberGenerator<1> const_gen;
-  File *file{nullptr};
-  int p_const = 32452867;
+  FileContext *context;
 };
 
 TEST_F(BlockTaggerTest, EmptyFile) {
   std::stringstream s;
-  auto t = MakeBlockTagger(s, &const_gen);
+  auto t = MakeBlockTagger(s);
   EXPECT_EQ(false, t.HasNext());
 }
 
 TEST_F(BlockTaggerTest, NotEmptyFile) {
   std::stringstream s{"a"};
-  auto t = MakeBlockTagger(s, &const_gen);
+  auto t = MakeBlockTagger(s);
   EXPECT_EQ(true, t.HasNext());
 }
 
 TEST_F(BlockTaggerTest, SingleLetter) {
   std::stringstream s{"a"};
-  ConstantNumberGenerator<10> gen;
-  auto t = MakeBlockTagger(s, &gen, 1, 1, p_const);
+  auto t = MakeBlockTagger(s, 10);
 
   auto tag = t.GetNext();
   EXPECT_EQ(0, tag.index());
@@ -79,7 +77,7 @@ TEST_F(BlockTaggerTest, SingleLetter) {
 
 TEST_F(BlockTaggerTest, BecomesInvalid) {
   std::stringstream s{"abc"};
-  auto t = MakeBlockTagger(s, &const_gen, 1, 10, p_const);
+  auto t = MakeBlockTagger(s, 1, 1, 10);
 
   t.GetNext();
   EXPECT_EQ(false, t.HasNext());
@@ -87,8 +85,7 @@ TEST_F(BlockTaggerTest, BecomesInvalid) {
 
 TEST_F(BlockTaggerTest, LargerSectorSize) {
   std::stringstream s{"a"};
-  ConstantNumberGenerator<10> gen;
-  auto t = MakeBlockTagger(s, &gen, 1, 10, p_const);
+  auto t = MakeBlockTagger(s, 10, 1, 10);
 
   auto tag = t.GetNext();
   EXPECT_EQ(0, tag.index());
@@ -97,8 +94,7 @@ TEST_F(BlockTaggerTest, LargerSectorSize) {
 
 TEST_F(BlockTaggerTest, LargerSectorNumber) {
   std::stringstream s{"a"};
-  ConstantNumberGenerator<10> gen;
-  auto t = MakeBlockTagger(s, &gen, 10, 1, p_const);
+  auto t = MakeBlockTagger(s, 10, 10, 1);
 
   auto tag = t.GetNext();
   EXPECT_EQ(0, tag.index());
@@ -107,8 +103,7 @@ TEST_F(BlockTaggerTest, LargerSectorNumber) {
 
 TEST_F(BlockTaggerTest, LargeSectorSizeAndNumber) {
   std::stringstream s{"a"};
-  ConstantNumberGenerator<10> gen;
-  auto t = MakeBlockTagger(s, &gen, 10, 10, p_const);
+  auto t = MakeBlockTagger(s, 10, 10, 10);
 
   auto tag = t.GetNext();
   EXPECT_EQ(0, tag.index());
@@ -117,8 +112,7 @@ TEST_F(BlockTaggerTest, LargeSectorSizeAndNumber) {
 
 TEST_F(BlockTaggerTest, Modulo) {
   std::stringstream s{"a"};
-  ConstantNumberGenerator<100> gen;
-  auto t = MakeBlockTagger(s, &gen, 1, 1, 11);
+  auto t = MakeBlockTagger(s, 100, 1, 1, 11);
 
   int expected = (100 * static_cast<int>('a')) % 11;
 
@@ -149,8 +143,7 @@ TEST_F(BlockTaggerTest, FullFile) {
   std::stringstream s{"abcdefghi"};
   auto s_ptr = (unsigned char *)s.str().data();
 
-  DummyNumberGenerator gen{{2, 4}};
-  auto t = MakeBlockTagger(s, &gen, 2, 2, p_const);
+  auto t = MakeBlockTagger(s, {2, 4}, 2, 2);
 
   std::vector<proto::BlockTag> tags;
   while (t.HasNext()) {
@@ -169,7 +162,7 @@ TEST_F(BlockTaggerTest, FullFile) {
   block.set_sigma(Result(ToBN(s_ptr + 8, 1, 2), BN_new_ptr(0), 2));
   expected.push_back(block);
 
-  ExpectProtosEqual(expected, tags);
+  ExpectBlocksEqual(expected, tags);
 }
 
 int main(int argc, char **argv) {
