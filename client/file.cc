@@ -22,7 +22,7 @@ FileContext::FileContext(const File& file, const TaggingParameters& parameters,
       alphas_(std::move(alphas)),
       p_(std::move(p)),
       prf_(std::move(prf)) {
-  if (alphas_.size() != parameters_.sector_size) {
+  if (alphas_.size() != parameters_.num_sectors) {
     throw std::length_error(
         "The size of alphas must be equal to num_sectors (" +
         std::to_string(alphas_.size()) + " != " +

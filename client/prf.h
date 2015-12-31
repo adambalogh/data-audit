@@ -32,9 +32,9 @@ class HMACPRF : public PRF {
 
   HMACPRF();
 
-  std::string Key() const;
+  std::string Key() const override;
 
-  BN_ptr Encode(unsigned int i) const;
+  BN_ptr Encode(unsigned int i) const override;
 
  private:
   // Secret key for hmac
