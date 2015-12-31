@@ -34,15 +34,9 @@ namespace audit {
 class BlockTagger {
  public:
   // Constructs a BlockTagger.
-  //
-  // @param file: The file's content will be tagged. This object must outlive
-  //   the BlockTagger.
-  // @param prf: A PRF that will be used for making the tags secure.
-  //
-  BlockTagger(const File& file, std::unique_ptr<PRF> prf)
-      : file_(file), prf_(std::move(prf)) {
-    buffer.resize(
-        std::max(file_.sector_size(), static_cast<size_t>(1000) * 1000));
+  BlockTagger(FileContext& context) : context_(context) {
+    buffer.resize(std::max(context.parameters().sector_size,
+                           static_cast<size_t>(1000) * 1000));
   }
 
   // Returns the BlockTag for the next block from the file, should only be
@@ -68,11 +62,7 @@ class BlockTagger {
 
   bool file_read_{false};
 
-  // Pointer to the FileTag of the file being tagged
-  const File& file_;
-
-  // Pointer to a pseudorandom function
-  std::unique_ptr<PRF> prf_;
+  FileContext& context_;
 
   // BN context used for computations
   BN_CTX_ptr ctx{BN_CTX_new(), ::BN_CTX_free};
