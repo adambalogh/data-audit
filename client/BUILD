@@ -137,7 +137,7 @@ cc_library(
     "//audit:util",
     "//audit/third_party/openssl:openssl",
   ]
- )
+)
 
 
 cc_library(
@@ -146,6 +146,15 @@ cc_library(
   srcs = ["amazon_s3_storage.cc"],
   deps = [
     ":storage",
+    "//audit/proto:cpor",
+  ]
+)
+
+cc_library(
+  name = "local_disk_file_tag_source",
+  srcs = ["local_disk_file_tag_source.cc"],
+  hdrs = ["local_disk_file_tag_source.h"],
+  deps = [
     "//audit/proto:cpor",
   ]
 )

@@ -1,5 +1,10 @@
 #include "audit/client/local_disk_file_tag_source.h"
 
+#include <fstream>
+#include <sstream>
+
+#include "audit/proto/cpor.pb.h"
+
 namespace audit {
 
 proto::PrivateFileTag LocalDiskFileTagSource::GetFileTag(
