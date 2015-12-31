@@ -18,6 +18,9 @@ class PRF {
  public:
   virtual BN_ptr Encode(unsigned int i) = 0;
 
+  // Returns the secret key
+  virtual std::string Key() const = 0;
+
   virtual ~PRF() {}
 };
 
@@ -27,15 +30,9 @@ class HMACPRF : public PRF {
   typedef std::array<unsigned char,
                      CryptoPP::HMAC<CryptoPP::SHA1>::DEFAULT_KEYLENGTH> KeyType;
 
-  HMACPRF()
-      : key_([]() {
-          KeyType key;
-          BN_ptr prf_key{BN_new(), ::BN_free};
-          BN_rand(prf_key.get(), key.size() * 8, 0, 1);
-          BN_bn2bin(prf_key.get(), &key[0]);
-          return std::move(key);
-        }()),
-        hmac_(&key_[0], key_.size()) {}
+  HMACPRF();
+
+  std::string Key() const;
 
   BN_ptr Encode(unsigned int i);
 

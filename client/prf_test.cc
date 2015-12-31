@@ -25,6 +25,13 @@ TEST(HMACPRF, Different) {
   EXPECT_NE(0, BN_cmp(a.get(), b.get()));
 }
 
+TEST(HMACPRF, Key) {
+  HMACPRF prf;
+  HMACPRF::KeyType sample_key;
+
+  EXPECT_EQ(sample_key.size(), prf.Key().size());
+}
+
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();

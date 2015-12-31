@@ -9,6 +9,16 @@
 
 namespace audit {
 
+HMACPRF::HMACPRF()
+    : key_([]() {
+        KeyType key;
+        BN_ptr prf_key{BN_new(), ::BN_free};
+        BN_rand(prf_key.get(), key.size() * 8, 0, 1);
+        BN_bn2bin(prf_key.get(), &key[0]);
+        return std::move(key);
+      }()),
+      hmac_(&key_[0], key_.size()) {}
+
 BN_ptr HMACPRF::Encode(unsigned int i) {
   hmac_.Restart();
 
@@ -27,5 +37,9 @@ BN_ptr HMACPRF::Encode(unsigned int i) {
   BN_bin2bn(&digest[0], hmac_.DigestSize(), result.get());
 
   return std::move(result);
+}
+
+std::string HMACPRF::Key() const {
+  return std::string{key_.begin(), key_.end()};
 }
 }
