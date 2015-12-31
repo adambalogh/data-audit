@@ -24,7 +24,7 @@ bool Verify(const proto::PrivateFileTag& file_tag,
   BN_ptr weighted_index{BN_new(), ::BN_free};
   for (auto& item : challenge.items()) {
     BN_mul(weighted_index.get(), StringToBignum(item.weight()).get(),
-           prf->Encode(item.index()).get(), ctx.get());
+           prf.Encode(item.index()).get(), ctx.get());
     BN_add(sigma_sum.get(), sigma_sum.get(), weighted_index.get());
     BN_clear(weighted_index.get());
   }
