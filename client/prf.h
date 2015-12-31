@@ -31,6 +31,7 @@ class HMACPRF : public PRF {
                      CryptoPP::HMAC<CryptoPP::SHA1>::DEFAULT_KEYLENGTH> KeyType;
 
   HMACPRF();
+  HMACPRF(const std::string& key);
 
   std::string Key() const override;
 

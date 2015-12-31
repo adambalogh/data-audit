@@ -6,6 +6,26 @@
 
 using namespace audit;
 
+TEST(HMACPRF, AutoGenerateKey) {
+  HMACPRF prf_1;
+  HMACPRF prf_2;
+
+  auto a = prf_1.Encode(10);
+  auto b = prf_2.Encode(10);
+
+  EXPECT_NE(0, BN_cmp(a.get(), b.get()));
+}
+
+TEST(HMACPRF, SetKey) {
+  HMACPRF prf_1;
+  HMACPRF prf_2{prf_1.Key()};
+
+  auto a = prf_1.Encode(10);
+  auto b = prf_2.Encode(10);
+
+  EXPECT_EQ(0, BN_cmp(a.get(), b.get()));
+}
+
 TEST(HMACPRF, Same) {
   HMACPRF prf_hello;
 

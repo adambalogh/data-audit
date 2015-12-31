@@ -19,6 +19,19 @@ HMACPRF::HMACPRF()
       }()),
       hmac_(&key_[0], key_.size()) {}
 
+HMACPRF::HMACPRF(const std::string& key)
+    : key_([&]() {
+        if (key.size() != key_.size()) {
+          throw std::length_error("The size of the given key is invalid");
+        }
+        KeyType new_key;
+        for (int i = 0; i < key.size(); ++i) {
+          new_key[i] = key[i];
+        }
+        return new_key;
+      }()),
+      hmac_(&key_[0], key_.size()) {}
+
 BN_ptr HMACPRF::Encode(unsigned int i) const {
   hmac_.Restart();
 
