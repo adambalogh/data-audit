@@ -6,7 +6,7 @@
 #include "openssl/bn.h"
 
 #include "audit/test_util.h"
-#include "audit/client/file.h"
+#include "audit/client/upload/file.h"
 
 using namespace audit;
 

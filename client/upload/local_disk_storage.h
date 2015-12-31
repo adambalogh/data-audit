@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "audit/client/storage.h"
+#include "audit/client/upload/storage.h"
 #include "audit/proto/cpor.pb.h"
 
 namespace audit {

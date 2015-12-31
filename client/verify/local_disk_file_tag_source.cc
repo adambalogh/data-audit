@@ -1,4 +1,4 @@
-#include "audit/client/local_disk_file_tag_source.h"
+#include "audit/client/verify/local_disk_file_tag_source.h"
 
 #include <fstream>
 #include <sstream>

@@ -6,8 +6,8 @@
 
 #include "audit/common.h"
 #include "audit/util.h"
-#include "audit/client/file.h"
 #include "audit/client/prf.h"
+#include "audit/client/upload/file.h"
 #include "audit/proto/cpor.pb.h"
 
 namespace audit {

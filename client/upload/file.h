@@ -70,10 +70,10 @@ class FileContext {
   const BIGNUM* p() const { return p_.get(); }
   const PRF& prf() const { return *prf_; }
 
+  proto::PrivateFileTag Proto() const;
+
  private:
   int CalculateNumBlocks();
-
-  proto::PrivateFileTag Proto() const;
 
   // The file we want to audit
   File file_;

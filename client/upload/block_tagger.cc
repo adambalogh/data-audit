@@ -1,4 +1,4 @@
-#include "audit/client/block_tagger.h"
+#include "audit/client/upload/block_tagger.h"
 
 #include <assert.h>
 #include <iostream>
@@ -9,8 +9,8 @@
 
 #include "audit/common.h"
 #include "audit/util.h"
-#include "audit/client/file.h"
 #include "audit/client/prf.h"
+#include "audit/client/upload/file.h"
 #include "audit/proto/cpor.pb.h"
 
 namespace audit {
@@ -30,6 +30,9 @@ void BlockTagger::FillBuffer() {
   end_ = bytes_left + context_.file().stream.gcount();
   if (end_ != buffer.size()) {
     file_read_ = true;
+
+    context_.file().stream.clear();
+    context_.file().stream.seekg(0, context_.file().stream.beg);
   }
 }
 

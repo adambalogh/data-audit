@@ -1,6 +1,6 @@
 #pragma once
 
-#include "audit/client/file_tag_source.h"
+#include "audit/client/verify/file_tag_source.h"
 #include "audit/proto/cpor.pb.h"
 
 namespace audit {

@@ -21,18 +21,18 @@ class Storage {
   virtual ~Storage() {}
 };
 
-class StorageWithCheck : public Storage {
-  virtual void StoreFileTag(const proto::PrivateFileTag& file_tag) override {
-    if (!(file_tag.alphas_size() && file_tag.prf_key().size() &&
-          file_tag.has_public_tag() && file_tag.public_tag().num_blocks() &&
-          file_tag.public_tag().num_sectors() &&
-          file_tag.public_tag().sector_size() &&
-          file_tag.public_tag().p().size() &&
-          file_tag.public_tag().file_name().size())) {
-      throw std::logic_error("FileTag is missing information");
-    }
-  }
-};
+// class StorageWithCheck : public Storage {
+//  virtual void StoreFileTag(const proto::PrivateFileTag& file_tag) override {
+//    if (!(file_tag.alphas_size() && file_tag.prf_key().size() &&
+//          file_tag.has_public_tag() && file_tag.public_tag().num_blocks() &&
+//          file_tag.public_tag().num_sectors() &&
+//          file_tag.public_tag().sector_size() &&
+//          file_tag.public_tag().p().size() &&
+//          file_tag.public_tag().file_name().size())) {
+//      throw std::logic_error("FileTag is missing information");
+//    }
+//  }
+//};
 
 class StorageUsingFileName : public Storage {
  public:
