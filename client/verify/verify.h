@@ -11,12 +11,13 @@
 #include "audit/proto/cpor.pb.h"
 
 namespace audit {
+namespace verify {
 
 // Verifies a file's integrity based on the proof recieved from the server.
 // Returns true if the file is intact.
 template <typename PRF>
-bool Verify(const proto::PrivateFileTag& file_tag,
-            const proto::Challenge& challenge, const proto::Proof& proof) {
+bool VerifyFile(const proto::PrivateFileTag& file_tag,
+                const proto::Challenge& challenge, const proto::Proof& proof) {
   PRF prf{file_tag.prf_key()};
 
   BN_ptr sigma_sum{BN_new(), ::BN_free};
@@ -41,5 +42,6 @@ bool Verify(const proto::PrivateFileTag& file_tag,
          StringToBignum(file_tag.public_tag().p()).get(), ctx.get());
 
   return BN_cmp(sigma_sum.get(), StringToBignum(proof.sigma()).get()) == 0;
+}
 }
 }

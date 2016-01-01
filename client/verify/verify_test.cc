@@ -14,7 +14,7 @@
 #include "audit/common.h"
 #include "audit/test_util.h"
 
-using namespace audit;
+using namespace audit::verify;
 
 // TODO cleanup
 TEST(Verification, Successful) {
@@ -51,7 +51,7 @@ TEST(Verification, Successful) {
   Prover prover{fetcher, challenge};
   auto proof = prover.Prove();
 
-  EXPECT_TRUE(Verify<HMACPRF>(private_file_tag, challenge, proof));
+  EXPECT_TRUE(VerifyFile<HMACPRF>(private_file_tag, challenge, proof));
 }
 
 int main(int argc, char** argv) {

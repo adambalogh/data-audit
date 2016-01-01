@@ -6,6 +6,7 @@
 #include "audit/proto/cpor.pb.h"
 
 namespace audit {
+namespace verify {
 
 proto::PrivateFileTag LocalDiskFileTagSource::GetFileTag(
     const std::string& file_name) {
@@ -18,5 +19,6 @@ proto::PrivateFileTag LocalDiskFileTagSource::GetFileTag(
   buffer << tag_file_.rdbuf();
   tag.ParseFromString(buffer.str());
   return tag;
+}
 }
 }
