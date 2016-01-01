@@ -3,7 +3,7 @@
     {
       "target_name": "upload",
 
-      "sources": [ "upload.cc" ],
+      "sources": [ "cc/upload.cc" ],
 
       "include_dirs": [
         "<!(node -e \"require('nan')\")",
@@ -57,7 +57,7 @@
     {
       "target_name": "verify",
 
-      "sources": [ "verify.cc" ],
+      "sources": [ "cc/verify.cc" ],
 
       "include_dirs": [
         "<!(node -e \"require('nan')\")",
