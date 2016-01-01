@@ -1,9 +1,9 @@
 package(default_visibility=["//visibility:public"])
 
 cc_library(
-  name = "verify",
-  srcs = ["verify.cc"],
-  hdrs = ["verify.h"],
+  name = "verify_file",
+  srcs = ["verify_file.cc"],
+  hdrs = ["verify_file.h"],
   deps = [
     "//audit/client:prf",
     "//audit:common",
@@ -15,11 +15,11 @@ cc_library(
 
 
 cc_binary(
-  name = "verify_test",
-  srcs = ["verify_test.cc"],
+  name = "verify_file_test",
+  srcs = ["verify_file_test.cc"],
   deps = [
     "@gtest//:main",
-    ":verify",
+    ":verify_file",
     "//audit/client/upload:file",
     "//audit/client/upload:block_tagger",
     "//audit/proto:cpor",
@@ -51,10 +51,19 @@ cc_library(
   srcs = ["client.cc"],
   hdrs = ["client.h"],
   deps = [
-    ":verify",
+    ":verify_file",
     "//audit:util",
     "//audit/client:prf",
     "//audit/proto:cpor",
     "//audit/third_party/openssl:openssl",
+  ]
+)
+
+cc_library(
+  name = "proof_source",
+  hdrs = ["proof_source.h"],
+  srcs = ["proof_source.cc"],
+  deps = [
+    "//audit/proto:cpor",
   ]
 )

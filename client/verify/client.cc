@@ -6,7 +6,7 @@
 
 #include "audit/util.h"
 #include "audit/client/prf.h"
-#include "audit/client/verify/verify.h"
+#include "audit/client/verify/verify_file.h"
 #include "audit/proto/cpor.pb.h"
 
 namespace audit {
