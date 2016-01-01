@@ -67,3 +67,15 @@ cc_library(
     "//audit/proto:cpor",
   ]
 )
+
+cc_library(
+  name = "local_proof_source",
+  hdrs = ["local_proof_source.h"],
+  srcs = ["local_proof_source.cc"],
+  deps = [
+    ":proof_source",
+    "//audit/proto:cpor",
+    "//audit/server:prover",
+    "//audit/server:local_disk_fetcher",
+  ]
+)
