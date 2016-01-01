@@ -8,9 +8,9 @@
 #include "openssl/bn.h"
 
 #include "audit/common.h"
-#include "audit/client/block_tagger.h"
 #include "audit/client/prf.h"
-#include "audit/client/file_tag.h"
+#include "audit/client/upload/block_tagger.h"
+#include "audit/client/upload/file.h"
 #include "audit/util.h"
 
 #define NDEBUG
@@ -23,9 +23,7 @@ int time(double size, std::istream& file) {
     return -1;
   }
 
-  std::unique_ptr<audit::PRF> prf{new audit::HMACPRF{
-      "afewf32432GrggwGWQGOKgejo23hr43goregh ihroihofiewhfo "
-      "ihwoiehoegirhge;h"}};
+  std::unique_ptr<audit::PRF> prf{new audit::HMACPRF};
 
   std::vector<audit::BN_ptr> alphas;
   for (int i = 0; i < 5; ++i) {
@@ -33,8 +31,13 @@ int time(double size, std::istream& file) {
   }
 
   t = clock();
-  audit::FileTag f{file, "", 5, 128, std::move(alphas), std::move(p)};
-  audit::BlockTagger block_tagger{f, std::move(prf)};
+
+  audit::upload::FileContext context{
+      audit::upload::File{file, ""}, audit::upload::TaggingParameters{5, 128},
+      std::move(alphas), std::move(p), std::move(prf)};
+
+  audit::upload::BlockTagger block_tagger{context};
+
   while (block_tagger.HasNext()) {
     auto tag = block_tagger.GetNext();
   }
@@ -57,7 +60,8 @@ int main(int argc, char** argv) {
 
   std::vector<std::string> files{
       "/Applications/iMovie.app/Contents/Frameworks/"
-      "StudioSharedResources.framework/Versions/A/Resources/AppThemeBitsB.car",
+      "StudioSharedResources.framework/Versions/A/Resources/"
+      "AppThemeBitsB.car",
       "/Applications/Firefox.app/Contents/MacOS/XUL",  // 150 MB
       "/Applications/BioShock3.app/Contents/GameData/XGame/Movies/"
       "BioshockInfinite_Credits.bik",  // 370 MB
