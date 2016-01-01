@@ -1,5 +1,7 @@
 #include "audit/client/upload/file.h"
 
+#include <iostream>
+
 #include "audit/common.h"
 #include "audit/proto/cpor.pb.h"
 #include "audit/util.h"
@@ -49,12 +51,12 @@ proto::PrivateFileTag FileContext::Proto() const {
   }
   *private_tag.mutable_prf_key() = prf_->Key();
 
-  auto public_tag = private_tag.public_tag();
-  public_tag.set_num_sectors(parameters_.num_sectors);
-  public_tag.set_sector_size(parameters_.sector_size);
-  public_tag.set_num_blocks(num_blocks_);
-  BignumToString(*p_, public_tag.mutable_p());
-  *public_tag.mutable_file_full_path() = file_.file_full_path;
+  auto public_tag = private_tag.mutable_public_tag();
+  public_tag->set_num_sectors(parameters_.num_sectors);
+  public_tag->set_sector_size(parameters_.sector_size);
+  public_tag->set_num_blocks(num_blocks_);
+  *public_tag->mutable_p() = BignumToString(*p_);
+  *public_tag->mutable_file_full_path() = file_.file_full_path;
 
   return private_tag;
 }

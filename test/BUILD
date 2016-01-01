@@ -9,6 +9,7 @@ cc_binary(
     "//audit:util",
     "//audit:test_util",
     "//audit/client:prf",
+    "//audit/client/verify:local_disk_file_tag_source",
     "//audit/client/upload:file",
     "//audit/client/upload:block_tagger",
     "//audit/server:local_disk_fetcher",

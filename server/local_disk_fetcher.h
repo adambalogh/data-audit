@@ -9,7 +9,7 @@ namespace audit {
 class LocalDiskFetcher : public Fetcher {
  public:
   LocalDiskFetcher(const proto::PublicFileTag& file_tag) : file_tag_(file_tag) {
-    file_.open(file_dir_ + file_tag_.file_name(), std::ifstream::binary);
+    file_.open(file_dir_ + file_tag_.file_full_path(), std::ifstream::binary);
   }
 
   std::basic_istream<char, std::char_traits<char>>& FetchBlock(

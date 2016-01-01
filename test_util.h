@@ -7,7 +7,7 @@
 #include "audit/client/prf.h"
 #include "audit/util.h"
 #include "audit/server/fetcher.h"
-#include "audit/client/file_tag.h"
+#include "audit/client/upload/file.h"
 #include "audit/proto/cpor.pb.h"
 
 using namespace audit;
@@ -68,16 +68,16 @@ void operator%=(BN_ptr &a, unsigned int b) {
 class DummyPRF : public PRF {
  public:
   DummyPRF() {}
-  BN_ptr Encode(unsigned int i) { return BN_new_ptr(i); }
-  void SetKey(const unsigned char *key, size_t size) {}
+  BN_ptr Encode(unsigned int i) const override { return BN_new_ptr(i); }
+  std::string Key() const override { return ""; }
 };
 
 template <int n>
 class ConstantPRF : public PRF {
  public:
   ConstantPRF() {}
-  BN_ptr Encode(unsigned int i) { return BN_new_ptr(n); }
-  void SetKey(const unsigned char *key, size_t size) {}
+  BN_ptr Encode(unsigned int i) const override { return BN_new_ptr(n); }
+  std::string Key() const override { return ""; }
 };
 
 template <int n>
@@ -108,15 +108,16 @@ class DummyNumberGenerator : public RandomNumberGenerator {
 
 class MemoryFetcher : public Fetcher {
  public:
-  MemoryFetcher(const FileTag &file_tag, std::vector<proto::BlockTag> &tags,
+  MemoryFetcher(const FileContext &context, std::vector<proto::BlockTag> &tags,
                 std::stringstream &s)
-      : file_tag_(file_tag), tags_(tags), s_(s) {}
+      : context_(context), tags_(tags), s_(s) {}
   std::basic_istream<char, std::char_traits<char>> &FetchBlock(
       unsigned long index) {
     std::string block{
-        s_.str().data() + file_tag_.block_size() * index,
-        std::min(file_tag_.block_size(),
-                 s_.str().size() - (file_tag_.block_size() * index))};
+        s_.str().data() + context_.parameters().block_size() * index,
+        std::min(
+            context_.parameters().block_size(),
+            s_.str().size() - (context_.parameters().block_size() * index))};
     stream.str(block);
     return stream;
   }
@@ -124,8 +125,8 @@ class MemoryFetcher : public Fetcher {
   proto::BlockTag FetchBlockTag(unsigned long index) { return tags_.at(index); }
 
  private:
-  const FileTag &file_tag_;
-  std::istringstream stream;
+  const FileContext &context_;
+  std::stringstream stream;
   std::vector<proto::BlockTag> &tags_;
   std::stringstream &s_;
 };
