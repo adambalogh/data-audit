@@ -4,50 +4,38 @@
 #include "openssl/rand.h"
 
 #include "audit/util.h"
+#include "audit/client/prf.h"
 #include "audit/client/upload/client.h"
 #include "audit/client/upload/local_disk_storage.h"
-#include "audit/client/prf.h"
-#include "audit/client/verify/verify.h"
-#include "audit/server/prover.h"
 #include "audit/client/verify/local_disk_file_tag_source.h"
-#include "audit/server/local_disk_fetcher.h"
+#include "audit/client/verify/client.h"
+#include "audit/client/verify/proof_source.h"
+#include "audit/client/verify/local_proof_source.h"
 #include "audit/proto/cpor.pb.h"
 
 using namespace audit;
 
 int main() {
+  std::string file_name = "hello";
   if (RAND_load_file("/dev/urandom", 128) != 128) {
     return -1;
   }
 
-  Client client{std::unique_ptr<Storage>{new LocalDiskStorage{"hello"}}};
+  upload::Client upload_client{std::unique_ptr<upload::Storage>{
+      new upload::LocalDiskStorage{file_name}}};
 
   std::stringstream content{
       "aejfwoigjqogijwer;goit43io;h5w3[94thg39wa;wighe;oiw4h3;"
       "toihtq09rhgwqpg84538h"};
 
-  File file{content, "hello"};
-  client.Upload(file);
+  upload::File file{content, file_name};
+  upload_client.Upload(file);
 
-  proto::Challenge challenge;
-
-  LocalDiskFileTagSource tag_source;
-  auto tag = tag_source.GetFileTag("hello");
-
-  *challenge.mutable_file_tag() = tag.public_tag();
-
-  auto item = challenge.add_items();
-  item->set_index(0);
-  BN_ptr weight{BN_new(), ::BN_free};
-  BN_set_word(weight.get(), 1432);
-  BignumToString(*weight, item->mutable_weight());
-
-  LocalDiskFetcher fetcher{challenge.file_tag()};
-  Prover prover{fetcher, challenge};
-
-  auto proof = prover.Prove();
-
-  if (Verify<HMACPRF>(tag, challenge, proof)) {
+  verify::Client verify_client{
+      std::unique_ptr<verify::FileTagSource>(
+          new verify::LocalDiskFileTagSource{}),
+      std::unique_ptr<verify::ProofSource>(new verify::LocalProofSource{})};
+  if (verify_client.Verify(file_name, 100)) {
     std::cout << "passed!!!" << std::endl;
   } else {
     std::cout << "failed" << std::endl;
