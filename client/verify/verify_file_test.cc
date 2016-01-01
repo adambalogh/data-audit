@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "audit/client/verify/verify.h"
+#include "audit/client/verify/verify_file.h"
 
 #include <sstream>
 #include <vector>
