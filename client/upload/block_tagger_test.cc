@@ -14,7 +14,7 @@
 #include "audit/test_util.h"
 #include "audit/util.h"
 
-using namespace audit;
+using namespace audit::upload;
 
 void ExpectBlocksEqual(std::vector<proto::BlockTag> &expected,
                        std::vector<proto::BlockTag> &actual) {

@@ -8,7 +8,7 @@
 #include "audit/test_util.h"
 #include "audit/client/upload/file.h"
 
-using namespace audit;
+using namespace audit::upload;
 
 TEST(File, ThrowsExceptionWhenInvalidFile) {
   std::ifstream s{""};

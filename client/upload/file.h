@@ -15,6 +15,7 @@
 #include "audit/proto/cpor.pb.h"
 
 namespace audit {
+namespace upload {
 
 struct File {
   File(std::istream& stream, const std::string& file_name);
@@ -94,4 +95,5 @@ class FileContext {
   // A pseudo random function used for generating the tags for this file
   const std::unique_ptr<PRF> prf_;
 };
+}
 }

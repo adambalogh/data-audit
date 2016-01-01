@@ -11,6 +11,7 @@
 #include "audit/client/upload/storage.h"
 
 namespace audit {
+namespace upload {
 
 class Client {
  public:
@@ -21,4 +22,5 @@ class Client {
  private:
   std::unique_ptr<Storage> storage_;
 };
+}
 }

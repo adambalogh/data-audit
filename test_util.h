@@ -108,8 +108,8 @@ class DummyNumberGenerator : public RandomNumberGenerator {
 
 class MemoryFetcher : public Fetcher {
  public:
-  MemoryFetcher(const FileContext &context, std::vector<proto::BlockTag> &tags,
-                std::stringstream &s)
+  MemoryFetcher(const upload::FileContext &context,
+                std::vector<proto::BlockTag> &tags, std::stringstream &s)
       : context_(context), tags_(tags), s_(s) {}
   std::basic_istream<char, std::char_traits<char>> &FetchBlock(
       unsigned long index) {
@@ -125,7 +125,7 @@ class MemoryFetcher : public Fetcher {
   proto::BlockTag FetchBlockTag(unsigned long index) { return tags_.at(index); }
 
  private:
-  const FileContext &context_;
+  const upload::FileContext &context_;
   std::stringstream stream;
   std::vector<proto::BlockTag> &tags_;
   std::stringstream &s_;

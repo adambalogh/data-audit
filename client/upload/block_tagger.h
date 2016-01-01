@@ -11,6 +11,7 @@
 #include "audit/proto/cpor.pb.h"
 
 namespace audit {
+namespace upload {
 
 // BlockTagger returns a BlockTag for each block in the given file.
 //
@@ -67,4 +68,5 @@ class BlockTagger {
   // BN context used for computations
   BN_CTX_ptr ctx{BN_CTX_new(), ::BN_CTX_free};
 };
+}
 }

@@ -14,6 +14,7 @@
 #include "audit/proto/cpor.pb.h"
 
 namespace audit {
+namespace upload {
 
 void BlockTagger::FillBuffer() {
   assert(!file_read_);
@@ -82,5 +83,6 @@ proto::BlockTag BlockTagger::GetNext() { return GenerateTag(); }
 
 bool BlockTagger::HasNext() const {
   return num_blocks_read_ < context_.num_blocks();
+}
 }
 }

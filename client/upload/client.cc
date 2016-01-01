@@ -10,6 +10,7 @@
 #include "audit/proto/cpor.pb.h"
 
 namespace audit {
+namespace upload {
 
 void Client::Upload(const File& file) {
   TaggingParameters params{10, 128};
@@ -33,5 +34,6 @@ void Client::Upload(const File& file) {
 
   storage_->StoreFileTag(context.Proto());
   storage_->StoreFile(file.stream);
+}
 }
 }

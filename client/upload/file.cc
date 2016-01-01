@@ -7,6 +7,7 @@
 #include "audit/util.h"
 
 namespace audit {
+namespace upload {
 
 File::File(std::istream& stream, const std::string& file_full_path)
     : stream(stream), file_full_path(file_full_path) {
@@ -59,5 +60,6 @@ proto::PrivateFileTag FileContext::Proto() const {
   *public_tag->mutable_file_full_path() = file_.file_full_path;
 
   return private_tag;
+}
 }
 }

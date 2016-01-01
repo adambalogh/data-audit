@@ -6,6 +6,7 @@
 #include "audit/proto/cpor.pb.h"
 
 namespace audit {
+namespace upload {
 
 // Storage is an interface for storing the original File, the File Tag and the
 // Block Tags.
@@ -41,4 +42,5 @@ class StorageUsingFileName : public Storage {
  protected:
   const std::string file_name_;
 };
+}
 }

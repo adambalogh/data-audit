@@ -6,6 +6,7 @@
 #include "audit/proto/cpor.pb.h"
 
 namespace audit {
+namespace upload {
 
 // Storage implementation that stores all the data on the local disk.
 //
@@ -23,4 +24,5 @@ class LocalDiskStorage : public StorageUsingFileName {
   // Everything is stored under this directory
   std::string file_dir_{"/users/adambalogh/Developer/audit/files_dir/"};
 };
+}
 }

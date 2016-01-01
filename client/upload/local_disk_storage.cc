@@ -8,6 +8,7 @@
 #include "audit/proto/cpor.pb.h"
 
 namespace audit {
+namespace upload {
 
 void LocalDiskStorage::StoreBlockTag(const proto::BlockTag& tag) {
   std::ofstream tag_file{
@@ -38,5 +39,6 @@ void LocalDiskStorage::StoreFile(std::istream& file) {
   while (file.read(buffer.data(), buffer.size()).gcount()) {
     out_file.write(buffer.data(), file.gcount());
   }
+}
 }
 }
