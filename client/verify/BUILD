@@ -52,6 +52,7 @@ cc_library(
   hdrs = ["client.h"],
   deps = [
     ":verify_file",
+    ":proof_source",
     "//audit:util",
     "//audit/client:prf",
     "//audit/proto:cpor",
