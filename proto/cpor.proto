@@ -9,10 +9,10 @@ message BlockTag {
 
 message PublicFileTag {
   // The total number of blocks in the file
-  uint64 num_blocks = 1;
+  int32 num_blocks = 1;
 
   // The number of sectors in a block
-  uint64 num_sectors = 2;
+  int32 num_sectors = 2;
 
   // The size of a block in bytes
   int32 sector_size = 3;
@@ -34,7 +34,7 @@ message PrivateFileTag {
 
 message ChallengeItem {
   // index of requested block from file
-  uint64 index = 1;
+  int32 index = 1;
 
   // weight of requested block
   bytes weight = 2;
