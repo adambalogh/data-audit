@@ -3,6 +3,7 @@
 #include <istream>
 #include <string>
 
+#include "audit/client/upload/file.h"
 #include "audit/proto/cpor.pb.h"
 
 namespace audit {
@@ -15,9 +16,10 @@ namespace upload {
 // retrieved later using a Fetcher.
 class Storage {
  public:
-  virtual void StoreBlockTag(const proto::BlockTag& tag) = 0;
-  virtual void StoreFileTag(const proto::PrivateFileTag& file_tag) = 0;
-  virtual void StoreFile(std::istream& file) = 0;
+  virtual void StoreBlockTag(const File& file, const proto::BlockTag& tag) = 0;
+  virtual void StoreFileTag(const File& file,
+                            const proto::PrivateFileTag& file_tag) = 0;
+  virtual void StoreFile(const File& file) = 0;
 
   virtual ~Storage() {}
 };
@@ -34,13 +36,5 @@ class Storage {
 //    }
 //  }
 //};
-
-class StorageUsingFileName : public Storage {
- public:
-  StorageUsingFileName(const std::string& file_name) : file_name_(file_name) {}
-
- protected:
-  const std::string file_name_;
-};
 }
 }

@@ -29,11 +29,11 @@ void Client::Upload(const File& file) {
                       std::unique_ptr<PRF>(new HMACPRF)};
   BlockTagger tagger{context};
   while (tagger.HasNext()) {
-    storage_->StoreBlockTag(tagger.GetNext());
+    storage_->StoreBlockTag(file, tagger.GetNext());
   }
 
-  storage_->StoreFileTag(context.Proto());
-  storage_->StoreFile(file.stream);
+  storage_->StoreFileTag(file, context.Proto());
+  storage_->StoreFile(file);
 }
 }
 }

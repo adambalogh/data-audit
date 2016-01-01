@@ -68,6 +68,7 @@ cc_library(
   hdrs = ["local_disk_storage.h"],
   deps = [
     ":storage",
+    ":file",
     "//audit/proto:cpor",
   ]
 )

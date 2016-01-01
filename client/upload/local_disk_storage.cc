@@ -10,9 +10,10 @@
 namespace audit {
 namespace upload {
 
-void LocalDiskStorage::StoreBlockTag(const proto::BlockTag& tag) {
+void LocalDiskStorage::StoreBlockTag(const File& file,
+                                     const proto::BlockTag& tag) {
   std::ofstream tag_file{
-      file_dir_ + "tags" + file_name_ + std::to_string(tag.index()),
+      file_dir_ + "tags" + file.file_full_path + std::to_string(tag.index()),
       std::ofstream::binary};
   if (!tag_file) {
     throw std::runtime_error("Could not open file to write BlockTag");
@@ -20,8 +21,9 @@ void LocalDiskStorage::StoreBlockTag(const proto::BlockTag& tag) {
   tag.SerializeToOstream(&tag_file);
 }
 
-void LocalDiskStorage::StoreFileTag(const proto::PrivateFileTag& file_tag) {
-  std::ofstream tag_file{file_dir_ + "file_tag" + file_name_,
+void LocalDiskStorage::StoreFileTag(const File& file,
+                                    const proto::PrivateFileTag& file_tag) {
+  std::ofstream tag_file{file_dir_ + "file_tag" + file.file_full_path,
                          std::ofstream::binary};
   if (!tag_file) {
     throw std::runtime_error("Could not open file to write FileTag");
@@ -29,15 +31,16 @@ void LocalDiskStorage::StoreFileTag(const proto::PrivateFileTag& file_tag) {
   file_tag.SerializeToOstream(&tag_file);
 }
 
-void LocalDiskStorage::StoreFile(std::istream& file) {
-  std::ofstream out_file{file_dir_ + file_name_, std::ofstream::binary};
+void LocalDiskStorage::StoreFile(const File& file) {
+  std::ofstream out_file{file_dir_ + file.file_full_path,
+                         std::ofstream::binary};
   if (!out_file) {
     throw std::runtime_error("Could not open file to write the original file");
   }
   std::array<char, 1000> buffer;
 
-  while (file.read(buffer.data(), buffer.size()).gcount()) {
-    out_file.write(buffer.data(), file.gcount());
+  while (file.stream.read(buffer.data(), buffer.size()).gcount()) {
+    out_file.write(buffer.data(), file.stream.gcount());
   }
 }
 }

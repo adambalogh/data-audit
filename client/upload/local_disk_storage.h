@@ -11,14 +11,13 @@ namespace upload {
 // Storage implementation that stores all the data on the local disk.
 //
 // It is only created for testing purposes.
-class LocalDiskStorage : public StorageUsingFileName {
+class LocalDiskStorage : public Storage {
  public:
-  LocalDiskStorage(const std::string& file_name)
-      : StorageUsingFileName(file_name) {}
-
-  virtual void StoreBlockTag(const proto::BlockTag& tag) override;
-  virtual void StoreFileTag(const proto::PrivateFileTag& file_tag) override;
-  virtual void StoreFile(std::istream& file) override;
+  virtual void StoreBlockTag(const File& file,
+                             const proto::BlockTag& tag) override;
+  virtual void StoreFileTag(const File& file,
+                            const proto::PrivateFileTag& file_tag) override;
+  virtual void StoreFile(const File& file) override;
 
  private:
   // Everything is stored under this directory

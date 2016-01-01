@@ -21,8 +21,8 @@ int main() {
     return -1;
   }
 
-  upload::Client upload_client{std::unique_ptr<upload::Storage>{
-      new upload::LocalDiskStorage{file_name}}};
+  upload::Client upload_client{
+      std::unique_ptr<upload::Storage>{new upload::LocalDiskStorage}};
 
   std::stringstream content{
       "aejfwoigjqogijwer;goit43io;h5w3[94thg39wa;wighe;oiw4h3;"
@@ -34,7 +34,8 @@ int main() {
   verify::Client verify_client{
       std::unique_ptr<verify::FileTagSource>(
           new verify::LocalDiskFileTagSource{}),
-      std::unique_ptr<verify::ProofSource>(new verify::LocalProofSource{})};
+      std::unique_ptr<verify::ProofSource>(new verify::LocalProofSource)};
+
   if (verify_client.Verify(file_name, 100)) {
     std::cout << "passed!!!" << std::endl;
   } else {
