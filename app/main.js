@@ -13,8 +13,10 @@ app.on('window-all-closed', function() {
 app.on('ready', function() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 300,
-    height: 180,
+    width: 640,
+    height: 400,
+    resizable: false,
+    title: "File Check",
   });
 
   // and load the index.html of the app.
