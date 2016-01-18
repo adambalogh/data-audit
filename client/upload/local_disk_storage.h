@@ -19,9 +19,8 @@ class LocalDiskStorage : public Storage {
                             const proto::PrivateFileTag& file_tag) override;
   virtual void StoreFile(const File& file) override;
 
- private:
   // Everything is stored under this directory
-  std::string file_dir_{"/users/adambalogh/Developer/audit/files_dir/"};
+  static const std::string file_dir_;
 };
 }
 }

@@ -10,6 +10,9 @@
 namespace audit {
 namespace upload {
 
+const std::string LocalDiskStorage::file_dir_{
+    "/users/adambalogh/Developer/audit/files_dir/"};
+
 void LocalDiskStorage::StoreBlockTag(const File& file,
                                      const proto::BlockTag& tag) {
   std::ofstream tag_file{

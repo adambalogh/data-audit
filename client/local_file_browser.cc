@@ -1,0 +1,34 @@
+#include "audit/client/local_file_browser.h"
+
+#include <iostream>
+
+#include <dirent.h>
+
+#include "audit/client/upload/local_disk_storage.h"
+
+namespace audit {
+
+std::vector<std::string> LocalFileBrowser::GetAllFiles() {
+  std::vector<std::string> files;
+
+  auto dir_name = upload::LocalDiskStorage::file_dir_;
+
+  DIR *dp;
+  struct dirent *ep;
+
+  dp = opendir(dir_name.c_str());
+  if (dp == NULL) {
+    // error
+  }
+
+  while ((ep = readdir(dp))) {
+    if (ep->d_type != DT_REG) {
+      continue;
+    }
+    files.push_back(ep->d_name);
+  }
+  (void)closedir(dp);
+
+  return files;
+}
+}
