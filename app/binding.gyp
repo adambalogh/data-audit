@@ -78,6 +78,7 @@
           "/users/adambalogh/Developer/bazel-bin/audit/client/libprf.a",
           "/users/adambalogh/Developer/bazel-bin/audit/client/verify/libclient.a",
           "/users/adambalogh/Developer/bazel-bin/audit/client/verify/liblocal_disk_file_tag_source.a",
+          "/users/adambalogh/Developer/bazel-bin/audit/client/upload/liblocal_disk_storage.a",
           "/users/adambalogh/Developer/bazel-bin/audit/client/verify/liblocal_proof_source.a",
           "/users/adambalogh/Developer/bazel-bin/audit/client/verify/libverify_file.a",
           "/users/adambalogh/Developer/bazel-bin/audit/server/liblocal_disk_fetcher.a",
