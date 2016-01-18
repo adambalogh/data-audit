@@ -36,6 +36,7 @@ cc_library(
   hdrs = ["local_disk_file_tag_source.h"],
   deps = [
     "//audit/proto:cpor",
+    "//audit/client/upload:local_disk_storage",
   ]
 )
 

@@ -2,6 +2,7 @@
 #include <string>
 
 #include "audit/server/fetcher.h"
+#include "audit/client/upload/local_disk_storage.h"
 
 namespace audit {
 
@@ -20,7 +21,7 @@ class LocalDiskFetcher : public Fetcher {
  private:
   proto::PublicFileTag file_tag_;
 
-  std::string file_dir_{"/users/adambalogh/Developer/audit/files_dir/"};
+  const std::string file_dir_ = upload::LocalDiskStorage::files_dir;
 
   std::ifstream file_;
 };

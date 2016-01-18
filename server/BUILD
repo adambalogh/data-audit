@@ -30,8 +30,8 @@ cc_binary(
     "//audit/third_party/openssl:openssl",
     "//audit:util",
     "//audit:common",
-    "//audit/client:file_tag",
-    "//audit/client:block_tagger",
+    "//audit/client/upload:file",
+    "//audit/client/upload:block_tagger",
     "//audit/client:prf",
     "//audit:test_util",
     "//audit/proto:cpor",
@@ -45,6 +45,7 @@ cc_library(
   deps = [
     ":fetcher",
     "//audit/proto:cpor",
+    "//audit/client/upload:local_disk_storage",
   ]
 )
 

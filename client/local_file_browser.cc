@@ -11,7 +11,7 @@ namespace audit {
 std::vector<std::string> LocalFileBrowser::GetAllFiles() {
   std::vector<std::string> files;
 
-  auto dir_name = upload::LocalDiskStorage::file_dir_;
+  auto dir_name = upload::LocalDiskStorage::files_dir;
 
   DIR *dp;
   struct dirent *ep;
