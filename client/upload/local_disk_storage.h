@@ -20,7 +20,8 @@ class LocalDiskStorage : public Storage {
   virtual void StoreFile(const File& file) override;
 
   // Everything is stored under this directory
-  static const std::string file_dir_;
+  static const std::string files_dir;
+  static const std::string tags_dir;
 };
 }
 }
