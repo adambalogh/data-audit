@@ -4,6 +4,16 @@ window.onload = function() {
   var dialog = remote.require('dialog');  
   var upload = require('bindings')('upload');
   var verify = require('bindings')('verify');
+  var file_browser = require('bindings')('file_browser');
+
+  var files_list = document.getElementById("files");
+  file_browser.show_files(function(files) {
+    files.forEach(function(file) {
+      var li = document.createElement("li");
+      li.appendChild(document.createTextNode(file));
+      files_list.appendChild(li);
+    });
+  });
 
   var uploadButton = document.getElementById("upload");
   uploadButton.onclick = function() {
