@@ -27,6 +27,11 @@ li {
   padding: 8px;
 }
 
+li>div {
+  cursor: pointer;
+  display: inline-block;
+}
+
 input#search {
   margin: 0px;
   padding-left: 10px;

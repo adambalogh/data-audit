@@ -11,9 +11,13 @@ window.onload = function() {
   file_browser.show_files(function(files) {
 
     files.forEach(function(file) {
+      var div = document.createElement("div");
+      div.appendChild(document.createTextNode(file));
+
       var li = document.createElement("li");
-      li.appendChild(document.createTextNode(file));
+      li.appendChild(div);
       li.setAttribute("class", "file");
+
       files_list.appendChild(li);
     });
 
