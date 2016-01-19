@@ -124,10 +124,11 @@
       ],
 
       "link_settings": {
-        'libraries': [
+        "libraries": [
 
           "/users/adambalogh/Developer/bazel-bin/audit/client/upload/liblocal_disk_storage.a",
-          "/users/adambalogh/Developer/bazel-bin/audit/client/liblocal_file_browser.a",
+          "/users/adambalogh/Developer/bazel-bin/audit/files/libfile_browser.a",
+          "/users/adambalogh/Developer/bazel-bin/audit/files/liblocal_file_list_source.a",
         ],
       },
 

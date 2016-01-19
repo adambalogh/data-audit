@@ -7,7 +7,7 @@ namespace audit {
 
 class FileListSource {
  public:
-  virtual std::vector<std::string> GetAllFiles() = 0;
+  virtual std::vector<const std::string> GetFiles() = 0;
 
   virtual ~FileListSource() {}
 };
