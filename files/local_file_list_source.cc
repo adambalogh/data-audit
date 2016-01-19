@@ -1,4 +1,4 @@
-#include "audit/client/local_file_browser.h"
+#include "audit/files/local_file_list_source.h"
 
 #include <iostream>
 
@@ -8,7 +8,7 @@
 
 namespace audit {
 
-std::vector<std::string> LocalFileBrowser::GetAllFiles() {
+std::vector<std::string> LocalFileListSource::GetAllFiles() {
   std::vector<std::string> files;
 
   auto dir_name = upload::LocalDiskStorage::files_dir;

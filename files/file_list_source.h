@@ -5,10 +5,10 @@
 
 namespace audit {
 
-class FileBrowser {
+class FileListSource {
  public:
   virtual std::vector<std::string> GetAllFiles() = 0;
 
-  virtual ~FileBrowser() {}
+  virtual ~FileListSource() {}
 };
 }
