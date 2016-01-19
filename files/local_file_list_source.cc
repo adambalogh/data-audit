@@ -8,8 +8,8 @@
 
 namespace audit {
 
-std::vector<std::string> LocalFileListSource::GetAllFiles() {
-  std::vector<std::string> files;
+std::vector<const std::string> LocalFileListSource::GetFiles() {
+  std::vector<const std::string> files;
 
   auto dir_name = upload::LocalDiskStorage::files_dir;
 

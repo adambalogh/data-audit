@@ -6,6 +6,6 @@ namespace audit {
 
 class LocalFileListSource : public FileListSource {
  public:
-  std::vector<std::string> GetAllFiles();
+  std::vector<const std::string> GetFiles();
 };
 }
