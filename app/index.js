@@ -1,28 +1,18 @@
+
+var remote = require('remote'); 
+var dialog = remote.require('dialog');  
+var upload = require('bindings')('upload');
+var verify = require('bindings')('verify');
+var file_browser = require('bindings')('file_browser');
+
 window.onload = function() {
 
-  var remote = require('remote'); 
-  var dialog = remote.require('dialog');  
-  var upload = require('bindings')('upload');
-  var verify = require('bindings')('verify');
-  var file_browser = require('bindings')('file_browser');
-
+  // Initially, show all the files available
   file_browser.get_files(function(files) {
     displayFiles(files);
-   
-    var file_buttons = document.getElementsByClassName("file");
-    for (var i = 0; i < file_buttons.length; i++) {
-      file_buttons[i].onclick = function(e) {
-        var fileName = this.innerText;
-        verify.verify(fileName, function(result) {
-          alert(result);
-        });
-      }
-    }
-
   });
 
   var uploadButton = document.getElementById("upload");
-
   uploadButton.onclick = function() {
     dialog.showOpenDialog(function(files) {
       upload.upload(files[0], function(a) {
@@ -40,6 +30,7 @@ window.onload = function() {
 
 }
 
+// Displays the given list of files
 function displayFiles(files) {
   var files_list = document.getElementById("files");
   while (files_list.firstChild) {
@@ -48,6 +39,9 @@ function displayFiles(files) {
   files.forEach(function(file) {
     var div = document.createElement("div");
     div.appendChild(document.createTextNode(file));
+    div.onclick = function() {
+      verify_file(this.innerText);
+    }
 
     var li = document.createElement("li");
     li.appendChild(div);
@@ -57,7 +51,9 @@ function displayFiles(files) {
   });
 }
 
-function filter(query) {
-  alert(query);
+// Verifies the given file's integrity, and displays the result
+function verify_file(file_name) {
+  verify.verify(file_name, function(result) {
+    alert(result);
+  });
 }
-
