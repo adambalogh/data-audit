@@ -16,6 +16,8 @@ app.on('ready', function() {
     width: 640,
     height: 400,
     resizable: false,
+    fullscreen: false,
+    fullscreenable: false,
     title: "File Check",
   });
 

@@ -110,4 +110,5 @@ a.main:visited {
   height: 85%;
 
   background: #f6f7f9;
+  overflow-y: scroll;
 }

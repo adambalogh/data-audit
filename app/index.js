@@ -16,14 +16,14 @@ window.onload = function() {
   uploadButton.onclick = function() {
     dialog.showOpenDialog(function(files) {
       var uploadWin = new BrowserWindow({
-        width: 440,
-        height: 140,
+        width: 540,
+        height: 160,
         title: "Uploading file",
         resizable: false,
-        alwaysOnTop: true,
         maximizable: false,
         minimizable: false,
         fullscreen: false,
+        closable: false,
       });
       uploadWin.loadURL('file://' + __dirname + '/upload.html');
 
