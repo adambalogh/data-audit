@@ -15,6 +15,8 @@ window.onload = function() {
   var uploadButton = document.getElementById("upload");
   uploadButton.onclick = function() {
     dialog.showOpenDialog(function(files) {
+      if (files == undefined || files.length == 0) return;
+
       var uploadWin = new BrowserWindow({
         width: 540,
         height: 160,

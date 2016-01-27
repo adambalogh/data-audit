@@ -5,48 +5,64 @@
 
 #include <nan.h>
 
+#include "upload.h"
+
 #include "audit/util.h"
 #include "audit/client/prf.h"
 #include "audit/client/upload/client.h"
 #include "audit/client/upload/local_disk_storage.h"
 
-std::string GetFileName(const std::string& file_path) {
-  return file_path.substr(file_path.find_last_of("\\/") + 1);
-}
+audit::upload::Client client{std::unique_ptr<audit::upload::Storage>{
+    new audit::upload::LocalDiskStorage}};
 
-void Upload(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  v8::String::Utf8Value param1(info[0]->ToString());
+class UploadWorker : public Nan::AsyncWorker {
+ public:
+  UploadWorker(Nan::Callback* callback, const std::string& file_path)
+      : AsyncWorker(callback), file_path_(file_path) {}
 
-  std::string file_path{*param1};
-  auto file_name = GetFileName(file_path);
+  void Execute() override {
+    std::ifstream content{file_path_};
 
-  audit::upload::Client client{std::unique_ptr<audit::upload::Storage>{
-      new audit::upload::LocalDiskStorage}};
+    // TODO use full file path for file name
+    audit::upload::File file{content, GetFileName()};
 
-  std::ifstream content{file_path};
-  // TODO use full file path
-  audit::upload::File file{content, file_name};
-
-  try {
-    client.Upload(file);
-  } catch (std::runtime_error& e) {
-    std::string error = "Runtime error: " + std::string(e.what());
-    Nan::ThrowError(error.c_str());
-    return;
-  } catch (std::exception& e) {
-    Nan::ThrowError(e.what());
-    return;
+    try {
+      client.Upload(file);
+    } catch (std::runtime_error& e) {
+      std::string error = "Runtime error: " + std::string(e.what());
+      SetErrorMessage(error.c_str());
+    } catch (std::exception& e) {
+      std::string error = e.what();
+      SetErrorMessage(error.c_str());
+    }
   }
 
-  v8::Local<v8::Function> cb = info[1].As<v8::Function>();
-  const unsigned argc = 1;
-  v8::Local<v8::Value> argv[argc] = {Nan::New(file_name).ToLocalChecked()};
-  Nan::MakeCallback(Nan::GetCurrentContext()->Global(), cb, argc, argv);
+  void HandleOKCallback() override {
+    Nan::HandleScope scope;
+    v8::Local<v8::Value> argv[] = {Nan::Null()};
+    callback->Call(1, argv);
+  }
+
+ private:
+  std::string GetFileName() {
+    return file_path_.substr(file_path_.find_last_of("\\/") + 1);
+  }
+
+  const std::string file_path_;
+};
+
+NAN_METHOD(Upload) {
+  v8::String::Utf8Value param1(info[0]->ToString());
+  std::string file_path{*param1};
+  Nan::Callback* callback = new Nan::Callback(info[1].As<v8::Function>());
+
+  AsyncQueueWorker(new UploadWorker(callback, file_path));
 }
 
-void Init(v8::Local<v8::Object> exports) {
-  exports->Set(Nan::New("upload").ToLocalChecked(),
-               Nan::New<v8::FunctionTemplate>(Upload)->GetFunction());
+NAN_MODULE_INIT(InitAll) {
+  Nan::Set(target, Nan::New<v8::String>("uploadAsync").ToLocalChecked(),
+           Nan::GetFunction(Nan::New<v8::FunctionTemplate>(Upload))
+               .ToLocalChecked());
 }
 
-NODE_MODULE(upload, Init)
+NODE_MODULE(upload, InitAll)

@@ -13,17 +13,16 @@ window.onload = function() {
     var title = document.getElementById("title");
     title.appendChild(document.createTextNode("Uploading \"" + fileName + "\""));
 
-    try {
-      upload.upload(fileName, function(a) {
-        window.ready = true;
-        var closeButton = document.getElementById("close").style.display = "inline-block";
-      });
-    } catch(e) {
+    upload.uploadAsync(fileName, function(error) {
+      if (error != null) {
+        alert(error);
+      }
       window.ready = true;
       var closeButton = document.getElementById("close").style.display = "inline-block";
-      alert(e);
-    }
-  });
+    });
+
+
+  }); // on fileName
 
 }
 
