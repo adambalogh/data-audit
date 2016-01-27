@@ -37,7 +37,11 @@ function displayFiles(files) {
     files_list.removeChild(files_list.firstChild);
   }
   files.forEach(function(file) {
+    var icon = document.createElement("span");
+    icon.setAttribute("class", "octicon octicon-file-text icon");
+    
     var div = document.createElement("div");
+    div.appendChild(icon);
     div.appendChild(document.createTextNode(file));
     div.onclick = function() {
       verify_file(this.innerText);
