@@ -11,6 +11,7 @@
 #include "audit/client/prf.h"
 #include "audit/client/upload/client.h"
 #include "audit/client/upload/local_disk_storage.h"
+#include "audit/client/upload/stats.h"
 
 audit::upload::Client client{std::unique_ptr<audit::upload::Storage>{
     new audit::upload::LocalDiskStorage}};
@@ -27,7 +28,7 @@ class UploadWorker : public Nan::AsyncWorker {
     audit::upload::File file{content, GetFileName()};
 
     try {
-      client.Upload(file);
+      stats_ = client.Upload(file);
     } catch (std::runtime_error& e) {
       std::string error = "Runtime error: " + std::string(e.what());
       SetErrorMessage(error.c_str());
@@ -39,8 +40,22 @@ class UploadWorker : public Nan::AsyncWorker {
 
   void HandleOKCallback() override {
     Nan::HandleScope scope;
-    v8::Local<v8::Value> argv[] = {Nan::Null()};
-    callback->Call(1, argv);
+
+    v8::Local<v8::Array> array = Nan::New<v8::Array>(3);
+    array->Set(0, Nan::New((uint32_t)stats_.file_size));
+    array->Set(1, Nan::New((uint32_t)stats_.file_tag_size));
+    array->Set(2, Nan::New((uint32_t)stats_.block_tags_size));
+
+    v8::Local<v8::Value> argv[] = {array, Nan::Null()};
+    callback->Call(2, argv);
+  }
+
+  void HandleErrorCallback() override {
+    Nan::HandleScope scope;
+    v8::Local<v8::Value> argv[] = {
+        Nan::Null(), v8::Exception::Error(Nan::New<v8::String>(ErrorMessage())
+                                              .ToLocalChecked())};
+    callback->Call(2, argv);
   }
 
  private:
@@ -49,6 +64,8 @@ class UploadWorker : public Nan::AsyncWorker {
   }
 
   const std::string file_path_;
+
+  audit::upload::Stats stats_;
 };
 
 NAN_METHOD(Upload) {
