@@ -6,6 +6,8 @@ electron.crashReporter.start();
 
 var mainWindow = null;
 
+app.commandLine.appendSwitch('enable-logging', "true");
+
 app.on('window-all-closed', function() {
   app.quit();
 });

@@ -12,6 +12,7 @@ namespace upload {
 File::File(std::istream& stream, const std::string& file_full_path)
     : stream(stream),
       file_full_path(file_full_path),
+      // TODO check stream somehow?
       size([&stream]() {
         stream.seekg(0, stream.end);
         auto length = stream.tellg();
