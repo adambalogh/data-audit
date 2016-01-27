@@ -1,9 +1,9 @@
-
 var remote = require('remote'); 
 var dialog = remote.require('dialog');  
-var upload = require('bindings')('upload');
 var verify = require('bindings')('verify');
 var file_browser = require('bindings')('file_browser');
+const BrowserWindow = require('electron').remote.BrowserWindow;
+
 
 window.onload = function() {
 
@@ -15,9 +15,29 @@ window.onload = function() {
   var uploadButton = document.getElementById("upload");
   uploadButton.onclick = function() {
     dialog.showOpenDialog(function(files) {
-      upload.upload(files[0], function(a) {
-        alert(a);
+      var uploadWin = new BrowserWindow({
+        width: 440,
+        height: 140,
+        title: "Uploading file",
+        resizable: false,
+        alwaysOnTop: true,
+        maximizable: false,
+        minimizable: false,
+        fullscreen: false,
       });
+      uploadWin.loadURL('file://' + __dirname + '/upload.html');
+
+      uploadWin.webContents.on('did-finish-load', function() {
+        uploadWin.webContents.send('fileName', files[0]);
+      });
+
+      uploadWin.on('closed', function() {
+        file_browser.get_files(function(files) {
+          displayFiles(files);
+        });
+      });
+
+      uploadWin.show();
     });
   }
 
