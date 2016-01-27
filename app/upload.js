@@ -13,10 +13,16 @@ window.onload = function() {
     var title = document.getElementById("title");
     title.appendChild(document.createTextNode("Uploading \"" + fileName + "\""));
 
-    upload.upload(fileName, function(a) {
+    try {
+      upload.upload(fileName, function(a) {
+        window.ready = true;
+        var closeButton = document.getElementById("close").style.display = "inline-block";
+      });
+    } catch(e) {
       window.ready = true;
       var closeButton = document.getElementById("close").style.display = "inline-block";
-    });
+      alert(e);
+    }
   });
 
 }

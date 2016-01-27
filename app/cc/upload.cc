@@ -27,7 +27,16 @@ void Upload(const Nan::FunctionCallbackInfo<v8::Value>& info) {
   // TODO use full file path
   audit::upload::File file{content, file_name};
 
-  client.Upload(file);
+  try {
+    client.Upload(file);
+  } catch (std::runtime_error& e) {
+    std::string error = "Runtime error: " + std::string(e.what());
+    Nan::ThrowError(error.c_str());
+    return;
+  } catch (std::exception& e) {
+    Nan::ThrowError(e.what());
+    return;
+  }
 
   v8::Local<v8::Function> cb = info[1].As<v8::Function>();
   const unsigned argc = 1;
