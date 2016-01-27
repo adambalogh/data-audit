@@ -18,21 +18,16 @@ namespace audit {
 namespace upload {
 
 struct File {
-  File(std::istream& stream, const std::string& file_name);
-
-  // Returns the size of the file in bytes
-  size_t size() {
-    stream.seekg(0, stream.end);
-    auto length = stream.tellg();
-    stream.seekg(0, stream.beg);
-    return length;
-  }
+  File(std::istream& stream, const std::string& file_full_path);
 
   // The stream containing the content of the file
   std::istream& stream;
 
   // The full path and name of the file
   const std::string file_full_path;
+
+  // The size of the file in bytes
+  const size_t size;
 };
 
 // Holds the parameters used for generating tags.

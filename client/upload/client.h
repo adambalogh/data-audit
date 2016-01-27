@@ -17,7 +17,7 @@ class Client {
  public:
   Client(std::unique_ptr<Storage> storage) : storage_(std::move(storage)) {}
 
-  void Upload(const File& file);
+  Stats Upload(const File& file);
 
  private:
   std::unique_ptr<Storage> storage_;

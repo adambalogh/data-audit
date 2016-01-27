@@ -10,7 +10,14 @@ namespace audit {
 namespace upload {
 
 File::File(std::istream& stream, const std::string& file_full_path)
-    : stream(stream), file_full_path(file_full_path) {
+    : stream(stream),
+      file_full_path(file_full_path),
+      size([&stream]() {
+        stream.seekg(0, stream.end);
+        auto length = stream.tellg();
+        stream.seekg(0, stream.beg);
+        return length;
+      }()) {
   if (!stream) {
     throw std::runtime_error("The given stream cannot be read from.");
   }
@@ -34,7 +41,7 @@ FileContext::FileContext(const File& file, const TaggingParameters& parameters,
 }
 
 int FileContext::CalculateNumBlocks() {
-  auto file_size = file_.size();
+  auto file_size = file_.size;
   auto block_size = parameters_.block_size();
 
   int num_blocks = file_size / block_size;

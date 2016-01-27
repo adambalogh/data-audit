@@ -12,7 +12,7 @@
 namespace audit {
 namespace upload {
 
-void Client::Upload(const File& file) {
+Stats Client::Upload(const File& file) {
   TaggingParameters params{10, 128};
 
   BN_ptr p{BN_new(), ::BN_free};
@@ -27,13 +27,18 @@ void Client::Upload(const File& file) {
 
   FileContext context{file, params, std::move(alphas), std::move(p),
                       std::unique_ptr<PRF>(new HMACPRF)};
+
+  StorageWithStats unique_storage{storage_.get()};
+
   BlockTagger tagger{context};
   while (tagger.HasNext()) {
-    storage_->StoreBlockTag(file, tagger.GetNext());
+    unique_storage.StoreBlockTag(file, tagger.GetNext());
   }
 
-  storage_->StoreFileTag(file, context.Proto());
-  storage_->StoreFile(file);
+  unique_storage.StoreFileTag(file, context.Proto());
+  unique_storage.StoreFile(file);
+
+  return unique_storage.GetStats();
 }
 }
 }

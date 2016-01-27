@@ -16,7 +16,7 @@ cc_binary(
   name = "file_test",
   srcs = ["file_test.cc"],
   deps = [
-    "@gtest//:main",
+    "//audit/third_party/gtest:gtest",
     ":file",
     "//audit:test_util",
     "//audit/third_party/openssl:openssl",
@@ -58,6 +58,7 @@ cc_library(
   name = "storage",
   hdrs = ["storage.h"],
   deps = [
+    ":stats",
     "//audit/proto:cpor",
   ]
 )
@@ -85,6 +86,12 @@ cc_library(
     "//audit:util",
     "//audit/third_party/openssl:openssl",
   ]
+)
+
+cc_library(
+    name = "stats",
+    hdrs = ["stats.h"],
+    deps = []
 )
 
 
