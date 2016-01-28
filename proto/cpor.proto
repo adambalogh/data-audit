@@ -7,6 +7,11 @@ message BlockTag {
   bytes sigma = 2;
 }
 
+message BlockTagMap {
+  repeated uint64 offset = 1;
+  repeated uint64 index = 2;
+}
+
 message PublicFileTag {
   // The total number of blocks in the file
   int32 num_blocks = 1;
