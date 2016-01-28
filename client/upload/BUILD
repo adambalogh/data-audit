@@ -95,5 +95,24 @@ cc_library(
     deps = []
 )
 
+cc_library(
+    name = "block_tag_serializer",
+    hdrs = ["block_tag_serializer.h"],
+    srcs = ["block_tag_serializer.cc"],
+    deps = [
+        ":file",
+        "//audit/proto:cpor",
+    ]
+)
+
+cc_binary(
+    name = "block_tag_serializer_test",
+    srcs = ["block_tag_serializer_test.cc"],
+    deps = [
+        ":block_tag_serializer",
+        "//audit/proto:cpor",
+        "//audit/third_party/gtest:gtest",
+    ]
+)
 
 
