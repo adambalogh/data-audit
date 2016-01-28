@@ -15,6 +15,10 @@ namespace upload {
 //
 // All the files and tags should be stored in a way, so that they can be
 // retrieved later using a Fetcher.
+//
+// Implementations of these classes should be thread safe and they should be
+// reusable for several files.
+//
 class Storage {
  public:
   virtual void StoreBlockTag(const File& file, const proto::BlockTag& tag) = 0;
@@ -25,7 +29,10 @@ class Storage {
   virtual ~Storage() {}
 };
 
-// A wrapper class for Storages that provides statistics about the stored items
+// A wrapper class for Storages that provides statistics about the stored items.
+//
+// It should only be used to store a single file and its tags.
+//
 class StorageWithStats : public Storage {
  public:
   StorageWithStats(Storage* real_storage)
@@ -48,9 +55,12 @@ class StorageWithStats : public Storage {
     real_storage_->StoreFile(file);
   }
 
+  // Returns the stats about the storage procedure. It should only be called
+  // after all parts of the file have been stored.
   Stats GetStats() const { return stats_; }
 
  private:
+  // The statistics for currently stored file
   Stats stats_;
 
   // This is the actual storage we are using to store things

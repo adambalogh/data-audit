@@ -13,6 +13,7 @@
 namespace audit {
 namespace upload {
 
+// This client class should be used to tag and upload files.
 class Client {
  public:
   Client(std::unique_ptr<Storage> storage) : storage_(std::move(storage)) {}

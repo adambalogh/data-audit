@@ -17,13 +17,14 @@
 namespace audit {
 namespace upload {
 
+// Wrapper class for a single file.
 struct File {
   File(std::istream& stream, const std::string& file_full_path);
 
   // The stream containing the content of the file
   std::istream& stream;
 
-  // The full path and name of the file
+  // The full path and name of the file, e.g. /usr/local/text.txt
   const std::string file_full_path;
 
   // The size of the file in bytes

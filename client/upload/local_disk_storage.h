@@ -19,8 +19,10 @@ class LocalDiskStorage : public Storage {
                             const proto::PrivateFileTag& file_tag) override;
   virtual void StoreFile(const File& file) override;
 
-  // Everything is stored under this directory
+  // This is where all the files are stored on the local disk
   static const std::string files_dir;
+
+  // This is a separate sub-directory for storing all the tags
   static const std::string tags_dir;
 };
 }
