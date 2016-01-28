@@ -6,14 +6,44 @@ using namespace audit;
 
 TEST(ProgressBar, New) {
   ProgressBar b{10};
-  ASSERT_FALSE(b.Done());
   ASSERT_EQ(0, b.Percentage());
+  ASSERT_FALSE(b.Done());
 }
 
 TEST(ProgessBar, OneStep) {
   ProgressBar b{100};
   b.Progress(1);
   ASSERT_EQ(1, b.Percentage());
+}
+
+TEST(ProgressBar, Complete) {
+  ProgressBar b{100};
+  b.Progress(50);
+  b.Progress(50);
+  ASSERT_EQ(100, b.Percentage());
+  ASSERT_TRUE(b.Done());
+}
+
+TEST(ProgressBar, Fraction) {
+  ProgressBar b{3};
+
+  b.Progress(1);
+  ASSERT_EQ(33, b.Percentage());
+
+  b.Progress(1);
+  ASSERT_EQ(66, b.Percentage());
+
+  b.Progress(1);
+  ASSERT_EQ(100, b.Percentage());
+  ASSERT_TRUE(b.Done());
+}
+
+TEST(ProgressBar, Over) {
+  ProgressBar b{5};
+  b.Progress(5);
+  b.Progress(2);
+
+  ASSERT_EQ(100, b.Percentage());
 }
 
 int main(int argc, char **argv) {
