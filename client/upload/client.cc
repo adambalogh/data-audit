@@ -32,6 +32,8 @@ Stats Client::Upload(const File& file) {
 
   BlockTagger tagger{context};
   while (tagger.HasNext()) {
+    // TODO this is a very inefficient way of doing it, especially if it's
+    // stored on AWS or something similar
     unique_storage.StoreBlockTag(file, tagger.GetNext());
   }
 

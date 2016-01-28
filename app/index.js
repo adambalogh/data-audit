@@ -20,7 +20,7 @@ window.onload = function() {
       var uploadWin = new BrowserWindow({
         width: 540,
         height: 160,
-        title: "Uploading file",
+        title: "Uploading File",
         resizable: false,
         maximizable: false,
         minimizable: false,
