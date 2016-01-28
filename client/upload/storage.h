@@ -45,6 +45,8 @@ class SingleFileStorage {
   const File& file_;
 };
 
+// TODO implement some kind of pipeline to be able to combine progress bar with
+// stats etc.
 class StorageWithProgressBar : public SingleFileStorage {
  public:
   StorageWithProgressBar(const File& file, size_t block_size, int num_blocks,
