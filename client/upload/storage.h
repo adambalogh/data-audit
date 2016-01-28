@@ -3,6 +3,7 @@
 #include <istream>
 #include <string>
 
+#include "audit/client/progress_bar.h"
 #include "audit/client/upload/file.h"
 #include "audit/client/upload/stats.h"
 #include "audit/proto/cpor.pb.h"
@@ -10,73 +11,94 @@
 namespace audit {
 namespace upload {
 
-class ProgressBar {
- public:
-  ProgressBar(std::function<void(int)> callback) {}
-
-  void Increment() { Increment(1); }
-  void Increment(int i) {
-    if (value_ + i > 100) {
-      return;
-    }
-    value_ += i;
-  }
-
-  int Value() const { return value_; }
-  bool Done() const { return value_ == 100; }
-
- private:
-  int value_{0};
-};
-
-// Storage is an generic interface for storing the File, the File Tag and the
-// Block Tags.
+// ReusableStorage is an generic interface for storing the File, the File Tag
+// and the Block Tags.
 //
 // All the files and tags should be stored in a way, so that they can be
 // retrieved later using a Fetcher.
 //
-// Implementations of these classes may or may not be reusable for several
-// files.
+// Implementations of this interface should be thread safe and they should be
+// reusable for several files.
 //
-class Storage {
+class ReusableStorage {
  public:
   virtual void StoreBlockTag(const File& file, const proto::BlockTag& tag) = 0;
   virtual void StoreFileTag(const File& file,
                             const proto::PrivateFileTag& file_tag) = 0;
   virtual void StoreFile(const File& file) = 0;
 
-  virtual ~Storage() {}
+  virtual ~ReusableStorage() {}
 };
 
-// Implementations of this interface should be thread safe and they should be
-// reusable for several files.
-//
-class ReusableStorage : public Storage {};
+// SingleFileStorage should only be used to store a single file and its tags.
+class SingleFileStorage {
+ public:
+  SingleFileStorage(const File& file) : file_(file) {}
 
-// A wrapper class for Storages that provides statistics about the stored items.
+  virtual void StoreFile() = 0;
+  virtual void StoreFileTag(const proto::PrivateFileTag& file_tag) = 0;
+  virtual void StoreBlockTag(const proto::BlockTag& tag) = 0;
+
+  virtual ~SingleFileStorage() {}
+
+ protected:
+  const File& file_;
+};
+
+class StorageWithProgressBar : public SingleFileStorage {
+ public:
+  StorageWithProgressBar(const File& file, size_t block_size, int num_blocks,
+                         ReusableStorage* reusable_storage)
+      : SingleFileStorage(file),
+        progress_bar_(CalculateTotalBlocks(file.size, block_size, num_blocks)),
+        reusable_storage_(reusable_storage) {}
+
+  void StoreFile() override { reusable_storage_->StoreFile(file_); }
+
+  void StoreFileTag(const proto::PrivateFileTag& file_tag) override {
+    reusable_storage_->StoreFileTag(file_, file_tag);
+  }
+
+  void StoreBlockTag(const proto::BlockTag& tag) override {
+    reusable_storage_->StoreBlockTag(file_, tag);
+  }
+
+ private:
+  size_t CalculateTotalBlocks(size_t file_size, size_t block_size,
+                              int num_blocks) {
+    size_t total = static_cast<size_t>(num_blocks) + file_size / block_size;
+    if (!file_size % block_size) ++total;
+    return total;
+  }
+
+  ProgressBar progress_bar_;
+
+  ReusableStorage* const reusable_storage_;
+};
+
+// A wrapper class for Storages that provides statistics about the stored
+// items.
 //
 // It should only be used to store a single file and its tags.
 //
-class StorageWithStats : public Storage {
+class StorageWithStats : public SingleFileStorage {
  public:
-  StorageWithStats(ReusableStorage* reusable_storage)
-      : reusable_storage_(std::move(reusable_storage)) {}
+  StorageWithStats(const File& file, ReusableStorage* reusable_storage)
+      : SingleFileStorage(file), reusable_storage_(reusable_storage) {}
 
-  virtual void StoreBlockTag(const File& file,
-                             const proto::BlockTag& tag) override {
+  void StoreBlockTag(const proto::BlockTag& tag) override {
     stats_.block_tags_size += tag.ByteSize();
-    reusable_storage_->StoreBlockTag(file, tag);
+    reusable_storage_->StoreBlockTag(file_, tag);
   }
 
-  virtual void StoreFileTag(const File& file,
-                            const proto::PrivateFileTag& file_tag) override {
+  void StoreFileTag(const proto::PrivateFileTag& file_tag) override {
     stats_.file_tag_size = file_tag.ByteSize();
-    reusable_storage_->StoreFileTag(file, file_tag);
+    reusable_storage_->StoreFileTag(file_, file_tag);
   }
 
-  virtual void StoreFile(const File& file) override {
-    stats_.file_size = file.size;
-    reusable_storage_->StoreFile(file);
+  void StoreFile() override {
+    stats_.file_size = file_.size;
+    reusable_storage_->StoreFile(file_);
   }
 
   // Returns the stats about the storage procedure. It should only be called

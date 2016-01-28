@@ -16,12 +16,13 @@ namespace upload {
 // This client class should be used to tag and upload files.
 class Client {
  public:
-  Client(std::unique_ptr<Storage> storage) : storage_(std::move(storage)) {}
+  Client(std::unique_ptr<ReusableStorage> storage)
+      : storage_(std::move(storage)) {}
 
   Stats Upload(const File& file);
 
  private:
-  std::unique_ptr<Storage> storage_;
+  std::unique_ptr<ReusableStorage> storage_;
 };
 }
 }

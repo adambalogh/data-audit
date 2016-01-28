@@ -59,6 +59,7 @@ cc_library(
   hdrs = ["storage.h"],
   deps = [
     ":stats",
+    "//audit/client:progress_bar",
     "//audit/proto:cpor",
   ]
 )

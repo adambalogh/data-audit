@@ -22,7 +22,7 @@ int main() {
   }
 
   upload::Client upload_client{
-      std::unique_ptr<upload::Storage>{new upload::LocalDiskStorage}};
+      std::unique_ptr<upload::ReusableStorage>{new upload::LocalDiskStorage}};
 
   std::stringstream content{
       "aejfwoigjqogijwer;goit43io;h5w3[94thg39wa;wighe;oiw4h3;"

@@ -14,7 +14,7 @@
 #include "audit/client/upload/stats.h"
 
 // TODO find a better solution
-audit::upload::Client client{std::unique_ptr<audit::upload::Storage>{
+audit::upload::Client client{std::unique_ptr<audit::upload::ReusableStorage>{
     new audit::upload::LocalDiskStorage}};
 
 class UploadWorker : public Nan::AsyncWorker {
