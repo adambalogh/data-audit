@@ -3,7 +3,8 @@
 namespace audit {
 namespace upload {
 
-// Stats is used for analyzing how much extra space we are using
+// Stats is used for keeping track of how much space we are using to store the
+// file and its tags
 struct Stats {
  public:
   Stats() {}

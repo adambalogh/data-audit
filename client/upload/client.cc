@@ -28,19 +28,23 @@ Stats Client::Upload(const File& file) {
   FileContext context{file, params, std::move(alphas), std::move(p),
                       std::unique_ptr<PRF>(new HMACPRF)};
 
-  StorageWithStats unique_storage{file, storage_.get()};
+  StatsListener stats_;
+  ProgressBarListener progress_{file.size, context.parameters().block_size(),
+                                context.num_blocks()};
+
+  StorageListenerChain listener{{&stats_, &progress_}};
 
   BlockTagger tagger{context};
   while (tagger.HasNext()) {
     // TODO this is a very inefficient way of doing it, especially if it's
     // stored on AWS or something similar
-    unique_storage.StoreBlockTag(tagger.GetNext());
+    storage_->StoreBlockTag(file, tagger.GetNext(), listener);
   }
 
-  unique_storage.StoreFileTag(context.Proto());
-  unique_storage.StoreFile();
+  storage_->StoreFileTag(file, context.Proto(), listener);
+  storage_->StoreFile(file, listener);
 
-  return unique_storage.GetStats();
+  return stats_.GetStats();
 }
 }
 }

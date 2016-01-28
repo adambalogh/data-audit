@@ -16,7 +16,8 @@ const std::string LocalDiskStorage::files_dir{
 const std::string LocalDiskStorage::tags_dir{files_dir + "tags/"};
 
 void LocalDiskStorage::StoreBlockTag(const File& file,
-                                     const proto::BlockTag& tag) {
+                                     const proto::BlockTag& tag,
+                                     StorageListener& listener) {
   std::ofstream tag_file{
       tags_dir + "tags" + file.file_full_path + std::to_string(tag.index()),
       std::ofstream::binary};
@@ -27,7 +28,8 @@ void LocalDiskStorage::StoreBlockTag(const File& file,
 }
 
 void LocalDiskStorage::StoreFileTag(const File& file,
-                                    const proto::PrivateFileTag& file_tag) {
+                                    const proto::PrivateFileTag& file_tag,
+                                    StorageListener& listener) {
   std::ofstream tag_file{tags_dir + "file_tag" + file.file_full_path,
                          std::ofstream::binary};
   if (!tag_file) {
@@ -36,7 +38,7 @@ void LocalDiskStorage::StoreFileTag(const File& file,
   file_tag.SerializeToOstream(&tag_file);
 }
 
-void LocalDiskStorage::StoreFile(const File& file) {
+void LocalDiskStorage::StoreFile(const File& file, StorageListener& listener) {
   std::ofstream out_file{files_dir + file.file_full_path,
                          std::ofstream::binary};
   if (!out_file) {
