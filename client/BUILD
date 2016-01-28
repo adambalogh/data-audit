@@ -16,9 +16,24 @@ cc_binary(
   srcs = ["prf_test.cc"],
   deps = [
     "//audit:common",
-    "@gtest//:main",
+    "//audit/third_party/gtest:gtest",
     ":prf",
     "//audit/third_party/cryptopp:cryptopp",
     "//audit/third_party/openssl:openssl",
   ],
+)
+
+cc_library(
+    name = "progress_bar",
+    hdrs = ["progress_bar.h"],
+    deps = []
+)
+
+cc_binary(
+    name = "progress_bar_test",
+    srcs = ["progress_bar_test.cc"],
+    deps = [
+        "//audit/third_party/gtest:gtest",
+        ":progress_bar",
+    ]
 )

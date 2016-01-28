@@ -43,7 +43,7 @@ cc_binary(
   srcs = ["block_tagger_test.cc"],
   deps = [
     "//audit:common",
-    "@gtest//:main",
+    "//audit/third_party/gtest:gtest",
     ":block_tagger",
     "//audit:util",
     "//audit:test_util",

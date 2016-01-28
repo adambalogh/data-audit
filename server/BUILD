@@ -25,7 +25,7 @@ cc_binary(
   name = "prover_test",
   srcs = ["prover_test.cc"],
   deps = [
-    "@gtest//:main",
+    "//audit/third_party/gtest:gtest",
     ":prover",
     "//audit/third_party/openssl:openssl",
     "//audit:util",

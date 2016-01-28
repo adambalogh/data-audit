@@ -18,7 +18,7 @@ cc_binary(
   name = "verify_file_test",
   srcs = ["verify_file_test.cc"],
   deps = [
-    "@gtest//:main",
+    "//audit/third_party/gtest:gtest",
     ":verify_file",
     "//audit/client/upload:file",
     "//audit/client/upload:block_tagger",
