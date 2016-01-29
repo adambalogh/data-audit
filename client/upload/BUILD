@@ -82,6 +82,7 @@ cc_library(
   deps = [
     ":storage",
     ":file",
+    ":block_tag_serializer",
     ":block_tagger",
     "//audit/proto:cpor",
     "//audit:util",

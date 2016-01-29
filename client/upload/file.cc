@@ -9,9 +9,9 @@
 namespace audit {
 namespace upload {
 
-File::File(std::istream& stream, const std::string& file_full_path)
+File::File(std::istream& stream, const std::string& file_name)
     : stream(stream),
-      file_full_path(file_full_path),
+      file_name(file_name),
       // TODO check stream somehow?
       size([&stream]() {
         stream.seekg(0, stream.end);
@@ -65,7 +65,7 @@ proto::PrivateFileTag FileContext::Proto() const {
   public_tag->set_sector_size(parameters_.sector_size);
   public_tag->set_num_blocks(num_blocks_);
   *public_tag->mutable_p() = BignumToString(*p_);
-  *public_tag->mutable_file_full_path() = file_.file_full_path;
+  *public_tag->mutable_file_name() = file_.file_name;
 
   return private_tag;
 }
