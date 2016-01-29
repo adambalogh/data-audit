@@ -12,12 +12,15 @@ namespace verify {
 proto::PrivateFileTag LocalDiskFileTagSource::GetFileTag(
     const std::string& file_name) {
   proto::PrivateFileTag tag;
-  std::ifstream tag_file_;
-  tag_file_.open(upload::LocalDiskStorage::GetFileTagPath(file_name));
+  std::ifstream tag_file{upload::LocalDiskStorage::GetFileTagPath(file_name),
+                         std::ifstream::binary};
+  if (!tag_file) {
+    throw std::runtime_error(
+        "Could not open file containing FileTag (" +
+        upload::LocalDiskStorage::GetFileTagPath(file_name) + ")");
+  }
 
-  std::stringstream buffer;
-  buffer << tag_file_.rdbuf();
-  tag.ParseFromString(buffer.str());
+  tag.ParseFromIstream(&tag_file);
   return tag;
 }
 }
