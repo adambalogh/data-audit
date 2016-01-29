@@ -8,7 +8,7 @@ message BlockTag {
 }
 
 message BlockTagMap {
-  repeated uint64 offset = 1;
+  repeated uint64 end = 1;
   repeated uint64 index = 2;
 }
 

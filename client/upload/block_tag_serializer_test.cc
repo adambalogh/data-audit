@@ -22,14 +22,20 @@ TEST(BlockTagSerializer, BlockTagMap) {
   proto::BlockTag tag;
   tag.set_index(10);
 
+  proto::BlockTag tag2;
+  tag2.set_index(1);
+  tag2.set_sigma("hwer");
+
   serializer.Add(tag);
+  serializer.Add(tag2);
   auto block_tag_map = serializer.Done();
 
-  proto::BlockTagMap expected;
-  expected.add_index(10);
-  expected.add_offset(tag.ByteSize());
-
-  EXPECT_EQ(expected.DebugString(), block_tag_map.DebugString());
+  EXPECT_EQ(2, block_tag_map.end_size());
+  EXPECT_EQ(2, block_tag_map.index_size());
+  EXPECT_EQ(10, block_tag_map.index(0));
+  EXPECT_EQ(tag.ByteSize(), block_tag_map.end(0));
+  EXPECT_EQ(1, block_tag_map.index(1));
+  EXPECT_EQ(tag.ByteSize() + tag2.ByteSize(), block_tag_map.end(1));
 }
 
 int main(int argc, char **argv) {
