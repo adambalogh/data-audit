@@ -19,7 +19,7 @@ class StorageListener {
   virtual void OnFileChunkStored(size_t bytes) = 0;
 
   // Should be called whenever one or more block tags has been stored
-  virtual void OnBlockTagsStored(size_t bytes) = 0;
+  virtual void OnBlockTagFileChunkStored(size_t bytes) = 0;
 
   // Should be called when the file tag has been stored
   virtual void OnFileTagStored(size_t bytes) = 0;
@@ -29,7 +29,7 @@ class StorageListener {
 class EmptyStorageListener : public StorageListener {
  public:
   void OnFileChunkStored(size_t bytes) override {}
-  void OnBlockTagsStored(size_t bytes) override {}
+  void OnBlockTagFileChunkStored(size_t bytes) override {}
   void OnFileTagStored(size_t bytes) override {}
 };
 
@@ -46,9 +46,9 @@ class StorageListenerChain : public StorageListener {
     }
   }
 
-  void OnBlockTagsStored(size_t bytes) override {
+  void OnBlockTagFileChunkStored(size_t bytes) override {
     for (auto listener : listeners_) {
-      listener->OnBlockTagsStored(bytes);
+      listener->OnBlockTagFileChunkStored(bytes);
     }
   }
 
@@ -67,7 +67,7 @@ class StorageListenerChain : public StorageListener {
 //
 class StatsListener : public StorageListener {
  public:
-  void OnBlockTagsStored(size_t bytes) override {
+  void OnBlockTagFileChunkStored(size_t bytes) override {
     stats_.block_tags_size += bytes;
   }
 
@@ -95,7 +95,7 @@ class ProgressBarListener : public StorageListener {
   void OnFileChunkStored(size_t bytes) override {
     progress_bar_.Progress(bytes);
   }
-  void OnBlockTagsStored(size_t bytes) override {
+  void OnBlockTagFileChunkStored(size_t bytes) override {
     progress_bar_.Progress(bytes);
   }
   void OnFileTagStored(size_t bytes) override { progress_bar_.Progress(bytes); }
