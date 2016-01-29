@@ -4,13 +4,16 @@
 #include <fstream>
 #include <iostream>
 
+#include "audit/client/progress_bar.h"
 #include "audit/proto/cpor.pb.h"
 
 using namespace audit;
 using namespace audit::upload;
 
+ProgressBar progress_bar{100};
+
 TEST(BlockTagSerializer, WriteOne) {
-  BlockTagSerializer serializer{"hello"};
+  BlockTagSerializer serializer{"hello", progress_bar};
 
   proto::BlockTag tag;
   tag.set_index(10);
@@ -29,7 +32,7 @@ TEST(BlockTagSerializer, WriteOne) {
 }
 
 TEST(BlockTagSerializer, WriteThree) {
-  BlockTagSerializer serializer{"hello"};
+  BlockTagSerializer serializer{"hello", progress_bar};
 
   proto::BlockTag tag1;
   tag1.set_index(10);
@@ -67,7 +70,7 @@ TEST(BlockTagSerializer, WriteThree) {
 }
 
 TEST(BlockTagSerializer, BlockTagMap) {
-  BlockTagSerializer serializer{"hello"};
+  BlockTagSerializer serializer{"hello", progress_bar};
 
   proto::BlockTag tag;
   tag.set_index(10);

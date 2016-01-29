@@ -15,6 +15,11 @@
 namespace audit {
 namespace upload {
 
+size_t CalculateTotalBytes(size_t file_size, size_t block_size,
+                           int num_blocks) {
+  return file_size + block_size * num_blocks;
+}
+
 Stats Client::Upload(const File& file, ProgressBar::CallbackType callback) {
   TaggingParameters params{10, 128};
 
@@ -31,14 +36,17 @@ Stats Client::Upload(const File& file, ProgressBar::CallbackType callback) {
   FileContext context{file, params, std::move(alphas), std::move(p),
                       std::unique_ptr<PRF>(new HMACPRF)};
 
-  StatsListener stats;
-  ProgressBarListener progress{file.size, context.parameters().block_size(),
-                               context.num_blocks(), callback};
+  size_t total_size = file.size + file.size / context.parameters().num_sectors +
+                      file.size % context.parameters().num_sectors;
 
+  ProgressBar progress_bar{total_size, callback};
+
+  StatsListener stats;
+  ProgressBarListener progress{progress_bar};
   StorageListenerChain listener{{&stats, &progress}};
 
   BlockTagger tagger{context};
-  BlockTagSerializer serializer{file.file_name};
+  BlockTagSerializer serializer{file.file_name, progress_bar};
   while (tagger.HasNext()) {
     serializer.Add(tagger.GetNext());
   }
@@ -50,6 +58,8 @@ Stats Client::Upload(const File& file, ProgressBar::CallbackType callback) {
   storage_->StoreBlockTagFile(file.file_name, serializer.FileName(), listener);
   storage_->StoreFileTag(file.file_name, private_tag, listener);
   storage_->StoreFile(file.file_name, file.stream, listener);
+
+  assert(progress_bar.Done() == true);
 
   return stats.GetStats();
 }

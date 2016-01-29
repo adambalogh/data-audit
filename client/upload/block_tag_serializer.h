@@ -1,6 +1,7 @@
 #pragma once
 
 #include "audit/proto/cpor.pb.h"
+#include "audit/client/progress_bar.h"
 #include "audit/client/upload/file.h"
 
 #include <array>
@@ -18,9 +19,11 @@ namespace upload {
 //
 class BlockTagSerializer {
  public:
-  BlockTagSerializer(const std::string& file_full_path)
+  BlockTagSerializer(const std::string& file_full_path,
+                     ProgressBar& progress_bar)
       : file_name_(files_dir + file_full_path),
-        out_file_(file_name_, std::ofstream::binary) {
+        out_file_(file_name_, std::ofstream::binary),
+        progress_bar_(progress_bar) {
     if (!out_file_) {
       throw std::runtime_error(
           "Could not open file to serialize BlockTags to. (" + file_name_ +
@@ -58,6 +61,8 @@ class BlockTagSerializer {
   size_t file_end_{0};
 
   proto::BlockTagMap block_tag_map_;
+
+  ProgressBar& progress_bar_;
 };
 }
 }

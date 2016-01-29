@@ -26,16 +26,20 @@ class UploadWorker : public Nan::AsyncProgressWorker {
 
   void Execute(const AsyncProgressWorker::ExecutionProgress& execution_progress)
       override {
-    std::ifstream content{file_path_};
+    std::ifstream content{file_path_, std::ifstream::binary};
 
-    // TODO use full file path for file name
+    // TODO use full file path for file name?
     audit::upload::File file{content, GetFileName()};
 
     try {
-      stats_ = client.Upload(file, [&execution_progress](int percentage) {
+      auto stats = client.Upload(file, [&execution_progress](int percentage) {
         execution_progress.Send(reinterpret_cast<const char*>(&percentage),
                                 sizeof(int));
       });
+
+      // Write out stats to console
+      std::cout << "Stats for: " + GetFileName() << std::endl;
+      std::cout << stats.String();
 
     } catch (std::runtime_error& e) {
       std::string error = "Runtime error: " + std::string(e.what());
@@ -53,28 +57,6 @@ class UploadWorker : public Nan::AsyncProgressWorker {
     progress_bar_callback_->Call(1, argv);
   }
 
-  // This is called when Upload successfully finished
-  void HandleOKCallback() override {
-    Nan::HandleScope scope;
-
-    v8::Local<v8::Array> array = Nan::New<v8::Array>(3);
-    array->Set(0, Nan::New((uint32_t)stats_.file_size));
-    array->Set(1, Nan::New((uint32_t)stats_.file_tag_size));
-    array->Set(2, Nan::New((uint32_t)stats_.block_tags_size));
-
-    v8::Local<v8::Value> argv[] = {array, Nan::Null()};
-    callback->Call(2, argv);
-  }
-
-  // This is called when Upload threw an error
-  void HandleErrorCallback() override {
-    Nan::HandleScope scope;
-    v8::Local<v8::Value> argv[] = {
-        Nan::Null(), v8::Exception::Error(Nan::New<v8::String>(ErrorMessage())
-                                              .ToLocalChecked())};
-    callback->Call(2, argv);
-  }
-
  private:
   std::string GetFileName() {
     return file_path_.substr(file_path_.find_last_of("\\/") + 1);
@@ -83,8 +65,6 @@ class UploadWorker : public Nan::AsyncProgressWorker {
   Nan::Callback* const progress_bar_callback_;
 
   const std::string file_path_;
-
-  audit::upload::Stats stats_;
 };
 
 NAN_METHOD(Upload) {

@@ -23,7 +23,7 @@ window.onload = function() {
         progress.textContent = percentage + "%";
       },
 
-      function(stats, error) {
+      function(error) {
         if (error != null) {
           //progress.textContent = "0%";
           title.firstChild.textContent = error;
@@ -32,7 +32,6 @@ window.onload = function() {
           //progress.textContent = "100%";
           title.firstChild.textContent = "Successfully Uploaded File";
           title.style.color = "#27ae60";
-          new Stats(stats).String();
         }
         window.ready = true;
         var closeButton = document.getElementById("close").style.display = "inline-block";
@@ -48,21 +47,3 @@ window.onload = function() {
 window.onbeforeunload = function(e) {
   e.returnValue = window.ready;
 };
-
-// Statistics about uploaded data size
-var Stats = function (properties) {
-  this.fileSize = properties[0];
-  this.fileTagSize = properties[1];
-  this.blockTagsSize = properties[2];
-  this.String = function() {
-    return "File Size: " + MBs(this.fileSize) + " MB\n" +
-           "File Tag Size: " + MBs(this.fileTagSize) + " MB\n" +
-           "Block Tag Size: " + MBs(this.blockTagsSize) + " MB\n"; 
-  }
-}
-
-// Returns number of Megabytes the given bytes are equal to, rounded to 3
-// decimal places
-function MBs(bytes) {
-  return Math.round(bytes / 1000 / 1000 * 1000) / 1000;
-}

@@ -89,26 +89,18 @@ class StatsListener : public StorageListener {
 //
 class ProgressBarListener : public StorageListener {
  public:
-  ProgressBarListener(size_t file_size, size_t block_size, int num_blocks,
-                      ProgressBar::CallbackType callback)
-      : progress_bar_(CalculateTotalBytes(file_size, block_size, num_blocks),
-                      callback) {}
+  ProgressBarListener(ProgressBar& progress_bar)
+      : progress_bar_(progress_bar) {}
 
   void OnFileChunkStored(size_t bytes) override {
     progress_bar_.Progress(bytes);
   }
-  void OnBlockTagFileChunkStored(size_t bytes) override {
-    progress_bar_.Progress(bytes);
-  }
+  void OnBlockTagFileChunkStored(size_t bytes) override {}
+
   void OnFileTagStored(size_t bytes) override { progress_bar_.Progress(bytes); }
 
  private:
-  size_t CalculateTotalBytes(size_t file_size, size_t block_size,
-                             int num_blocks) {
-    return file_size + block_size * num_blocks;
-  }
-
-  ProgressBar progress_bar_;
+  ProgressBar& progress_bar_;
 };
 
 // ReusableStorage is an generic interface for storing the File, the File Tag

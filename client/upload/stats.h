@@ -1,5 +1,7 @@
 #pragma once
 
+#include <math.h>
+
 namespace audit {
 namespace upload {
 
@@ -14,6 +16,14 @@ struct Stats {
         file_tag_size(file_tag_size),
         block_tags_size(block_tags_size) {}
 
+  std::string String() const {
+    std::string out;
+    out += "File Size: " + std::to_string(ToMB(file_size)) + " MB\n";
+    out += "FileTag Size: " + std::to_string(ToMB(file_tag_size)) + " MB\n";
+    out += "BlockTags Size: " + std::to_string(ToMB(block_tags_size)) + " MB\n";
+    return out;
+  }
+
   // The actual size of the file we uploaded in bytes
   size_t file_size{0};
 
@@ -22,6 +32,11 @@ struct Stats {
 
   // The size of all the uploaded BlockTags together, in bytes
   size_t block_tags_size{0};
+
+ private:
+  static double ToMB(size_t bytes) {
+    return static_cast<double>(floor(bytes / 1000)) / 1000;
+  }
 };
 }
 }
