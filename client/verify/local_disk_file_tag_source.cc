@@ -13,7 +13,7 @@ proto::PrivateFileTag LocalDiskFileTagSource::GetFileTag(
     const std::string& file_name) {
   proto::PrivateFileTag tag;
   std::ifstream tag_file_;
-  tag_file_.open(upload::LocalDiskStorage::tags_dir + "file_Tag" + file_name);
+  tag_file_.open(upload::LocalDiskStorage::GetFileTagPath(file_name));
 
   std::stringstream buffer;
   buffer << tag_file_.rdbuf();

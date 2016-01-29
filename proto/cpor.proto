@@ -25,6 +25,8 @@ message PublicFileTag {
   bytes p = 4;
 
   string file_name = 5;
+
+  BlockTagMap block_tag_map = 6;
 }
 
 message PrivateFileTag {
@@ -35,8 +37,6 @@ message PrivateFileTag {
   bytes hmac_code = 3;
 
   bytes prf_key = 4;
-
-  BlockTagMap block_tag_map = 5;
 }
 
 message ChallengeItem {

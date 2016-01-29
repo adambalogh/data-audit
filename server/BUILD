@@ -44,6 +44,7 @@ cc_library(
   hdrs = ["local_disk_fetcher.h"],
   deps = [
     ":fetcher",
+    "//audit:block_tag_map",
     "//audit/proto:cpor",
     "//audit/client/upload:local_disk_storage",
   ]

@@ -10,7 +10,7 @@ class BlockTagMap {
  public:
   BlockTagMap(const proto::BlockTagMap& map) : map_(map) {}
 
-  std::pair<size_t, size_t> FindBlockTag(unsigned long index) {
+  std::pair<size_t, size_t> FindBlockTag(unsigned long index) const {
     auto iter = std::find(map_.index().begin(), map_.index().end(), index);
     if (iter == map_.index().end()) {
       throw std::range_error("BlockTag does not exist with given index: " +

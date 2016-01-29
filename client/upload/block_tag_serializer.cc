@@ -31,6 +31,7 @@ void BlockTagSerializer::Flush() {
   buffer_size_ = 0;
 }
 
+// TODO remove temporary block tag file after it's been stored
 proto::BlockTagMap BlockTagSerializer::Done() {
   Flush();
   out_file_.close();

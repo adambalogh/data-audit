@@ -20,7 +20,8 @@ void LocalDiskStorage::StoreBlockTagFile(const std::string& file_name,
                                          StorageListener& listener) {
   std::ofstream out_file{GetBlockTagFilePath(file_name), std::ofstream::binary};
   if (!out_file) {
-    throw std::runtime_error("Could not open file to write BlockTag");
+    throw std::runtime_error("Could not open file to write BlockTag (" +
+                             GetBlockTagFilePath(file_name) + ")");
   }
 
   std::ifstream input{block_file_path, std::ifstream::binary};
@@ -40,7 +41,8 @@ void LocalDiskStorage::StoreFileTag(const std::string& file_name,
                                     StorageListener& listener) {
   std::ofstream tag_file{GetFileTagPath(file_name), std::ofstream::binary};
   if (!tag_file) {
-    throw std::runtime_error("Could not open file to write FileTag");
+    throw std::runtime_error("Could not open file to write FileTag (" +
+                             GetFileTagPath(file_name) + ")");
   }
   file_tag.SerializeToOstream(&tag_file);
 }
@@ -50,7 +52,9 @@ void LocalDiskStorage::StoreFile(const std::string& file_name,
                                  StorageListener& listener) {
   std::ofstream out_file{GetFilePath(file_name), std::ofstream::binary};
   if (!out_file) {
-    throw std::runtime_error("Could not open file to write the original file");
+    throw std::runtime_error(
+        "Could not open file to write the original file (" +
+        GetFilePath(file_name) + ")");
   }
   std::array<char, 1000> buffer;
   while (stream.read(buffer.data(), buffer.size()).gcount()) {

@@ -42,11 +42,12 @@ Stats Client::Upload(const File& file) {
   }
 
   auto private_tag = context.Proto();
-  *private_tag.mutable_block_tag_map() = serializer.Done();
+  *private_tag.mutable_public_tag()->mutable_block_tag_map() =
+      serializer.Done();
 
-  storage_->StoreBlockTagFile(file, serializer.FileName(), listener);
-  storage_->StoreFileTag(file, private_tag, listener);
-  storage_->StoreFile(file, listener);
+  storage_->StoreBlockTagFile(file.file_name, serializer.FileName(), listener);
+  storage_->StoreFileTag(file.file_name, private_tag, listener);
+  storage_->StoreFile(file.file_name, file.stream, listener);
 
   return stats_.GetStats();
 }
