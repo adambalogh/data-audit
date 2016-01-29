@@ -14,18 +14,30 @@ window.onload = function() {
     var title = document.getElementById("title");
     title.appendChild(document.createTextNode("Uploading \"" + fileName + "\"..."));
 
-    upload.uploadAsync(fileName, function(stats, error) {
-      if (error != null) {
-        title.firstChild.textContent = error;
-        title.style.color = "#FF0000";
-      } else {
-        title.firstChild.textContent = "Successfully Uploaded File";
-        title.style.color = "#27ae60";
-        alert(new Stats(stats).String());
+    var progress = document.getElementById("progress");
+
+    upload.uploadAsync(
+      fileName,
+
+      function(percentage) {
+        progress.textContent = percentage + "%";
+      },
+
+      function(stats, error) {
+        if (error != null) {
+          progress.textContent = "0%";
+          title.firstChild.textContent = error;
+          title.style.color = "#FF0000";
+        } else {
+          progress.textContent = "100%";
+          title.firstChild.textContent = "Successfully Uploaded File";
+          title.style.color = "#27ae60";
+          new Stats(stats).String();
+        }
+        window.ready = true;
+        var closeButton = document.getElementById("close").style.display = "inline-block";
       }
-      window.ready = true;
-      var closeButton = document.getElementById("close").style.display = "inline-block";
-    });
+   );
 
 
   }); // on fileName

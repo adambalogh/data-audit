@@ -24,8 +24,10 @@ body {
   display: none;
 }
 
-progress {
-  margin: 10px;
+#progress {
+  position: absolute;
+  left: 30px;
+  bottom: 20px;
 }
 
 .button {
