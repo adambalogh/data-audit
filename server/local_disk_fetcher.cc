@@ -35,6 +35,7 @@ std::basic_istream<char, std::char_traits<char>>& LocalDiskFetcher::FetchBlock(
   return file_;
 }
 
+// TODO this is kind of slow because of the several seeks
 proto::BlockTag LocalDiskFetcher::FetchBlockTag(unsigned long index) {
   size_t start;
   size_t end;

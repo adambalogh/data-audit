@@ -25,6 +25,7 @@
           "/users/adambalogh/Developer/bazel-bin/audit/client/upload/libfile.a",
           "/users/adambalogh/Developer/bazel-bin/audit/client/upload/liblocal_disk_storage.a",
           "/users/adambalogh/Developer/bazel-bin/audit/client/upload/libblock_tagger.a",
+          "/users/adambalogh/Developer/bazel-bin/audit/client/upload/libblock_tag_serializer.a",
           "/users/adambalogh/Developer/bazel-bin/audit/client/upload/libclient.a",
           "/users/adambalogh/Developer/bazel-bin/audit/proto/libcpor.a",
         ],
