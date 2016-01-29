@@ -25,11 +25,11 @@ window.onload = function() {
 
       function(error) {
         if (error != null) {
-          //progress.textContent = "0%";
+          progress.textContent = "0%";
           title.firstChild.textContent = error;
           title.style.color = "#FF0000";
         } else {
-          //progress.textContent = "100%";
+          progress.textContent = "100%";
           title.firstChild.textContent = "Successfully Uploaded File";
           title.style.color = "#27ae60";
         }
