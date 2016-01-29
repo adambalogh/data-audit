@@ -10,7 +10,6 @@ using namespace audit;
 using namespace audit::upload;
 
 TEST(BlockTagSerializer, WriteOne) {
-  return;
   BlockTagSerializer serializer{"hello"};
 
   proto::BlockTag tag;
@@ -68,7 +67,6 @@ TEST(BlockTagSerializer, WriteThree) {
 }
 
 TEST(BlockTagSerializer, BlockTagMap) {
-  return;
   BlockTagSerializer serializer{"hello"};
 
   proto::BlockTag tag;

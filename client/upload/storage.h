@@ -121,15 +121,17 @@ class ProgressBarListener : public StorageListener {
 class ReusableStorage {
  public:
   // Stores the given file.
-  virtual void StoreFile(const File& file, StorageListener& listener) = 0;
+  virtual void StoreFile(const std::string& file_name, std::istream& stream,
+                         StorageListener& listener) = 0;
 
   // Stores a PrivateFileTag associated with the given file
-  virtual void StoreFileTag(const File& file,
+  virtual void StoreFileTag(const std::string& file_name,
                             const proto::PrivateFileTag& file_tag,
                             StorageListener& listener) = 0;
 
   // Stores a BlockTag associated with the given file
-  virtual void StoreBlockTagFile(const File& file, const std::string& file_name,
+  virtual void StoreBlockTagFile(const std::string& file_name,
+                                 const std::string& block_file_path,
                                  StorageListener& listener) = 0;
 
   virtual ~ReusableStorage() {}
