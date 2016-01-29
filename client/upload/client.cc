@@ -15,11 +15,6 @@
 namespace audit {
 namespace upload {
 
-size_t CalculateTotalBytes(size_t file_size, size_t block_size,
-                           int num_blocks) {
-  return file_size + block_size * num_blocks;
-}
-
 Stats Client::Upload(const File& file, ProgressBar::CallbackType callback) {
   TaggingParameters params{10, 128};
 

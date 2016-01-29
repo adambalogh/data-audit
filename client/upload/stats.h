@@ -5,7 +5,7 @@
 namespace audit {
 namespace upload {
 
-// Stats is used for keeping track of how much space we are using to store the
+// Stats is used for keeping track of how much space is used to store the
 // file and its tags
 struct Stats {
  public:
@@ -16,6 +16,7 @@ struct Stats {
         file_tag_size(file_tag_size),
         block_tags_size(block_tags_size) {}
 
+  // Returns string representation of stats
   std::string String() const {
     std::string out;
     out += "File Size: " + std::to_string(ToMB(file_size)) + " MB\n";
@@ -34,6 +35,8 @@ struct Stats {
   size_t block_tags_size{0};
 
  private:
+  // Returns the number of Megabytes the given bytes are equal to, rounded to 3
+  // decimal places
   static double ToMB(size_t bytes) {
     return static_cast<double>(floor(bytes / 1000)) / 1000;
   }

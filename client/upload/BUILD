@@ -116,4 +116,11 @@ cc_binary(
     ]
 )
 
-
+cc_library(
+    name = "gdrive_storage",
+    hdrs = ["gdrive_storage.h"],
+    srcs = ["gdrive_storage.cc"],
+    deps = [
+        ":storage",
+    ]
+)

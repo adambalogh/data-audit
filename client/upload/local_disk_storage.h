@@ -13,16 +13,16 @@ namespace upload {
 // It is only created for testing purposes.
 class LocalDiskStorage : public ReusableStorage {
  public:
-  virtual void StoreFile(const std::string& file_name, std::istream& stream,
+  void StoreFile(const std::string& file_name, std::istream& stream,
+                 StorageListener& listener) override;
+
+  void StoreFileTag(const std::string& file_name,
+                    const proto::PrivateFileTag& file_tag,
+                    StorageListener& listener) override;
+
+  void StoreBlockTagFile(const std::string& file_name,
+                         const std::string& block_file_path,
                          StorageListener& listener) override;
-
-  virtual void StoreFileTag(const std::string& file_name,
-                            const proto::PrivateFileTag& file_tag,
-                            StorageListener& listener) override;
-
-  virtual void StoreBlockTagFile(const std::string& file_name,
-                                 const std::string& block_file_path,
-                                 StorageListener& listener) override;
 
   // Returns the full path to the file where the given file is stored
   static std::string GetFilePath(const std::string& file_name) {
