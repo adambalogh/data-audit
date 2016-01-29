@@ -74,6 +74,7 @@ NAN_METHOD(Upload) {
   }
   v8::String::Utf8Value param1(info[0]->ToString());
   std::string file_path{*param1};
+
   Nan::Callback* progress_bar_callback =
       new Nan::Callback(info[1].As<v8::Function>());
   Nan::Callback* callback = new Nan::Callback(info[2].As<v8::Function>());

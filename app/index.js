@@ -79,7 +79,10 @@ function displayFiles(files) {
 
 // Verifies the given file's integrity, and displays the result
 function verify_file(file_name) {
-  verify.verify(file_name, function(result) {
+  verify.verifyAsync(file_name, function(percentage) {}, function(result, error) {
+    if (error != null) {
+      alert(error);
+    }
     alert(result);
   });
 }
