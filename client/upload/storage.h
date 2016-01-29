@@ -129,8 +129,8 @@ class ReusableStorage {
                             StorageListener& listener) = 0;
 
   // Stores a BlockTag associated with the given file
-  virtual void StoreBlockTag(const File& file, const proto::BlockTag& tag,
-                             StorageListener& listener) = 0;
+  virtual void StoreBlockTagFile(const File& file, const std::string& file_name,
+                                 StorageListener& listener) = 0;
 
   virtual ~ReusableStorage() {}
 };

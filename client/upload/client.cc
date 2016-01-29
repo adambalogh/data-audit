@@ -5,6 +5,7 @@
 #include "audit/util.h"
 #include "audit/client/prf.h"
 #include "audit/client/upload/block_tagger.h"
+#include "audit/client/upload/block_tag_serializer.h"
 #include "audit/client/upload/file.h"
 #include "audit/client/upload/storage.h"
 #include "audit/proto/cpor.pb.h"
@@ -35,13 +36,16 @@ Stats Client::Upload(const File& file) {
   StorageListenerChain listener{{&stats_, &progress_}};
 
   BlockTagger tagger{context};
+  BlockTagSerializer serializer{file.file_name};
   while (tagger.HasNext()) {
-    // TODO this is a very inefficient way of doing it, especially if it's
-    // stored on AWS or something similar
-    storage_->StoreBlockTag(file, tagger.GetNext(), listener);
+    serializer.Add(tagger.GetNext());
   }
 
-  storage_->StoreFileTag(file, context.Proto(), listener);
+  auto private_tag = context.Proto();
+  *private_tag.mutable_block_tag_map() = serializer.Done();
+
+  storage_->StoreBlockTagFile(file, serializer.FileName(), listener);
+  storage_->StoreFileTag(file, private_tag, listener);
   storage_->StoreFile(file, listener);
 
   return stats_.GetStats();

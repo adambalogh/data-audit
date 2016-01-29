@@ -19,12 +19,12 @@ namespace upload {
 class BlockTagSerializer {
  public:
   BlockTagSerializer(const std::string& file_full_path)
-      : file_name_(files_dir + "tags"),
+      : file_name_(files_dir + file_full_path),
         out_file_(file_name_, std::ofstream::binary) {
     if (!out_file_) {
       throw std::runtime_error(
-          "Could not open file to serialize BlockTags to. (" + files_dir +
-          "tags" + ")");
+          "Could not open file to serialize BlockTags to. (" + file_name_ +
+          ")");
     }
   }
 
