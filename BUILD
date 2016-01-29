@@ -48,3 +48,19 @@ cc_library(
   ]
 )
 
+cc_library(
+    name = "block_tag_map",
+    hdrs = ["block_tag_map.h"],
+    deps = [
+        "//audit/proto:cpor",
+    ]
+)
+
+cc_binary(
+    name = "block_tag_map_test",
+    srcs = ["block_tag_map_test.cc"],
+    deps = [
+        "//audit/third_party/gtest:gtest",
+        ":block_tag_map",
+    ]
+)
