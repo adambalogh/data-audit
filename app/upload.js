@@ -10,26 +10,27 @@ window.onload = function() {
     window.close();
   }
 
+  var line = new ProgressBar.Line('#progress', {
+    strokeWidth: 3,
+    duration: 100
+  });
+
   require('electron').ipcRenderer.on('fileName', function(event, fileName) {
     var title = document.getElementById("title");
     title.appendChild(document.createTextNode("Uploading \"" + fileName + "\"..."));
-
-    var progress = document.getElementById("progress");
 
     upload.uploadAsync(
       fileName,
 
       function(percentage) {
-        progress.textContent = percentage + "%";
+        line.animate(percentage / 100);
       },
 
       function(error) {
         if (error != null) {
-          progress.textContent = "0%";
           title.firstChild.textContent = error;
           title.style.color = "#FF0000";
         } else {
-          progress.textContent = "100%";
           title.firstChild.textContent = "Successfully Uploaded File";
           title.style.color = "#27ae60";
         }

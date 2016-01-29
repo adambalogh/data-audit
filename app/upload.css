@@ -25,9 +25,13 @@ body {
 }
 
 #progress {
+  color: #2c3e50;
   position: absolute;
-  left: 30px;
-  bottom: 20px;
+  left: 20px;
+  bottom: 30px;
+  border: 1px solid #34495e;
+  padding: 0px;
+  width: 60%;
 }
 
 .button {
