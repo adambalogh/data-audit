@@ -30,10 +30,12 @@ void LocalDiskStorage::StoreBlockTagFile(const std::string& file_name,
                              block_file_path + ")");
   }
 
-  std::array<char, 1000 * 1000> buffer;
+  std::array<char, 1000 * 10> buffer;
+  size_t written;
   while (input.read(buffer.data(), buffer.size()).gcount()) {
-    out_file.write(buffer.data(), input.gcount());
-    listener.OnBlockTagFileChunkStored(buffer.size());
+    written = input.gcount();
+    out_file.write(buffer.data(), written);
+    listener.OnBlockTagFileChunkStored(written);
   }
 }
 
@@ -58,10 +60,12 @@ void LocalDiskStorage::StoreFile(const std::string& file_name,
         "Could not open file to write the original file (" +
         GetFilePath(file_name) + ")");
   }
-  std::array<char, 1000 * 1000> buffer;
+  std::array<char, 1000 * 10> buffer;
+  size_t written;
   while (stream.read(buffer.data(), buffer.size()).gcount()) {
-    out_file.write(buffer.data(), stream.gcount());
-    listener.OnFileChunkStored(buffer.size());
+    written = stream.gcount();
+    out_file.write(buffer.data(), written);
+    listener.OnFileChunkStored(written);
   }
 }
 }

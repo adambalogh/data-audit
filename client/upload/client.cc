@@ -33,7 +33,7 @@ Stats Client::Upload(const File& file) {
   ProgressBarListener progress_{file.size, context.parameters().block_size(),
                                 context.num_blocks()};
 
-  StorageListenerChain listener{{&stats_, &progress_}};
+  StorageListenerChain listener{{&stats_}};
 
   BlockTagger tagger{context};
   BlockTagSerializer serializer{file.file_name};
