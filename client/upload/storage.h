@@ -89,8 +89,10 @@ class StatsListener : public StorageListener {
 //
 class ProgressBarListener : public StorageListener {
  public:
-  ProgressBarListener(size_t file_size, size_t block_size, int num_blocks)
-      : progress_bar_(CalculateTotalBytes(file_size, block_size, num_blocks)) {}
+  ProgressBarListener(size_t file_size, size_t block_size, int num_blocks,
+                      ProgressBar::CallbackType callback)
+      : progress_bar_(CalculateTotalBytes(file_size, block_size, num_blocks),
+                      callback) {}
 
   void OnFileChunkStored(size_t bytes) override {
     progress_bar_.Progress(bytes);

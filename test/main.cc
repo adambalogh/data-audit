@@ -29,7 +29,8 @@ int main() {
       "toihtq09rhgwqpg84538h"};
 
   upload::File file{content, file_name};
-  upload_client.Upload(file);
+  upload_client.Upload(
+      file, [](int percentage) { std::cout << percentage << std::endl; });
 
   verify::Client verify_client{
       std::unique_ptr<verify::FileTagSource>(

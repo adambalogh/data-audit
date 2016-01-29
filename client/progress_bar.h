@@ -1,16 +1,25 @@
 #pragma once
 
+#include <functional>
+
 namespace audit {
 
 class ProgressBar {
  public:
-  ProgressBar(size_t max) : max_(max) {}
+  typedef std::function<void(int)> CallbackType;
+
+  ProgressBar(size_t max, CallbackType callback = [](int) {})
+      : max_(max), callback_(callback) {}
 
   void Progress(size_t value) {
     current_value_ += value;
-    percentage_ =
-        (static_cast<double>(current_value_) / static_cast<double>(max_)) * 100;
-    if (percentage_ > 100) percentage_ = 100;
+
+    size_t new_percentage = (current_value_ * 100) / max_;
+    if (new_percentage > 100) new_percentage = 100;
+    if (new_percentage > percentage_) {
+      callback_(new_percentage);
+    }
+    percentage_ = new_percentage;
   }
 
   size_t Percentage() const { return percentage_; }
@@ -25,5 +34,8 @@ class ProgressBar {
   size_t current_value_{0};
 
   size_t percentage_{0};
+
+  // Should be called whenever the percentage increases
+  CallbackType callback_;
 };
 }

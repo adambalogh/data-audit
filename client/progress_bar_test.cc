@@ -46,6 +46,17 @@ TEST(ProgressBar, Over) {
   ASSERT_EQ(100, b.Percentage());
 }
 
+TEST(ProgressBar, Callback) {
+  int value{0};
+  ProgressBar b{10, [&value](int p) {
+    EXPECT_TRUE(p > value);
+    value = p;
+  }};
+
+  b.Progress(1);
+  b.Progress(5);
+  b.Progress(4);
+}
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();

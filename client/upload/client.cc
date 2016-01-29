@@ -1,5 +1,7 @@
 #include "audit/client/upload/client.h"
 
+#include <iostream>
+
 #include "openssl/bn.h"
 
 #include "audit/util.h"
@@ -13,7 +15,7 @@
 namespace audit {
 namespace upload {
 
-Stats Client::Upload(const File& file) {
+Stats Client::Upload(const File& file, ProgressBar::CallbackType callback) {
   TaggingParameters params{10, 128};
 
   BN_ptr p{BN_new(), ::BN_free};
@@ -29,11 +31,11 @@ Stats Client::Upload(const File& file) {
   FileContext context{file, params, std::move(alphas), std::move(p),
                       std::unique_ptr<PRF>(new HMACPRF)};
 
-  StatsListener stats_;
-  ProgressBarListener progress_{file.size, context.parameters().block_size(),
-                                context.num_blocks()};
+  StatsListener stats;
+  ProgressBarListener progress{file.size, context.parameters().block_size(),
+                               context.num_blocks(), callback};
 
-  StorageListenerChain listener{{&stats_}};
+  StorageListenerChain listener{{&stats, &progress}};
 
   BlockTagger tagger{context};
   BlockTagSerializer serializer{file.file_name};
@@ -49,7 +51,7 @@ Stats Client::Upload(const File& file) {
   storage_->StoreFileTag(file.file_name, private_tag, listener);
   storage_->StoreFile(file.file_name, file.stream, listener);
 
-  return stats_.GetStats();
+  return stats.GetStats();
 }
 }
 }
