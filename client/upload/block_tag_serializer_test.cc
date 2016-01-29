@@ -1,6 +1,9 @@
 #include "gtest/gtest.h"
 #include "audit/client/upload/block_tag_serializer.h"
 
+#include <fstream>
+#include <iostream>
+
 #include "audit/proto/cpor.pb.h"
 
 using namespace audit;
@@ -11,9 +14,18 @@ TEST(BlockTagSerializer, WriteOne) {
 
   proto::BlockTag tag;
   tag.set_index(10);
+  tag.set_sigma("abcd");
 
   serializer.Add(tag);
   serializer.Done();
+
+  std::ifstream tag_file{serializer.FileName(), std::ifstream::binary};
+
+  proto::BlockTag read_tag;
+  EXPECT_TRUE(read_tag.ParseFromIstream(&tag_file));
+
+  EXPECT_EQ(tag.index(), read_tag.index());
+  EXPECT_EQ(tag.sigma(), read_tag.sigma());
 }
 
 TEST(BlockTagSerializer, BlockTagMap) {

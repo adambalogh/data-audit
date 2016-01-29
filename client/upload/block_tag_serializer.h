@@ -19,7 +19,8 @@ namespace upload {
 class BlockTagSerializer {
  public:
   BlockTagSerializer(const std::string& file_full_path)
-      : file_name_(files_dir + "tags"), out_file_(file_name_) {
+      : file_name_(files_dir + "tags"),
+        out_file_(file_name_, std::ofstream::binary) {
     if (!out_file_) {
       throw std::runtime_error(
           "Could not open file to serialize BlockTags to. (" + files_dir +
@@ -35,7 +36,7 @@ class BlockTagSerializer {
 
   // Returns the full path and name of the file where the serialized tags are
   // stored
-  std::string GetFileName() const { return file_name_; }
+  std::string FileName() const { return file_name_; }
 
   // The directory under which all the tag files are stored
   static const std::string files_dir;
@@ -49,14 +50,12 @@ class BlockTagSerializer {
 
   std::ofstream out_file_;
 
-  // TODO what if BlockTag is bigger than 2 MB
-  std::array<unsigned int, 1000 * 1000 * 2> buffer;  // 2 MB
+  std::vector<proto::BlockTag> tags_;
 
-  // Indicates where we can write in the buffer
-  size_t buffer_end{0};
+  size_t buffer_size_{0};
 
   // Indicates the current size of out_file
-  size_t file_end{0};
+  size_t file_end_{0};
 
   proto::BlockTagMap block_tag_map_;
 };
