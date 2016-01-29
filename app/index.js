@@ -1,7 +1,7 @@
 var remote = require('remote'); 
 var dialog = remote.require('dialog');  
-var verify = require('bindings')('verify');
-var file_browser = require('bindings')('file_browser');
+var verify = require('bindings')('verify')
+var file_browser = require('bindings')('file_browser')
 const BrowserWindow = require('electron').remote.BrowserWindow;
 
 

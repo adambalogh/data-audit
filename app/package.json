@@ -1,19 +1,19 @@
 {
   "name": "Data-Audit",
   "version": "0.0.1",
-  "description": "Node binding to Data Audit",
+  "description": "Data Audit app",
   "main": "start.js",
   "private": true,
-  "dependencies": {
-    "bindings": "~1.2.1",
-    "nan": "^2.0.0"
-  },
   "scripts": {
     "test": "node start.js"
   },
   "gypfile": true,
+  "dependencies": {
+    "bindings": "^1.2.1",
+    "nan": "^2.2.0"
+  },
   "devDependencies": {
-    "electron-prebuilt": "^0.36.2",
-    "electron-rebuild": "^1.0.2"
+    "electron-prebuilt": "^0.36.6",
+    "electron-rebuild": "^1.1.2"
   }
 }
