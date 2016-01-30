@@ -4,24 +4,26 @@
 #include <fstream>
 #include <cstdlib>
 
-#include "boost/network.hpp"
-#include "boost/network/protocol/http/client.hpp"
+#include "cpprest/uri.h"
+#include "cpprest/http_client.h"
 #include "nlohmann/json.hpp"
 
 using json = nlohmann::json;
-using namespace boost::network;
+
+using web::uri;
+using web::uri_builder;
+using web::http::client::http_client;
+using web::http::http_request;
 
 namespace audit {
 namespace dropbox {
 
 const std::string TokenSource::SECRETS_FILE{
     "/users/adambalogh/Developer/audit/providers/dropbox/secrets.json"};
-
-const uri::uri TokenSource::AUTHORIZE_URL{
+const web::uri TokenSource::AUTHORIZE_URL{
     "https://www.dropbox.com/1/oauth2/authorize"};
-
-const uri::uri TokenSource::TOKEN_URL{
-    "https://api.dropboxapi.com/1/oauth2/token"};
+const web::uri TokenSource::BASE_URL{"https://api.dropboxapi.com"};
+const web::uri TokenSource::TOKEN_URL{"/1/oauth2/token"};
 
 TokenSource::TokenSource(CodeCallbackType code_callback)
     : client_id_(GetClientId()),
@@ -42,19 +44,21 @@ std::string TokenSource::GetClientSecret() {
 
 std::string TokenSource::ExchangeCodeForToken(const std::string& code) {
   std::stringstream request_body;
-  request_body << "code=" << uri::encoded(code)
+  request_body << "code=" << uri::encode_data_string(code)
                << "&grant_type=authorization_code"
-               << "&client_id=" << uri::encoded(client_id_)
-               << "&client_secret=" << uri::encoded(client_secret_);
+               << "&client_id=" << uri::encode_data_string(client_id_)
+               << "&client_secret=" << uri::encode_data_string(client_secret_);
 
-  http::client::request request(TOKEN_URL);
-  request << header("Content-Type", "application/x-www-form-urlencoded");
+  http_request request("POST");
+  request.set_request_uri(TOKEN_URL);
+  request.headers().add("Content-Type", "application/x-www-form-urlencoded");
+  request.set_body(request_body.str());
 
-  http::client client;
-  // TODO error handling
-  auto http_response = client.post(request, request_body.str());
-  auto response = json::parse(body(http_response));
+  http_client client{BASE_URL};
+  auto http_response = client.request(request).get();
+  auto response = json::parse(http_response.extract_string().get());
 
+  // If request was invalid, "error" field will be set
   auto error = response.find("error");
   if (error != response.end()) {
     throw std::runtime_error("Unable to authorize app with Dropbox: " +
@@ -66,11 +70,12 @@ std::string TokenSource::ExchangeCodeForToken(const std::string& code) {
 }
 
 void TokenSource::OpenAuthorizeUrl() const {
-  uri::uri authorize_url;
-  authorize_url << AUTHORIZE_URL << uri::query("response_type", "code")
-                << uri::query("client_id", client_id_);
+  uri_builder builder{AUTHORIZE_URL};
+  builder.append_query("response_type", "code")
+      .append_query("client_id", client_id_);
+  auto authorize_url = builder.to_uri();
 
-  std::string command = "open \"" + authorize_url.string() + "\"";
+  std::string command = "open \"" + authorize_url.to_string() + "\"";
   system(command.c_str());
 }
 

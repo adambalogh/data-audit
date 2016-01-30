@@ -1,8 +1,5 @@
-#include "audit/providers/dropbox/token_source.h"
-
 #include "gtest/gtest.h"
-
-#include <iostream>
+#include "audit/providers/dropbox/token_source.h"
 
 using namespace audit::dropbox;
 
