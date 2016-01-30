@@ -10,8 +10,8 @@
 #include "audit/util.h"
 #include "audit/client/prf.h"
 #include "audit/client/upload/client.h"
-#include "audit/client/upload/local_disk_storage.h"
 #include "audit/client/upload/stats.h"
+#include "audit/providers/local_disk/local_disk_storage.h"
 
 audit::upload::Client client{std::unique_ptr<audit::upload::ReusableStorage>{
     new audit::upload::LocalDiskStorage}};

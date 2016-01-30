@@ -1,6 +1,6 @@
 #include "audit/client/verify/local_proof_source.h"
 
-#include "audit/server/local_disk_fetcher.h"
+#include "audit/providers/local_disk/local_disk_fetcher.h"
 #include "audit/server/prover.h"
 
 namespace audit {

@@ -65,17 +65,6 @@ cc_library(
 )
 
 cc_library(
-  name = "local_disk_storage",
-  srcs = ["local_disk_storage.cc"],
-  hdrs = ["local_disk_storage.h"],
-  deps = [
-    ":storage",
-    ":file",
-    "//audit/proto:cpor",
-  ]
-)
-
-cc_library(
   name = "client",
   srcs = ["client.cc"],
   hdrs = ["client.h"],
@@ -116,11 +105,3 @@ cc_binary(
     ]
 )
 
-cc_library(
-    name = "gdrive_storage",
-    hdrs = ["gdrive_storage.h"],
-    srcs = ["gdrive_storage.cc"],
-    deps = [
-        ":storage",
-    ]
-)

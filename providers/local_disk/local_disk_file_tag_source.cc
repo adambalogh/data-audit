@@ -1,10 +1,10 @@
-#include "audit/client/verify/local_disk_file_tag_source.h"
+#include "audit/providers/local_disk/local_disk_file_tag_source.h"
 
 #include <fstream>
 #include <sstream>
 
 #include "audit/proto/cpor.pb.h"
-#include "audit/client/upload/local_disk_storage.h"
+#include "audit/providers/local_disk/local_disk_storage.h"
 
 namespace audit {
 namespace verify {

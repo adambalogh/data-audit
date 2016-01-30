@@ -1,9 +1,9 @@
-#include "audit/server/local_disk_fetcher.h"
+#include "audit/providers/local_disk/local_disk_fetcher.h"
 
 #include <sstream>
 
 #include "audit/block_tag_map.h"
-#include "audit/client/upload/local_disk_storage.h"
+#include "audit/providers/local_disk/local_disk_storage.h"
 
 namespace audit {
 

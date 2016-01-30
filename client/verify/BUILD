@@ -31,16 +31,6 @@ cc_binary(
 )
 
 cc_library(
-  name = "local_disk_file_tag_source",
-  srcs = ["local_disk_file_tag_source.cc"],
-  hdrs = ["local_disk_file_tag_source.h"],
-  deps = [
-    "//audit/proto:cpor",
-    "//audit/client/upload:local_disk_storage",
-  ]
-)
-
-cc_library(
   name = "file_tag_source",
   hdrs = ["file_tag_source.h"],
   deps = [
@@ -78,6 +68,6 @@ cc_library(
     ":proof_source",
     "//audit/proto:cpor",
     "//audit/server:prover",
-    "//audit/server:local_disk_fetcher",
+    "//audit/providers/local_disk:local_disk_fetcher",
   ]
 )

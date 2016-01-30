@@ -9,8 +9,8 @@
 
 #include "audit/util.h"
 #include "audit/client/verify/client.h"
-#include "audit/client/verify/local_disk_file_tag_source.h"
 #include "audit/client/verify/local_proof_source.h"
+#include "audit/providers/local_disk/local_disk_file_tag_source.h"
 
 audit::verify::Client client{std::unique_ptr<audit::verify::FileTagSource>(
                                  new audit::verify::LocalDiskFileTagSource{}),

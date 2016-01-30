@@ -1,4 +1,4 @@
-#include "audit/client/upload/local_disk_storage.h"
+#include "audit/providers/local_disk/local_disk_storage.h"
 
 #include <array>
 #include <iostream>

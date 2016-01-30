@@ -38,15 +38,4 @@ cc_binary(
   ]
 )
 
-cc_library(
-  name = "local_disk_fetcher",
-  srcs = ["local_disk_fetcher.cc"],
-  hdrs = ["local_disk_fetcher.h"],
-  deps = [
-    ":fetcher",
-    "//audit:block_tag_map",
-    "//audit/proto:cpor",
-    "//audit/client/upload:local_disk_storage",
-  ]
-)
 
