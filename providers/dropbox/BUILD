@@ -15,3 +15,12 @@ cc_library(
         "//audit/third_party/cpp-netlib:cpp-netlib",
     ]
 )
+
+cc_binary(
+    name = "token_source_test",
+    srcs = ["token_source_test.cc"],
+    deps = [
+        "//audit/third_party/gtest:gtest",
+        ":token_source",
+    ]
+)
