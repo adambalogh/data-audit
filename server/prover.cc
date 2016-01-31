@@ -10,6 +10,7 @@
 #include "audit/server/fetcher.h"
 
 namespace audit {
+namespace server {
 
 Prover::Prover(Fetcher& fetcher, const proto::Challenge& chal)
     : ProverInterface(fetcher, chal) {
@@ -68,5 +69,6 @@ proto::Proof Prover::Prove() {
   }
 
   return ConstructProof();
+}
 }
 }
