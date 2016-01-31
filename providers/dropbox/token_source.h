@@ -35,6 +35,10 @@ class TokenSource {
   const std::string client_secret_;
 
   CodeCallbackType code_callback_;
+
+  std::string token_;
+
+  bool has_token_{false};
 };
 }
 }

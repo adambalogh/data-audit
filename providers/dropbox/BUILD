@@ -1,3 +1,5 @@
+package(default_visibility=["//visibility:public"])
+
 cc_library(
     name = "dropbox_storage",
     hdrs = ["dropbox_storage.h"],
@@ -5,6 +7,7 @@ cc_library(
     deps = [
         "//audit/client/upload:storage",
         "//audit/third_party/cpprestsdk:cpprestsdk",
+        ":dropbox_client",
         ":token_source",
     ]
 )
@@ -33,6 +36,16 @@ cc_binary(
     srcs = ["token_source_test.cc"],
     deps = [
         "//audit/third_party/gtest:gtest",
+        ":token_source",
+    ]
+)
+
+cc_library(
+    name = "dropbox_client",
+    hdrs = ["dropbox_client.h"],
+    srcs = ["dropbox_client.cc"],
+    deps = [
+        "//audit/third_party/cpprestsdk:cpprestsdk",
         ":token_source",
     ]
 )

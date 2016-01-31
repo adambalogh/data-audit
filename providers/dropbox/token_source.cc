@@ -20,10 +20,10 @@ namespace dropbox {
 
 const std::string TokenSource::SECRETS_FILE{
     "/users/adambalogh/Developer/audit/providers/dropbox/secrets.json"};
-const web::uri TokenSource::AUTHORIZE_URL{
+const uri TokenSource::AUTHORIZE_URL{
     "https://www.dropbox.com/1/oauth2/authorize"};
-const web::uri TokenSource::BASE_URL{"https://api.dropboxapi.com"};
-const web::uri TokenSource::TOKEN_URL{"/1/oauth2/token"};
+const uri TokenSource::BASE_URL{"https://api.dropboxapi.com"};
+const uri TokenSource::TOKEN_URL{"/1/oauth2/token"};
 
 TokenSource::TokenSource(CodeCallbackType code_callback)
     : client_id_(GetClientId()),
@@ -80,9 +80,13 @@ void TokenSource::OpenAuthorizeUrl() const {
 }
 
 std::string TokenSource::GetToken() {
-  OpenAuthorizeUrl();
-  auto code = code_callback_();
-  return ExchangeCodeForToken(code);
+  if (!has_token_) {
+    OpenAuthorizeUrl();
+    auto code = code_callback_();
+    token_ = ExchangeCodeForToken(code);
+    has_token_ = true;
+  }
+  return token_;
 }
 }
 }
