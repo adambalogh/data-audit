@@ -14,6 +14,12 @@
 #include "audit/common.h"
 #include "audit/test_util.h"
 
+using audit::upload::BlockTagger;
+using audit::upload::FileContext;
+using audit::upload::TaggingParameters;
+using audit::upload::File;
+using audit::server::Prover;
+
 using namespace audit::verify;
 
 // TODO cleanup
@@ -47,7 +53,7 @@ TEST(Verification, Successful) {
     tags.push_back(tagger.GetNext());
   }
 
-  MemoryFetcher fetcher{context, tags, content};
+  MemoryFetcher fetcher{challenge.file_tag(), context, tags, content};
   Prover prover{fetcher, challenge};
   auto proof = prover.Prove();
 

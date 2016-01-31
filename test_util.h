@@ -106,22 +106,28 @@ class DummyNumberGenerator : public RandomNumberGenerator {
   std::vector<int> nums_;
 };
 
-class MemoryFetcher : public Fetcher {
+class MemoryFetcher : public server::Fetcher {
  public:
-  MemoryFetcher(const upload::FileContext &context,
+  MemoryFetcher(const proto::PublicFileTag &file_tag,
+                const upload::FileContext &context,
                 std::vector<proto::BlockTag> &tags, std::stringstream &s)
-      : context_(context), tags_(tags), s_(s) {}
-  std::unique_ptr<std::basic_istream<char>> FetchBlock(unsigned long index) {
+      : server::Fetcher(file_tag), context_(context), tags_(tags), s_(s) {}
+
+  std::unique_ptr<std::basic_istream<char>> FetchBlock(
+      unsigned long index) override {
     std::string block{
         s_.str().data() + context_.parameters().block_size() * index,
         std::min(
             context_.parameters().block_size(),
             s_.str().size() - (context_.parameters().block_size() * index))};
+
     return std::unique_ptr<std::basic_istream<char>>{
         new std::stringstream{block}};
   }
 
-  proto::BlockTag FetchBlockTag(unsigned long index) { return tags_.at(index); }
+  proto::BlockTag FetchBlockTag(unsigned long index) override {
+    return tags_.at(index);
+  }
 
  private:
   const upload::FileContext &context_;

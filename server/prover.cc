@@ -29,8 +29,8 @@ proto::Proof Prover::ConstructProof() {
 }
 
 void Prover::ProcessChallenge(const proto::ChallengeItem& challenge) {
-  const auto tag = fetcher_.FetchBlockTag(chal_.file_tag(), challenge.index());
-  auto block_stream = fetcher_.FetchBlock(chal_.file_tag(), challenge.index());
+  const auto tag = fetcher_.FetchBlockTag(challenge.index());
+  auto block_stream = fetcher_.FetchBlock(challenge.index());
 
   auto weight = StringToBignum(challenge.weight());
   auto sigma = StringToBignum(tag.sigma());

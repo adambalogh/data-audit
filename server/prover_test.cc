@@ -8,30 +8,40 @@
 
 #include "audit/common.h"
 #include "audit/util.h"
-#include "audit/client/file_tag.h"
-#include "audit/client/block_tagger.h"
+#include "audit/client/upload/file.h"
+#include "audit/client/upload/block_tagger.h"
 #include "audit/proto/cpor.pb.h"
 #include "audit/test_util.h"
 
 #include <sstream>
 
-using namespace audit;
+using namespace audit::server;
+
+using audit::upload::BlockTagger;
+using audit::upload::TaggingParameters;
+using audit::upload::FileContext;
+using audit::upload::File;
 
 TEST(Prover, Sigma) {
-  unsigned int num_sectors = 2;
   size_t sector_size = 2;
-  std::stringstream file{"abcdefghijklmno\npqr "};
+  int num_sectors = 2;
+  TaggingParameters params{num_sectors, sector_size};
+
   auto p = BN_new_ptr(353868019);
+
   std::vector<BN_ptr> alphas;
   CryptoNumberGenerator g;
   for (auto i = 0; i < num_sectors; ++i) {
     alphas.push_back(g.GenerateNumber(*p));
   }
-  FileTag file_tag{file, "", num_sectors, sector_size, std::move(alphas),
-                   std::move(p)};
 
-  std::unique_ptr<PRF> prf{new HMACPRF{"hello"}};
-  BlockTagger block_tagger{file_tag, std::move(prf)};
+  std::stringstream stream{"abcdefghijklmno\npqr "};
+  File file{stream, ""};
+
+  FileContext context{file, params, std::move(alphas), std::move(p),
+                      std::unique_ptr<PRF>{new HMACPRF}};
+
+  BlockTagger block_tagger{context};
 
   std::vector<proto::BlockTag> tags;
   while (block_tagger.HasNext()) {
@@ -39,7 +49,7 @@ TEST(Prover, Sigma) {
   }
 
   proto::Challenge challenge;
-  *challenge.mutable_file_tag() = file_tag.PublicProto();
+  *challenge.mutable_file_tag() = context.Proto().public_tag();
 
   auto item = challenge.add_items();
   item->set_index(0);
@@ -51,7 +61,8 @@ TEST(Prover, Sigma) {
   auto weight2 = BN_new_ptr(17);
   item->set_weight(BignumToString(*weight2));
 
-  MemoryFetcher fetcher{file_tag, tags, file};
+  MemoryFetcher fetcher{challenge.file_tag(), context, tags, stream};
+
   Prover prover{fetcher, challenge};
   auto proof = prover.Prove();
 
@@ -62,7 +73,7 @@ TEST(Prover, Sigma) {
   BN_add(sigma_sum.get(), weight1.get(), weight2.get());
 
   BN_CTX_ptr ctx{BN_CTX_new(), ::BN_CTX_free};
-  BN_mod(sigma_sum.get(), sigma_sum.get(), file_tag.p(), ctx.get());
+  BN_mod(sigma_sum.get(), sigma_sum.get(), context.p(), ctx.get());
 
   ASSERT_EQ(0, BN_cmp(sigma_sum.get(), StringToBignum(proof.sigma()).get()));
 }
