@@ -39,6 +39,10 @@ proto::BlockTagMap BlockTagSerializer::Done() {
   return block_tag_map_;
 }
 
+void BlockTagSerializer::DeleteTempFile() const {
+  std::remove(file_name_.c_str());
+}
+
 void BlockTagSerializer::Add(const proto::BlockTag& tag) {
   if (buffer_size_ + tag.ByteSize() > 1000 * 1000 * 2) {
     Flush();

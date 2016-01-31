@@ -14,7 +14,7 @@ namespace upload {
 // A listener that can be notified when after we stored a chunk of data.
 class StorageListener {
  public:
-  virtual void OnChunkStored(size_t bytes);
+  virtual void OnChunkStored(size_t bytes) = 0;
 
   virtual ~StorageListener() {}
 };

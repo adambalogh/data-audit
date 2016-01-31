@@ -59,6 +59,8 @@ Stats Client::Upload(const File& file, ProgressBar::CallbackType callback) {
   storage_->StoreFileTag(file.file_name, private_tag, progress_listener);
   storage_->StoreFile(file.file_name, file.stream, progress_listener);
 
+  serializer.DeleteTempFile();
+
   // assert(progress_bar.Done() == true);
 
   return stats;

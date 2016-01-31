@@ -57,6 +57,7 @@ cc_binary(
 cc_library(
   name = "storage",
   hdrs = ["storage.h"],
+  srcs = ["storage.cc"],
   deps = [
     ":stats",
     "//audit/client:progress_bar",

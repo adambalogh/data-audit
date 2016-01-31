@@ -14,8 +14,14 @@ namespace upload {
 // BlockTagSerizer combines all the BlockTags of a file into a single binary
 // file.
 //
-// After we added all the BlockTags, Flush() must be called to write all the
+// After we added all the BlockTags, Done() must be called to write all the
 // tags to the file.
+//
+// The location of specific BlockTags can be found in the returned
+// proto::BlockTagMap, see it's comments for more explanation.
+//
+// Once the file containing the BlockTags has been properly stored,
+// DeleteTempFile must be called to delete the local copy.
 //
 class BlockTagSerializer {
  public:
@@ -41,6 +47,10 @@ class BlockTagSerializer {
   // stored
   std::string FileName() const { return file_name_; }
 
+  // Deletes the temporary file where the BlockTags are stored, must be called
+  // after we stored the file
+  void DeleteTempFile() const;
+
   // The directory under which all the tag files are stored
   static const std::string files_dir;
 
@@ -48,13 +58,16 @@ class BlockTagSerializer {
   // Writes the content of the buffer to out_file
   void Flush();
 
-  // Name of the file where the tags are written
+  // Name of the file where the tags are serialized to
   const std::string file_name_;
 
+  // The file where we serialize all the BlockTags
   std::ofstream out_file_;
 
+  // Buffer for tags
   std::vector<proto::BlockTag> tags_;
 
+  // The size of tags_ in bytes
   size_t buffer_size_{0};
 
   // Indicates the current size of out_file
