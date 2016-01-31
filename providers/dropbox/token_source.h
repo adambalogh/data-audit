@@ -8,6 +8,18 @@
 namespace audit {
 namespace dropbox {
 
+class TokenSource;
+
+// This should be used in production in order to make sure that we don't
+// authenticate users more than one time
+class TokenSourceInstance {
+ public:
+  static TokenSource& get() { return token_source_; }
+
+ private:
+  static TokenSource token_source_;
+};
+
 class TokenSource {
  public:
   typedef std::function<std::string(void)> CodeCallbackType;

@@ -58,9 +58,8 @@ void DropboxStorage::SaveFileToDropbox(const std::string& path,
   Concurrency::streams::stdio_istream<uint8_t> c_stream{stream};
   request.set_body(c_stream);
 
-  // TODO Check for error
   auto response = SendRequest(request);
-  std::cout << response.to_string() << std::endl;
+  // TODO check returned values
 }
 }
 }

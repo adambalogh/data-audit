@@ -15,8 +15,15 @@ const uri DropboxClient::BASE_URL{"https://content.dropboxapi.com"};
 
 http_response DropboxClient::SendRequest(http_request& request) {
   request.headers().add("Authorization", "Bearer " + token_source_.GetToken());
-  auto future_response = client_.request(request);
-  return future_response.get();
+  auto response = client_.request(request).get();
+
+  if (response.status_code() < 200 || response.status_code() >= 300) {
+    throw std::runtime_error(
+        "Sent unsuccessful request to Dropbox. HTTP status code: " +
+        std::to_string(response.status_code()));
+  }
+
+  return response;
 }
 }
 }
