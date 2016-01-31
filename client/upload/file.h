@@ -4,10 +4,6 @@
 #include <istream>
 #include <vector>
 
-#include "cryptopp/integer.h"
-#include "cryptopp/hmac.h"
-#include "cryptopp/sha.h"
-#include "cryptopp/aes.h"
 #include "openssl/bn.h"
 
 #include "audit/common.h"

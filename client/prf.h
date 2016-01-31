@@ -3,7 +3,6 @@
 #include <array>
 #include <string>
 
-#include "cryptopp/integer.h"
 #include "cryptopp/hmac.h"
 #include "cryptopp/sha.h"
 #include "openssl/bn.h"
