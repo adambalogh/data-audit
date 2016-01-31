@@ -25,10 +25,10 @@ proto::PrivateFileTag FileTagSource::GetFileTag(const std::string& file_name) {
   request.headers().add("Dropbox-API-Arg", parameters.dump());
 
   auto response = SendRequest(request);
-  auto binary = response.extract_string().get();
+  auto binary = response.extract_vector().get();
 
   proto::PrivateFileTag tag;
-  tag.ParseFromString(binary);
+  tag.ParseFromArray(binary.data(), binary.size());
   return tag;
 }
 }

@@ -10,10 +10,12 @@ namespace dropbox {
 
 class TokenSourceInterface {
  public:
-  virtual std::string GetToken();
+  virtual std::string GetToken() = 0;
+
+  virtual ~TokenSourceInterface() {}
 };
 
-class TokenSource : TokenSourceInterface {
+class TokenSource : public TokenSourceInterface {
  public:
   typedef std::function<std::string(void)> CodeCallbackType;
 

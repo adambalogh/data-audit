@@ -86,3 +86,24 @@ cc_library(
         "//audit/third_party/cpprestsdk:cpprestsdk",
     ]
 )
+
+cc_binary(
+    name = "fetcher_test",
+    srcs = ["fetcher_test.cc"],
+    deps = [
+        "//audit/third_party/gtest:gtest",
+        ":fetcher",
+        ":token_source",
+        ":file_tag_source",
+    ]
+)
+
+cc_binary(
+    name = "file_tag_source_test",
+    srcs = ["file_tag_source_test.cc"],
+    deps = [
+        "//audit/third_party/gtest:gtest",
+        ":file_tag_source",
+        ":token_source",
+    ]
+)
