@@ -1,7 +1,6 @@
 #pragma once
 
 #include "audit/client/upload/storage.h"
-#include "audit/providers/dropbox/token_source.h"
 #include "audit/providers/dropbox/dropbox_client.h"
 
 #include "cpprest/uri.h"

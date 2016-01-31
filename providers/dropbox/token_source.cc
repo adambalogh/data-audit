@@ -8,6 +8,8 @@
 #include "cpprest/http_client.h"
 #include "nlohmann/json.hpp"
 
+#include "audit/providers/dropbox/dropbox_urls.h"
+
 using json = nlohmann::json;
 
 using web::uri;
@@ -20,10 +22,6 @@ namespace dropbox {
 
 const std::string TokenSource::SECRETS_FILE{
     "/users/adambalogh/Developer/audit/providers/dropbox/secrets.json"};
-const uri TokenSource::AUTHORIZE_URL{
-    "https://www.dropbox.com/1/oauth2/authorize"};
-const uri TokenSource::BASE_URL{"https://api.dropboxapi.com"};
-const uri TokenSource::TOKEN_URL{"/1/oauth2/token"};
 
 std::string TokenSource::GetValueFromSecret(const std::string& key) {
   std::ifstream secrets_file{SECRETS_FILE};
@@ -57,11 +55,11 @@ std::string TokenSource::ExchangeCodeForToken(const std::string& code) {
                << "&client_secret=" << uri::encode_data_string(client_secret_);
 
   http_request request("POST");
-  request.set_request_uri(TOKEN_URL);
+  request.set_request_uri(TOKEN_PATH);
   request.headers().add("Content-Type", "application/x-www-form-urlencoded");
   request.set_body(request_body.str());
 
-  http_client client{BASE_URL};
+  http_client client{AUTH_URL};
   auto http_response = client.request(request).get();
   auto response = json::parse(http_response.extract_string().get());
 

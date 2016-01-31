@@ -11,8 +11,6 @@ using web::http::client::http_client;
 namespace audit {
 namespace dropbox {
 
-const uri DropboxClient::BASE_URL{"https://content.dropboxapi.com"};
-
 http_response DropboxClient::SendRequest(http_request& request) {
   request.headers().add("Authorization", "Bearer " + token_source_.GetToken());
   auto response = client_.request(request).get();

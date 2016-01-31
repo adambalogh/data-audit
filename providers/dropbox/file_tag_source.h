@@ -10,10 +10,10 @@ namespace dropbox {
 
 class FileTagSource : verify::FileTagSource, DropboxClient {
  public:
-  proto::PrivateFileTag GetFileTag(const std::string& file_name) override;
+  FileTagSource(TokenSourceInterface& token_source)
+      : DropboxClient(token_source) {}
 
- private:
-  const static web::uri DOWNLOAD_PATH;
+  proto::PrivateFileTag GetFileTag(const std::string& file_name) override;
 };
 }
 }

@@ -9,6 +9,7 @@ cc_library(
         "//audit/third_party/cpprestsdk:cpprestsdk",
         ":dropbox_client",
         ":token_source",
+        ":dropbox_urls",
     ]
 )
 
@@ -28,6 +29,7 @@ cc_library(
     srcs = ["token_source.cc"],
     deps = [
         "//audit/third_party/cpprestsdk:cpprestsdk",
+        ":dropbox_urls",
     ]
 )
 
@@ -56,7 +58,31 @@ cc_library(
     srcs = ["file_tag_source.cc"],
     deps = [
         ":storage",
+        ":dropbox_urls",
+        ":token_source",
         "//audit/third_party/cpprestsdk:cpprestsdk",
         "//audit/proto:cpor",
+    ]
+)
+
+cc_library(
+    name = "fetcher",
+    hdrs = ["fetcher.h"],
+    srcs = ["fetcher.cc"],
+    deps = [
+        "//audit/proto:cpor",
+        ":dropbox_client",
+        ":storage",
+        ":dropbox_urls",
+        "//audit/third_party/cpprestsdk:cpprestsdk",
+        "//audit/server:fetcher",
+    ]
+)
+
+cc_library(
+    name = "dropbox_urls",
+    hdrs = ["dropbox_urls.h"],
+    deps = [
+        "//audit/third_party/cpprestsdk:cpprestsdk",
     ]
 )

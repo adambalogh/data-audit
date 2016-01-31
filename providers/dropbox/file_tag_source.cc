@@ -1,5 +1,4 @@
 #include "audit/providers/dropbox/storage.h"
-
 #include "audit/providers/dropbox/file_tag_source.h"
 
 #include "cpprest/uri.h"
@@ -7,6 +6,7 @@
 #include "nlohmann/json.hpp"
 
 #include "audit/proto/cpor.pb.h"
+#include "audit/providers/dropbox/dropbox_urls.h"
 
 using json = nlohmann::json;
 
@@ -15,8 +15,6 @@ using web::http::http_request;
 
 namespace audit {
 namespace dropbox {
-
-const uri DOWNLOAD_PATH{"/2/files/download"};
 
 proto::PrivateFileTag FileTagSource::GetFileTag(const std::string& file_name) {
   json parameters;

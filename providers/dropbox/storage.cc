@@ -8,6 +8,8 @@
 #include "cpprest/interopstream.h"
 #include "nlohmann/json.hpp"
 
+#include "audit/providers/dropbox/dropbox_urls.h"
+
 using json = nlohmann::json;
 
 using web::uri;
@@ -16,8 +18,6 @@ using audit::upload::StorageListener;
 
 namespace audit {
 namespace dropbox {
-
-const uri Storage::UPLOAD_URL{"/2/files/upload"};
 
 void Storage::StoreFile(const std::string& file_name, std::istream& stream,
                         StorageListener& listener) {
@@ -51,7 +51,7 @@ void Storage::SaveFileToDropbox(const std::string& path, std::istream& stream,
   parameters["autorename"] = false;
 
   http_request request{"POST"};
-  request.set_request_uri(UPLOAD_URL);
+  request.set_request_uri(UPLOAD_PATH);
   request.headers().add("Dropbox-API-Arg", parameters.dump());
   Concurrency::streams::stdio_istream<uint8_t> c_stream{stream};
   request.set_body(c_stream);

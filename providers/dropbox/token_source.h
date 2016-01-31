@@ -30,10 +30,6 @@ class TokenSource : TokenSourceInterface {
   std::string GetClientId();
   std::string GetClientSecret();
 
-  const static web::uri AUTHORIZE_URL;
-  const static web::uri BASE_URL;
-  const static web::uri TOKEN_URL;
-
   // The full path to the file that contains all the client secrets
   const static std::string SECRETS_FILE;
 

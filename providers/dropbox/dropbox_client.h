@@ -5,6 +5,8 @@
 #include "audit/providers/dropbox/token_source.h"
 #include "cpprest/http_client.h"
 
+#include "audit/providers/dropbox/dropbox_urls.h"
+
 namespace audit {
 namespace dropbox {
 
@@ -24,8 +26,6 @@ class DropboxClient {
   web::http::client::http_client client_{BASE_URL};
 
   TokenSourceInterface& token_source_;
-
-  const static web::uri BASE_URL;
 };
 }
 }
