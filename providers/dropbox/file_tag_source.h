@@ -9,7 +9,7 @@
 namespace audit {
 namespace dropbox {
 
-class FileTagSource : verify::FileTagSource, DropboxClient {
+class FileTagSource : public verify::FileTagSource, public DropboxClient {
  public:
   FileTagSource(TokenSourceInterface& token_source)
       : DropboxClient(token_source) {}
