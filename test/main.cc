@@ -6,8 +6,9 @@
 #include "audit/util.h"
 #include "audit/client/prf.h"
 #include "audit/client/upload/client.h"
-#include "audit/client/upload/local_disk_storage.h"
-#include "audit/client/verify/local_disk_file_tag_source.h"
+#include "audit/providers/local_disk/local_disk_storage.h"
+#include "audit/providers/local_disk/local_disk_file_tag_source.h"
+#include "audit/providers/dropbox/dropbox_storage.h"
 #include "audit/client/verify/client.h"
 #include "audit/client/verify/proof_source.h"
 #include "audit/client/verify/local_proof_source.h"
@@ -21,8 +22,14 @@ int main() {
     return -1;
   }
 
-  upload::Client upload_client{
-      std::unique_ptr<upload::ReusableStorage>{new upload::LocalDiskStorage}};
+  dropbox::TokenSource token_source{[]() {
+    std::string code;
+    std::cin >> code;
+    return code;
+  }};
+
+  upload::Client upload_client{std::unique_ptr<upload::ReusableStorage>{
+      new upload::DropboxStorage{token_source}}};
 
   std::stringstream content{
       "aejfwoigjqogijwer;goit43io;h5w3[94thg39wa;wighe;oiw4h3;"
