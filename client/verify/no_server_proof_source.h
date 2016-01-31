@@ -7,6 +7,11 @@
 namespace audit {
 namespace verify {
 
+// In theory, the proof should come from the server that contains the
+// requested file, however this is impossible, since we cannot run our own
+// code on cloud storage services. As a result, we need to run the proof
+// generating code locally. This class does this.
+//
 class NoServerProofSource : public ProofSource {
  public:
   NoServerProofSource(std::unique_ptr<Fetcher> fetcher)

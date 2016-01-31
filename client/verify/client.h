@@ -9,6 +9,7 @@
 namespace audit {
 namespace verify {
 
+// You should only interact with this class for verification.
 class Client {
  public:
   Client(std::unique_ptr<FileTagSource> file_tag_source,
