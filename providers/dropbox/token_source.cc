@@ -25,22 +25,29 @@ const uri TokenSource::AUTHORIZE_URL{
 const uri TokenSource::BASE_URL{"https://api.dropboxapi.com"};
 const uri TokenSource::TOKEN_URL{"/1/oauth2/token"};
 
+std::string TokenSource::GetValueFromSecret(const std::string& key) {
+  std::ifstream secrets_file{SECRETS_FILE};
+  if (!secrets_file) {
+    throw std::runtime_error(
+        "Could not open file containing Dropbox client secrets (" +
+        SECRETS_FILE + ")");
+  }
+  auto secrets = json::parse(secrets_file);
+  return secrets.at(key);
+}
+
+std::string TokenSource::GetClientId() {
+  return GetValueFromSecret("client_id");
+}
+
+std::string TokenSource::GetClientSecret() {
+  return GetValueFromSecret("client_secret");
+}
+
 TokenSource::TokenSource(CodeCallbackType code_callback)
     : client_id_(GetClientId()),
       client_secret_(GetClientSecret()),
       code_callback_(code_callback) {}
-
-std::string TokenSource::GetClientId() {
-  std::ifstream secrets_file{SECRETS_FILE};
-  auto secrets = json::parse(secrets_file);
-  return secrets.at("client_id");
-}
-
-std::string TokenSource::GetClientSecret() {
-  std::ifstream secrets_file{SECRETS_FILE};
-  auto secrets = json::parse(secrets_file);
-  return secrets.at("client_secret");
-}
 
 std::string TokenSource::ExchangeCodeForToken(const std::string& code) {
   std::stringstream request_body;

@@ -1,6 +1,7 @@
 #include "audit/providers/dropbox/dropbox_storage.h"
 
 #include <sstream>
+#include <iostream>
 
 #include "cpprest/uri.h"
 #include "cpprest/http_client.h"
@@ -59,6 +60,7 @@ void DropboxStorage::SaveFileToDropbox(const std::string& path,
 
   // TODO Check for error
   auto response = SendRequest(request);
+  std::cout << response.to_string() << std::endl;
 }
 }
 }

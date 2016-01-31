@@ -4,7 +4,7 @@
 
 #include <dirent.h>
 
-#include "audit/client/upload/local_disk_storage.h"
+#include "audit/providers/local_disk/local_disk_storage.h"
 
 namespace audit {
 

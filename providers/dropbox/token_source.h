@@ -21,6 +21,7 @@ class TokenSource {
 
   std::string ExchangeCodeForToken(const std::string& code);
 
+  std::string GetValueFromSecret(const std::string& key);
   std::string GetClientId();
   std::string GetClientSecret();
 
