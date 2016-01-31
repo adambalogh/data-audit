@@ -61,13 +61,11 @@ cc_library(
 )
 
 cc_library(
-  name = "local_proof_source",
-  hdrs = ["local_proof_source.h"],
-  srcs = ["local_proof_source.cc"],
+  name = "no_server_proof_source",
+  hdrs = ["no_server_proof_source.h"],
   deps = [
     ":proof_source",
     "//audit/proto:cpor",
     "//audit/server:prover",
-    "//audit/providers/local_disk:local_disk_fetcher",
   ]
 )

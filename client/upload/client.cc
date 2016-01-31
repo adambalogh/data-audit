@@ -54,7 +54,7 @@ Stats Client::Upload(const File& file, ProgressBar::CallbackType callback) {
   storage_->StoreFileTag(file.file_name, private_tag, listener);
   storage_->StoreFile(file.file_name, file.stream, listener);
 
-  assert(progress_bar.Done() == true);
+  // assert(progress_bar.Done() == true);
 
   return stats.GetStats();
 }

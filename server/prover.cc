@@ -28,8 +28,8 @@ proto::Proof Prover::ConstructProof() {
 }
 
 void Prover::ProcessChallenge(const proto::ChallengeItem& challenge) {
-  const auto tag = fetcher_.FetchBlockTag(challenge.index());
-  auto& block_stream = fetcher_.FetchBlock(challenge.index());
+  const auto tag = fetcher_.FetchBlockTag(chal_.file_tag(), challenge.index());
+  auto block_stream = fetcher_.FetchBlock(chal_.file_tag(), challenge.index());
 
   auto weight = StringToBignum(challenge.weight());
   auto sigma = StringToBignum(tag.sigma());
@@ -42,14 +42,15 @@ void Prover::ProcessChallenge(const proto::ChallengeItem& challenge) {
   BN_ptr content{BN_new(), ::BN_free};
 
   for (int i = 0; i < file_tag_.num_sectors(); ++i) {
-    block_stream.read((char*)block.data(), file_tag_.sector_size());
-    if (!block_stream.gcount()) {
+    block_stream->read((char*)block.data(), file_tag_.sector_size());
+    if (!block_stream->gcount()) {
       break;
     }
-    BN_bin2bn(&block[0], block_stream.gcount(), content.get());
+
+    BN_bin2bn(&block[0], block_stream->gcount(), content.get());
     BN_mul(content.get(), content.get(), weight.get(), ctx_.get());
     BN_add(mus_.at(i).get(), mus_.at(i).get(), content.get());
-    if (block_stream.gcount() < file_tag_.sector_size()) {
+    if (block_stream->gcount() < file_tag_.sector_size()) {
       break;
     }
   }

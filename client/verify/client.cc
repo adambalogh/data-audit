@@ -50,6 +50,7 @@ bool Client::Verify(const std::string& file_full_path, int percent_blocks) {
   auto file_tag = file_tag_source_->GetFileTag(file_full_path);
   auto challenge = BuildChallenge(file_tag.public_tag(), percent_blocks);
   auto proof = proof_source_->GetProof(challenge);
+
   return VerifyFile<audit::HMACPRF>(file_tag, challenge, proof);
 }
 }

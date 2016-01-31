@@ -111,22 +111,20 @@ class MemoryFetcher : public Fetcher {
   MemoryFetcher(const upload::FileContext &context,
                 std::vector<proto::BlockTag> &tags, std::stringstream &s)
       : context_(context), tags_(tags), s_(s) {}
-  std::basic_istream<char, std::char_traits<char>> &FetchBlock(
-      unsigned long index) {
+  std::unique_ptr<std::basic_istream<char>> FetchBlock(unsigned long index) {
     std::string block{
         s_.str().data() + context_.parameters().block_size() * index,
         std::min(
             context_.parameters().block_size(),
             s_.str().size() - (context_.parameters().block_size() * index))};
-    stream.str(block);
-    return stream;
+    return std::unique_ptr<std::basic_istream<char>>{
+        new std::stringstream{block}};
   }
 
   proto::BlockTag FetchBlockTag(unsigned long index) { return tags_.at(index); }
 
  private:
   const upload::FileContext &context_;
-  std::stringstream stream;
   std::vector<proto::BlockTag> &tags_;
   std::stringstream &s_;
 };

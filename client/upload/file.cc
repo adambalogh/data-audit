@@ -64,6 +64,7 @@ proto::PrivateFileTag FileContext::Proto() const {
   public_tag->set_num_sectors(parameters_.num_sectors);
   public_tag->set_sector_size(parameters_.sector_size);
   public_tag->set_num_blocks(num_blocks_);
+  public_tag->set_file_size(file_.size);
   *public_tag->mutable_p() = BignumToString(*p_);
   *public_tag->mutable_file_name() = file_.file_name;
 

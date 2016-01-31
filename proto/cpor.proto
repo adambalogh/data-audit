@@ -27,6 +27,8 @@ message PublicFileTag {
   string file_name = 5;
 
   BlockTagMap block_tag_map = 6;
+
+  uint64 file_size = 7;
 }
 
 message PrivateFileTag {
