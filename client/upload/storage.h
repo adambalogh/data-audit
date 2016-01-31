@@ -11,26 +11,18 @@
 namespace audit {
 namespace upload {
 
-// A handler that can be notified when after we stored a chunk of data using a
-// ReusableStorage. It is used for the progress bar.
+// A listener that can be notified when after we stored a chunk of data.
 class StorageListener {
  public:
-  // Should be called whenever a chunk of the file has been stored
-  virtual void OnFileChunkStored(size_t bytes) = 0;
+  virtual void OnChunkStored(size_t bytes);
 
-  // Should be called whenever one or more block tags has been stored
-  virtual void OnBlockTagFileChunkStored(size_t bytes) = 0;
-
-  // Should be called when the file tag has been stored
-  virtual void OnFileTagStored(size_t bytes) = 0;
+  virtual ~StorageListener() {}
 };
 
 // A StorageListener that doesn't do anything
 class EmptyStorageListener : public StorageListener {
  public:
-  void OnFileChunkStored(size_t bytes) override {}
-  void OnBlockTagFileChunkStored(size_t bytes) override {}
-  void OnFileTagStored(size_t bytes) override {}
+  void OnChunkStored(size_t bytes) override {}
 };
 
 // StorageListenerChain can be used to create a chain of StorageListeners that
@@ -40,48 +32,14 @@ class StorageListenerChain : public StorageListener {
   StorageListenerChain(const std::vector<StorageListener*>& listeners)
       : listeners_(listeners) {}
 
-  void OnFileChunkStored(size_t bytes) override {
+  void OnChunkStored(size_t bytes) override {
     for (auto listener : listeners_) {
-      listener->OnFileChunkStored(bytes);
-    }
-  }
-
-  void OnBlockTagFileChunkStored(size_t bytes) override {
-    for (auto listener : listeners_) {
-      listener->OnBlockTagFileChunkStored(bytes);
-    }
-  }
-
-  void OnFileTagStored(size_t bytes) override {
-    for (auto listener : listeners_) {
-      listener->OnFileTagStored(bytes);
+      listener->OnChunkStored(bytes);
     }
   }
 
  private:
   std::vector<StorageListener*> listeners_;
-};
-
-// StatsListener keeps track of how much storage is used for a particular file
-// and its tags
-//
-class StatsListener : public StorageListener {
- public:
-  void OnBlockTagFileChunkStored(size_t bytes) override {
-    stats_.block_tags_size += bytes;
-  }
-
-  void OnFileTagStored(size_t bytes) override { stats_.file_tag_size += bytes; }
-
-  void OnFileChunkStored(size_t bytes) override { stats_.file_size += bytes; }
-
-  // Returns the stats about the storage procedure. It should only be called
-  // after all parts of the file have been stored.
-  Stats GetStats() const { return stats_; }
-
- private:
-  // Stats for the the current file and its tags
-  Stats stats_;
 };
 
 // ProgressBarListener keeps track of the progress of storing the whole file and
@@ -92,12 +50,7 @@ class ProgressBarListener : public StorageListener {
   ProgressBarListener(ProgressBar& progress_bar)
       : progress_bar_(progress_bar) {}
 
-  void OnFileChunkStored(size_t bytes) override {
-    progress_bar_.Progress(bytes);
-  }
-  void OnBlockTagFileChunkStored(size_t bytes) override {}
-
-  void OnFileTagStored(size_t bytes) override { progress_bar_.Progress(bytes); }
+  void OnChunkStored(size_t bytes) override { progress_bar_.Progress(bytes); }
 
  private:
   ProgressBar& progress_bar_;

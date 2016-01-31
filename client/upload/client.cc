@@ -35,28 +35,33 @@ Stats Client::Upload(const File& file, ProgressBar::CallbackType callback) {
                       file.size % context.parameters().num_sectors;
 
   ProgressBar progress_bar{total_size, callback};
-
-  StatsListener stats;
-  ProgressBarListener progress{progress_bar};
-  StorageListenerChain listener{{&stats, &progress}};
+  ProgressBarListener progress_listener{progress_bar};
 
   BlockTagger tagger{context};
   BlockTagSerializer serializer{file.file_name, progress_bar};
+
+  Stats stats;
+  stats.file_size = file.size;
+
   while (tagger.HasNext()) {
-    serializer.Add(tagger.GetNext());
+    auto tag = tagger.GetNext();
+    serializer.Add(tag);
+    stats.block_tags_size += tag.ByteSize();
   }
 
   auto private_tag = context.Proto();
   *private_tag.mutable_public_tag()->mutable_block_tag_map() =
       serializer.Done();
+  stats.file_tag_size = private_tag.ByteSize();
 
-  storage_->StoreBlockTagFile(file.file_name, serializer.FileName(), listener);
-  storage_->StoreFileTag(file.file_name, private_tag, listener);
-  storage_->StoreFile(file.file_name, file.stream, listener);
+  storage_->StoreBlockTagFile(file.file_name, serializer.FileName(),
+                              progress_listener);
+  storage_->StoreFileTag(file.file_name, private_tag, progress_listener);
+  storage_->StoreFile(file.file_name, file.stream, progress_listener);
 
   // assert(progress_bar.Done() == true);
 
-  return stats.GetStats();
+  return stats;
 }
 }
 }
