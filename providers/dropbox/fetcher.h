@@ -7,15 +7,26 @@
 namespace audit {
 namespace dropbox {
 
-class Fetcher : public DropboxClient, public audit::Fetcher {
+class Fetcher : public DropboxClient, public server::Fetcher {
  public:
-  Fetcher(TokenSourceInterface& token_source) : DropboxClient(token_source) {}
+  Fetcher(TokenSourceInterface& token_source,
+          const proto::PublicFileTag file_tag)
+      : DropboxClient(token_source), server::Fetcher(file_tag) {}
+
+  ~Fetcher() {}
 
   std::unique_ptr<std::basic_istream<char>> FetchBlock(
-      const proto::PublicFileTag& file_tag, unsigned long index) override;
+      unsigned long index) override;
 
-  proto::BlockTag FetchBlockTag(const proto::PublicFileTag& file_tag,
-                                unsigned long index) override;
+  proto::BlockTag FetchBlockTag(unsigned long index) override;
+
+  void DownloadFile();
+  void DownloadBlockTagFile();
+
+ private:
+  const static std::string files_dir_;
+  const static std::string tags_dir_;
+  ;
 };
 }
 }
