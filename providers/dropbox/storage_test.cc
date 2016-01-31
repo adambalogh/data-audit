@@ -1,18 +1,23 @@
 #include "gtest/gtest.h"
 
-#include "audit/providers/dropbox/dropbox_storage.h"
+#include "audit/providers/dropbox/storage.h"
 
 #include "audit/client/upload/storage.h"
 
 #include <sstream>
 
-using namespace audit::upload;
+using namespace audit::dropbox;
 
-TEST(DropboxStorage, StoreFile) {
-  DropboxStorage storage{
-      "dTCrjxub6z0AAAAAAAACkyOSk147wf27A5j5RAykOl1vyDNTWQ18Oy6gZKiAlcJp"};
+class TokenSourceStub : public TokenSourceInterface {
+ public:
+  std::string GetToken() { return "a"; }
+};
 
-  EmptyStorageListener listener;
+TEST(Storage, StoreFile) {
+  TokenSourceStub token_source;
+  Storage storage{token_source};
+
+  audit::upload::EmptyStorageListener listener;
 
   std::ifstream file{"/Users/adambalogh/Desktop/examulator.numbers"};
   if (!file) {

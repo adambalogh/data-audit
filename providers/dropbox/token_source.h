@@ -8,25 +8,18 @@
 namespace audit {
 namespace dropbox {
 
-class TokenSource;
-
-// This should be used in production in order to make sure that we don't
-// authenticate users more than one time
-class TokenSourceInstance {
+class TokenSourceInterface {
  public:
-  static TokenSource& get() { return token_source_; }
-
- private:
-  static TokenSource token_source_;
+  virtual std::string GetToken();
 };
 
-class TokenSource {
+class TokenSource : TokenSourceInterface {
  public:
   typedef std::function<std::string(void)> CodeCallbackType;
 
   TokenSource(CodeCallbackType code_callback);
 
-  std::string GetToken();
+  std::string GetToken() override;
 
  private:
   void OpenAuthorizeUrl() const;
@@ -52,6 +45,16 @@ class TokenSource {
   std::string token_;
 
   bool has_token_{false};
+};
+
+// This should be used in production in order to make sure that we don't
+// authenticate users more than one time
+class TokenSourceInstance {
+ public:
+  static TokenSource& get() { return token_source_; }
+
+ private:
+  static TokenSource token_source_;
 };
 }
 }
