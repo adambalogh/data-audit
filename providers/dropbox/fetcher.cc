@@ -37,8 +37,8 @@ Fetcher::~Fetcher() {
   DeleteBlockTagFile();
 }
 
-void Fetcher::DownloadAndSaveFile(const std::string& path,
-                                  const std::string& out_file_path) {
+size_t Fetcher::DownloadAndSaveFile(const std::string& path,
+                                    const std::string& out_file_path) {
   json parameters;
   parameters["path"] = path;
 
@@ -53,6 +53,8 @@ void Fetcher::DownloadAndSaveFile(const std::string& path,
                       out_file_path, std::ios_base::binary).get();
 
   auto size = body.read_to_end(out_file.streambuf());
+  // Wait until file is downloaded
+  return size.get();
 }
 
 void Fetcher::DownloadFile() {
@@ -78,13 +80,14 @@ void Fetcher::DownloadBlockTagFile() {
   }
 }
 
-void Fetcher::DeleteFile() { std::remove(files_dir_ + file_tag_.file_name()); }
-
-void Fetcher::DeleteBlockTagFile() {
-  std::remove(tags_dir_ + file_tag_.file_name());
+void Fetcher::DeleteFile() {
+  std::remove((files_dir_ + file_tag_.file_name()).c_str());
 }
 
-// TODO this is extremely slow
+void Fetcher::DeleteBlockTagFile() {
+  std::remove((tags_dir_ + file_tag_.file_name()).c_str());
+}
+
 std::unique_ptr<std::basic_istream<char>> Fetcher::FetchBlock(
     unsigned long index) {
   size_t block_size = file_tag_.sector_size() * file_tag_.num_sectors();
@@ -109,7 +112,6 @@ proto::BlockTag Fetcher::FetchBlockTag(unsigned long index) {
 
   proto::BlockTag tag;
   tag.ParseFromArray(binary.data(), binary.size());
-
   return tag;
 }
 }

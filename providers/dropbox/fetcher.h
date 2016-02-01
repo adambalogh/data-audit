@@ -21,8 +21,8 @@ class Fetcher : public DropboxClient, public server::Fetcher {
 
  private:
   // Downloads and saves the requeted file to the given path
-  void DownloadAndSaveFile(const std::string& path,
-                           const std::string& out_file_path);
+  size_t DownloadAndSaveFile(const std::string& path,
+                             const std::string& out_file_path);
 
   // Download local copies from Dropbox
   void DownloadFile();
