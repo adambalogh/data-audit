@@ -45,7 +45,16 @@ std::string TokenSource::GetClientSecret() {
 TokenSource::TokenSource()
     : client_id_(GetClientId()), client_secret_(GetClientSecret()) {}
 
-std::string TokenSource::ExchangeCodeForToken(const std::string& code) {
+std::string TokenSource::GetAuthorizeUrl() const {
+  uri_builder builder{AUTHORIZE_URL};
+  builder.append_query("response_type", "code")
+      .append_query("client_id", client_id_);
+  auto authorize_url = builder.to_uri();
+
+  return authorize_url.to_string();
+}
+
+void TokenSource::ExchangeCodeForToken(const std::string& code) {
   std::stringstream request_body;
   request_body << "code=" << uri::encode_data_string(code)
                << "&grant_type=authorization_code"
@@ -69,25 +78,14 @@ std::string TokenSource::ExchangeCodeForToken(const std::string& code) {
                              response["error_description"].get<std::string>());
   }
 
-  return response.at("access_token");
-}
-
-void TokenSource::OpenAuthorizeUrl() const {
-  uri_builder builder{AUTHORIZE_URL};
-  builder.append_query("response_type", "code")
-      .append_query("client_id", client_id_);
-  auto authorize_url = builder.to_uri();
-
-  std::string command = "open \"" + authorize_url.to_string() + "\"";
-  system(command.c_str());
+  has_token_ = true;
+  token_ = response.at("access_token");
 }
 
 std::string TokenSource::GetToken() {
   if (!has_token_) {
-    OpenAuthorizeUrl();
-    auto code = code_callback_();
-    token_ = ExchangeCodeForToken(code);
-    has_token_ = true;
+    throw std::logic_error(
+        "You must call ExchangeCodeForToken before you can use GetToken");
   }
   return token_;
 }

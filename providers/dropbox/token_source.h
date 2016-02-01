@@ -17,21 +17,15 @@ class TokenSourceInterface {
 
 class TokenSource : public TokenSourceInterface {
  public:
-  typedef std::function<std::string(void)> CodeCallbackType;
-
   TokenSource();
 
-  void Initialize(CodeCallbackType code_callback) {
-    code_callback_ = code_callback;
-  }
+  std::string GetAuthorizeUrl() const;
+
+  void ExchangeCodeForToken(const std::string& code);
 
   std::string GetToken() override;
 
  private:
-  void OpenAuthorizeUrl() const;
-
-  std::string ExchangeCodeForToken(const std::string& code);
-
   std::string GetValueFromSecret(const std::string& key);
   std::string GetClientId();
   std::string GetClientSecret();
@@ -41,8 +35,6 @@ class TokenSource : public TokenSourceInterface {
 
   const std::string client_id_;
   const std::string client_secret_;
-
-  CodeCallbackType code_callback_;
 
   std::string token_;
 

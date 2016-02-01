@@ -2,4 +2,5 @@
 
 #include <nan.h>
 
-NAN_METHOD(Login);
+NAN_METHOD(GetAuthorizeUrl);
+NAN_METHOD(ExchangeCodeForToken);
