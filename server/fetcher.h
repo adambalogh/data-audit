@@ -28,5 +28,13 @@ class Fetcher {
  protected:
   const proto::PublicFileTag& file_tag_;
 };
+
+class FetcherBuilder {
+ public:
+  virtual std::unique_ptr<Fetcher> build(
+      const proto::PublicFileTag& file_tag) = 0;
+
+  virtual ~FetcherBuilder() {}
+};
 }
 }

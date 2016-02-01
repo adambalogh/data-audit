@@ -29,6 +29,7 @@ proto::PrivateFileTag FileTagSource::GetFileTag(const std::string& file_name) {
 
   proto::PrivateFileTag tag;
   tag.ParseFromArray(binary.data(), binary.size());
+
   return tag;
 }
 }

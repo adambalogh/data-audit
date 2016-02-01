@@ -34,10 +34,9 @@ int main() {
   upload::Client upload_client{std::unique_ptr<upload::ReusableStorage>{
       new dropbox::Storage{token_source}}};
 
-  // std::stringstream content{
-  //    "aejfwoigjqogijwer;goit43io;h5w3[94thg39wa;wighe;oiw4h3;"
-  //    "toihtq09rhgwqpg84538hewwf43t34ti43to5tij5ijot4ijf"};
-  std::ifstream content{"/Users/adambalogh/Desktop/drunk_home.mp4"};
+  std::stringstream content{"mynameisadambalogh"};
+
+  std::cout << content.str() << std::endl;
 
   upload::File file{content, file_name};
   upload_client.Upload(file, [](int percentage) {});
@@ -46,7 +45,8 @@ int main() {
       std::unique_ptr<verify::FileTagSource>(
           new dropbox::FileTagSource{token_source}),
       std::unique_ptr<verify::ProofSource>(new verify::NoServerProofSource{
-          std::unique_ptr<Fetcher>{new dropbox::Fetcher{token_source}}})};
+          std::unique_ptr<server::FetcherBuilder>{
+              new dropbox::FetcherBuilder{token_source}}})};
 
   if (verify_client.Verify(file_name, 100)) {
     std::cout << "passed!!!" << std::endl;
