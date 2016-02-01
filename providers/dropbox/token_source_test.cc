@@ -7,11 +7,13 @@ using namespace audit::dropbox;
 // enter the received code from Dropbox.
 
 TEST(TokenSource, GetToken) {
-  TokenSource source{[]() {
+  TokenSource source;
+
+  source.Initialize([]() {
     std::string code;
     std::cin >> code;
     return code;
-  }};
+  });
   std::cout << source.GetToken();
 }
 

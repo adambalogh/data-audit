@@ -11,11 +11,12 @@ using namespace audit::dropbox;
 // enter the received code from Dropbox.
 
 TEST(Fetcher, GetBlock) {
-  TokenSource source{[]() {
+  TokenSource source;
+  source.Initialize([]() {
     std::string code;
     std::cin >> code;
     return code;
-  }};
+  });
   FileTagSource file_tag_source{source};
   auto file_tag = file_tag_source.GetFileTag("hello");
 

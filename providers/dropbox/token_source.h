@@ -19,7 +19,11 @@ class TokenSource : public TokenSourceInterface {
  public:
   typedef std::function<std::string(void)> CodeCallbackType;
 
-  TokenSource(CodeCallbackType code_callback);
+  TokenSource();
+
+  void Initialize(CodeCallbackType code_callback) {
+    code_callback_ = code_callback;
+  }
 
   std::string GetToken() override;
 
@@ -49,17 +53,10 @@ class TokenSource : public TokenSourceInterface {
 // authenticate users more than one time
 class TokenSourceInstance {
  public:
-  // Initialize must be called before any calls to Get()
-  static void Initialize(TokenSource::CodeCallbackType code_callback) {
-    token_source_ = new TokenSource(code_callback);
-  }
-
-  ~TokenSourceInstance() { delete token_source_; }
-
-  static TokenSource& Get() { return *token_source_; }
+  static TokenSource& Get() { return token_source_; }
 
  private:
-  static TokenSource* token_source_;
+  static TokenSource token_source_;
 };
 }
 }

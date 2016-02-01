@@ -21,12 +21,10 @@ http_response DropboxClient::SendRequest(http_request& request) {
   auto response = client_.request(request).get();
 
   if (response.status_code() < 200 || response.status_code() >= 300) {
-    auto response_body = json::parse(response.extract_string().get());
-
     throw std::runtime_error(
         "Sent unsuccessful request to Dropbox. HTTP status code: " +
-        std::to_string(response.status_code()) + ". Error message: " +
-        response_body["error_summary"].get<std::string>());
+        std::to_string(response.status_code()) + ". Message: " +
+        response.extract_string().get());
   }
 
   return response;

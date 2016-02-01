@@ -42,10 +42,8 @@ std::string TokenSource::GetClientSecret() {
   return GetValueFromSecret("client_secret");
 }
 
-TokenSource::TokenSource(CodeCallbackType code_callback)
-    : client_id_(GetClientId()),
-      client_secret_(GetClientSecret()),
-      code_callback_(code_callback) {}
+TokenSource::TokenSource()
+    : client_id_(GetClientId()), client_secret_(GetClientSecret()) {}
 
 std::string TokenSource::ExchangeCodeForToken(const std::string& code) {
   std::stringstream request_body;
@@ -94,6 +92,6 @@ std::string TokenSource::GetToken() {
   return token_;
 }
 
-TokenSource* TokenSourceInstance::token_source_{nullptr};
+TokenSource TokenSourceInstance::token_source_{};
 }
 }
