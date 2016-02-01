@@ -45,8 +45,6 @@ class UploadWorker : public Nan::AsyncProgressWorker {
 
   void Execute(const AsyncProgressWorker::ExecutionProgress& execution_progress)
       override {
-    std::cout << &TokenSourceInstance::Get() << std::endl;
-
     std::ifstream content{file_path_, std::ifstream::binary};
     upload::File file{content, GetFileName()};
 

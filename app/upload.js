@@ -1,4 +1,4 @@
-var native_module = require('bindings')('native_module');
+var electron = require('electron');
 
 // This value indicates if the upload has finished and the window can be closed
 window.ready = false;
@@ -15,32 +15,26 @@ window.onload = function() {
     duration: 100
   });
 
-  require('electron').ipcRenderer.on('fileName', function(event, fileName) {
+  electron.ipcRenderer.on('fileName', function(event, fileName) {
     var title = document.getElementById("title");
     title.appendChild(document.createTextNode("Uploading \"" + fileName + "\"..."));
+  });
 
-    native_module.uploadAsync(
-      fileName,
+  electron.ipcRenderer.on('progress', function(event, progress) {
+    line.animate(percentage / 100);
+  });
 
-      function(percentage) {
-        line.animate(percentage / 100);
-      },
-
-      function(error) {
-        if (error != null) {
-          title.firstChild.textContent = error;
-          title.style.color = "#FF0000";
-        } else {
-          title.firstChild.textContent = "Successfully Uploaded File";
-          title.style.color = "#27ae60";
-        }
-        window.ready = true;
-        var closeButton = document.getElementById("close").style.display = "inline-block";
-      }
-   );
-
-
-  }); // on fileName
+  electron.ipcRenderer.on('finished', function(event, error) {
+    if (error != null) {
+      title.firstChild.textContent = error;
+      title.style.color = "#FF0000";
+    } else {
+      title.firstChild.textContent = "Successfully Uploaded File";
+      title.style.color = "#27ae60";
+    }
+    window.ready = true;
+    var closeButton = document.getElementById("close").style.display = "inline-block";
+  });
 
 }
 

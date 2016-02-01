@@ -1,14 +1,13 @@
 var remote = require('remote'); 
 var dialog = remote.require('dialog');  
 var native_module = require('bindings')('native_module')
-var file_browser = require('bindings')('file_browser')
 const BrowserWindow = require('electron').remote.BrowserWindow;
 
 
 window.onload = function() {
 
   native_module.login(function() {
-    return "dTCrjxub6z0AAAAAAAADoZOIQ8dY2mDaBZLq8hC3v9s";
+    return "";
   });
 
   // Initially, show all the files available
@@ -33,8 +32,22 @@ window.onload = function() {
       });
       uploadWin.loadURL('file://' + __dirname + '/upload.html');
 
+      var file = files[0];
+      native_module.uploadAsync(
+          file,
+          function(progress) {
+            uploadWin.webContents.send('progress', progress);
+
+          },
+          function(error) {
+            uploadWin.webContents.send('finished', error);
+          }
+      );
+
+      uploadWin.show();
+
       uploadWin.webContents.on('did-finish-load', function() {
-        uploadWin.webContents.send('fileName', files[0]);
+        uploadWin.webContents.send('fileName', file);
       });
 
       uploadWin.on('closed', function() {
@@ -43,7 +56,6 @@ window.onload = function() {
         });
       });
 
-      uploadWin.show();
     });
   }
 

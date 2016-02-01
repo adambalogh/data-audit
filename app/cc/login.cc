@@ -26,7 +26,8 @@ void LoginImpl(const Nan::FunctionCallbackInfo<Value>& info) {
 
     return token;
   });
-  std::cout << &TokenSourceInstance::Get() << std::endl;
+
+  TokenSourceInstance::Get().GetToken();
 }
 
 NAN_METHOD(Login) { LoginImpl(info); }

@@ -25,14 +25,14 @@ int main() {
     return -1;
   }
 
-  dropbox::TokenSource token_source{[]() {
+  dropbox::TokenSourceInstance::Get().Initialize([]() {
     std::string code;
     std::cin >> code;
     return code;
-  }};
+  });
 
   upload::Client upload_client{std::unique_ptr<upload::ReusableStorage>{
-      new dropbox::Storage{token_source}}};
+      new dropbox::Storage{dropbox::TokenSourceInstance::Get()}}};
 
   std::stringstream content{"thisisiatestfile"};
 
@@ -41,10 +41,10 @@ int main() {
 
   verify::Client verify_client{
       std::unique_ptr<verify::FileTagSource>(
-          new dropbox::FileTagSource{token_source}),
+          new dropbox::FileTagSource{dropbox::TokenSourceInstance::Get()}),
       std::unique_ptr<verify::ProofSource>(new verify::NoServerProofSource{
-          std::unique_ptr<server::FetcherFactory>{
-              new dropbox::FetcherFactory{token_source}}})};
+          std::unique_ptr<server::FetcherFactory>{new dropbox::FetcherFactory{
+              dropbox::TokenSourceInstance::Get()}}})};
 
   if (verify_client.Verify(file_name, 100)) {
     std::cout << "passed!!!" << std::endl;
