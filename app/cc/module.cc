@@ -5,6 +5,7 @@
 #include "login.h"
 #include "upload.h"
 #include "verify.h"
+#include "file_browser.h"
 
 using v8::Local;
 using v8::Value;
@@ -18,8 +19,15 @@ NAN_MODULE_INIT(InitAll) {
            Nan::GetFunction(New<FunctionTemplate>(Login)).ToLocalChecked());
   Nan::Set(target, New<String>("uploadAsync").ToLocalChecked(),
            Nan::GetFunction(New<FunctionTemplate>(Upload)).ToLocalChecked());
+
   Nan::Set(target, New<String>("verifyAsync").ToLocalChecked(),
            Nan::GetFunction(New<FunctionTemplate>(Verify)).ToLocalChecked());
+
+  Nan::Set(target, New<String>("getFiles").ToLocalChecked(),
+           Nan::GetFunction(New<FunctionTemplate>(GetFiles)).ToLocalChecked());
+  Nan::Set(
+      target, New<String>("refreshFiles").ToLocalChecked(),
+      Nan::GetFunction(New<FunctionTemplate>(RefreshFiles)).ToLocalChecked());
 }
 
 NODE_MODULE(native, InitAll)

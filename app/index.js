@@ -7,13 +7,13 @@ const BrowserWindow = require('electron').remote.BrowserWindow;
 window.onload = function() {
 
   native_module.login(function() {
-    return "";
+    return "dTCrjxub6z0AAAAAAAAD7SFv8n4ft-Jmlt39ZQ4zyJI";
   });
-
-  // Initially, show all the files available
-  //file_browser.get_files(function(files) {
-  //  displayFiles(files);
-  //});
+  
+   //Initially, show all the files available
+  native_module.getFiles(function(files) {
+    displayFiles(files);
+  });
 
   var uploadButton = document.getElementById("upload");
   uploadButton.onclick = function() {
@@ -51,7 +51,7 @@ window.onload = function() {
       });
 
       uploadWin.on('closed', function() {
-        file_browser.get_files(function(files) {
+        native_module.refreshFiles(function(files) {
           displayFiles(files);
         });
       });
@@ -61,9 +61,9 @@ window.onload = function() {
 
   var searchBar = document.getElementById("search");
   searchBar.oninput = function() {
-    //file_browser.get_files(this.value, function(files) {
-    //  displayFiles(files);
-    //});
+    native_module.getFiles(this.value, function(files) {
+      displayFiles(files);
+    });
   }
 
 }

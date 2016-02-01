@@ -7,6 +7,7 @@
         "cc/upload.cc",
         "cc/verify.cc",
         "cc/login.cc",
+        "cc/file_browser.cc",
         "cc/module.cc",
       ],
 
@@ -39,6 +40,7 @@
           "/users/adambalogh/Developer/bazel-bin/audit/providers/dropbox/libfile_tag_source.a",
           "/users/adambalogh/Developer/bazel-bin/audit/providers/dropbox/libdropbox_client.a",
           "/users/adambalogh/Developer/bazel-bin/audit/providers/dropbox/libtoken_source.a",
+          "/users/adambalogh/Developer/bazel-bin/audit/providers/dropbox/libfile_list_source.a",
           "/users/adambalogh/Developer/bazel-bin/audit/proto/libcpor.a",
           "/users/adambalogh/Developer/bazel-bin/audit/server/libprover.a",
         ],

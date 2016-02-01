@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 #include "cpprest/uri.h"
 
 namespace audit {
@@ -11,8 +13,7 @@ const web::uri BASE_URL{"https://content.dropboxapi.com"};
 
 const web::uri DOWNLOAD_PATH{"/2/files/download"};
 
-// v2 doesn't support Range HTTP header
-const web::uri V1_DOWNLOAD_PATH{"/1/files/auto/"};
+const web::uri LIST_FOLDER_PATH{"/2/files/list_folder"};
 
 const web::uri UPLOAD_PATH{"/2/files/upload"};
 

@@ -16,16 +16,17 @@ namespace dropbox {
 // This class is not thread safe.
 class DropboxClient {
  public:
-  DropboxClient(TokenSourceInterface& token_source)
-      : token_source_(token_source) {}
+  DropboxClient(TokenSourceInterface& token_source,
+                const web::uri& base_url = BASE_URL)
+      : token_source_(token_source), client_(base_url) {}
 
  protected:
   web::http::http_response SendRequest(web::http::http_request& request);
 
  private:
-  web::http::client::http_client client_{BASE_URL};
-
   TokenSourceInterface& token_source_;
+
+  web::http::client::http_client client_;
 };
 }
 }

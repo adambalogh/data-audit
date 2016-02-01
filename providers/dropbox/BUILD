@@ -107,3 +107,24 @@ cc_binary(
         ":token_source",
     ]
 )
+
+cc_library(
+    name = "file_list_source",
+    hdrs = ["file_list_source.h"],
+    srcs = ["file_list_source.cc"],
+    deps = [
+        ":dropbox_client",
+        ":dropbox_urls",
+        "//audit/files:file_list_source",
+    ]
+)
+
+cc_binary(
+    name = "file_list_source_test",
+    srcs = ["file_list_source_test.cc"],
+    deps = [
+        ":file_list_source",
+        ":token_source",
+        "//audit/third_party/gtest:gtest",
+    ]
+)
