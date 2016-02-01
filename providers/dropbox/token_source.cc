@@ -93,5 +93,7 @@ std::string TokenSource::GetToken() {
   }
   return token_;
 }
+
+TokenSource* TokenSourceInstance::token_source_{nullptr};
 }
 }
