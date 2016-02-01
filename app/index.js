@@ -1,16 +1,20 @@
 var remote = require('remote'); 
 var dialog = remote.require('dialog');  
-var verify = require('bindings')('verify')
+var native_module = require('bindings')('native_module')
 var file_browser = require('bindings')('file_browser')
 const BrowserWindow = require('electron').remote.BrowserWindow;
 
 
 window.onload = function() {
 
-  // Initially, show all the files available
-  file_browser.get_files(function(files) {
-    displayFiles(files);
+  native_module.login(function() {
+    return "dTCrjxub6z0AAAAAAAADoZOIQ8dY2mDaBZLq8hC3v9s";
   });
+
+  // Initially, show all the files available
+  //file_browser.get_files(function(files) {
+  //  displayFiles(files);
+  //});
 
   var uploadButton = document.getElementById("upload");
   uploadButton.onclick = function() {
@@ -45,9 +49,9 @@ window.onload = function() {
 
   var searchBar = document.getElementById("search");
   searchBar.oninput = function() {
-    file_browser.get_files(this.value, function(files) {
-      displayFiles(files);
-    });
+    //file_browser.get_files(this.value, function(files) {
+    //  displayFiles(files);
+    //});
   }
 
 }
@@ -79,7 +83,7 @@ function displayFiles(files) {
 
 // Verifies the given file's integrity, and displays the result
 function verify_file(file_name) {
-  verify.verifyAsync(file_name, function(percentage) {}, function(result, error) {
+  native_module.verifyAsync(file_name, function(percentage) {}, function(result, error) {
     if (error != null) {
       alert(error);
     }

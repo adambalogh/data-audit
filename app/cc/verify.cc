@@ -1,3 +1,5 @@
+#include "verify.h"
+
 #include <fstream>
 #include <memory>
 #include <string>
@@ -5,21 +7,41 @@
 
 #include <nan.h>
 
-#include "verify.h"
-
 #include "audit/util.h"
 #include "audit/client/verify/client.h"
-#include "audit/client/verify/local_proof_source.h"
-#include "audit/providers/local_disk/local_disk_file_tag_source.h"
+#include "audit/client/verify/no_server_proof_source.h"
+#include "audit/providers/dropbox/fetcher.h"
+#include "audit/providers/dropbox/file_tag_source.h"
+#include "audit/providers/dropbox/token_source.h"
 
-audit::verify::Client client{std::unique_ptr<audit::verify::FileTagSource>(
-                                 new audit::verify::LocalDiskFileTagSource{}),
-                             std::unique_ptr<audit::verify::ProofSource>(
-                                 new audit::verify::LocalProofSource)};
+using namespace audit;
+
+using audit::verify::Client;
+using audit::verify::FileTagSource;
+using audit::verify::ProofSource;
+using audit::dropbox::TokenSourceInstance;
+
+using v8::Integer;
+using v8::Function;
+using v8::FunctionTemplate;
+using v8::Local;
+using v8::String;
+using v8::Value;
+
+using Nan::Callback;
+using Nan::New;
+using Nan::HandleScope;
+
+Client client{
+    std::unique_ptr<FileTagSource>(
+        new dropbox::FileTagSource{TokenSourceInstance::Get()}),
+    std::unique_ptr<ProofSource>(
+        new verify::NoServerProofSource{std::unique_ptr<server::FetcherFactory>{
+            new dropbox::FetcherFactory{TokenSourceInstance::Get()}}})};
 
 class VerifyWorker : public Nan::AsyncProgressWorker {
  public:
-  VerifyWorker(Nan::Callback* callback, Nan::Callback* progress_bar_callback,
+  VerifyWorker(Callback* callback, Callback* progress_bar_callback,
                const std::string& file_name)
       : AsyncProgressWorker(callback),
         progress_bar_callback_(progress_bar_callback),
@@ -35,29 +57,28 @@ class VerifyWorker : public Nan::AsyncProgressWorker {
   }
 
   void HandleErrorCallback() override {
-    Nan::HandleScope scope;
-    v8::Local<v8::Value> argv[] = {
-        Nan::New(false),
-        v8::Exception::Error(
-            Nan::New<v8::String>(ErrorMessage()).ToLocalChecked())};
+    ::HandleScope scope;
+    Local<Value> argv[] = {
+        New(false),
+        v8::Exception::Error(New<String>(ErrorMessage()).ToLocalChecked())};
     callback->Call(2, argv);
   }
 
   void HandleOKCallback() override {
-    Nan::HandleScope scope;
-    v8::Local<v8::Value> argv[] = {Nan::New(result_), Nan::Null()};
+    HandleScope scope;
+    Local<Value> argv[] = {New(result_), Nan::Null()};
     callback->Call(2, argv);
   }
 
   // This is called everytime the verification makes progress
   void HandleProgressCallback(const char* data, size_t size) override {
-    v8::Local<v8::Value> argv[] = {Nan::New<v8::Integer>(
-        *reinterpret_cast<int*>(const_cast<char*>(data)))};
+    Local<Value> argv[] = {
+        New<Integer>(*reinterpret_cast<int*>(const_cast<char*>(data)))};
     progress_bar_callback_->Call(1, argv);
   }
 
  private:
-  Nan::Callback* const progress_bar_callback_;
+  Callback* const progress_bar_callback_;
 
   const std::string file_name_;
 
@@ -70,21 +91,12 @@ NAN_METHOD(Verify) {
     return;
   }
 
-  v8::String::Utf8Value param1(info[0]->ToString());
+  String::Utf8Value param1(info[0]->ToString());
   std::string file_name{*param1};
 
-  Nan::Callback* progress_bar_callback =
-      new Nan::Callback(info[1].As<v8::Function>());
-  Nan::Callback* callback = new Nan::Callback(info[2].As<v8::Function>());
+  Callback* progress_bar_callback = new Callback(info[1].As<Function>());
+  Callback* callback = new Callback(info[2].As<Function>());
 
   AsyncQueueWorker(
       new VerifyWorker(callback, progress_bar_callback, file_name));
 }
-
-NAN_MODULE_INIT(InitAll) {
-  Nan::Set(target, Nan::New<v8::String>("verifyAsync").ToLocalChecked(),
-           Nan::GetFunction(Nan::New<v8::FunctionTemplate>(Verify))
-               .ToLocalChecked());
-}
-
-NODE_MODULE(verify, InitAll)

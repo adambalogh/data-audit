@@ -1,4 +1,4 @@
-var upload = require('bindings')('upload');
+var native_module = require('bindings')('native_module');
 
 // This value indicates if the upload has finished and the window can be closed
 window.ready = false;
@@ -19,7 +19,7 @@ window.onload = function() {
     var title = document.getElementById("title");
     title.appendChild(document.createTextNode("Uploading \"" + fileName + "\"..."));
 
-    upload.uploadAsync(
+    native_module.uploadAsync(
       fileName,
 
       function(percentage) {
