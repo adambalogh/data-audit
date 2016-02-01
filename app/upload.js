@@ -20,8 +20,8 @@ window.onload = function() {
     title.appendChild(document.createTextNode("Uploading \"" + fileName + "\"..."));
   });
 
-  electron.ipcRenderer.on('progress', function(event, progress) {
-    line.animate(percentage / 100);
+  electron.ipcRenderer.on('progress', function(event, percentage) {
+    line.animate(percentage / 100.0);
   });
 
   electron.ipcRenderer.on('finished', function(event, error) {

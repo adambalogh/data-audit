@@ -30,6 +30,8 @@ void Storage::StoreFileTag(const std::string& file_name,
   auto binary = file_tag.SerializeAsString();
   std::stringstream stream{binary};
   SaveFileToDropbox(GetFileTagPath(file_name), stream, listener);
+
+  listener.OnChunkStored(file_tag.ByteSize());
 }
 
 void Storage::StoreBlockTagFile(const std::string& file_name,
