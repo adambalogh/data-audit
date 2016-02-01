@@ -78,9 +78,11 @@ void Fetcher::DownloadBlockTagFile() {
   }
 }
 
-void Fetcher::DeleteFile() {}
+void Fetcher::DeleteFile() { std::remove(files_dir_ + file_tag_.file_name()); }
 
-void Fetcher::DeleteBlockTagFile() {}
+void Fetcher::DeleteBlockTagFile() {
+  std::remove(tags_dir_ + file_tag_.file_name());
+}
 
 // TODO this is extremely slow
 std::unique_ptr<std::basic_istream<char>> Fetcher::FetchBlock(
@@ -92,7 +94,6 @@ std::unique_ptr<std::basic_istream<char>> Fetcher::FetchBlock(
   file_.read((char*)binary.data(), binary.size());
 
   std::string str{binary.begin(), binary.begin() + file_.gcount()};
-
   return std::unique_ptr<std::basic_istream<char>>{new std::stringstream{str}};
 }
 
