@@ -32,12 +32,7 @@ using Nan::Callback;
 using Nan::New;
 using Nan::HandleScope;
 
-Client client{
-    std::unique_ptr<FileTagSource>(
-        new dropbox::FileTagSource{TokenSourceInstance::Get()}),
-    std::unique_ptr<ProofSource>(
-        new verify::NoServerProofSource{std::unique_ptr<server::FetcherFactory>{
-            new dropbox::FetcherFactory{TokenSourceInstance::Get()}}})};
+static std::unique_ptr<Client> client;
 
 class VerifyWorker : public Nan::AsyncProgressWorker {
  public:
@@ -50,7 +45,7 @@ class VerifyWorker : public Nan::AsyncProgressWorker {
   void Execute(const AsyncProgressWorker::ExecutionProgress& execution_progress)
       override {
     try {
-      result_ = client.Verify(file_name_, 100);
+      result_ = client->Verify(file_name_, 100);
     } catch (std::exception& e) {
       SetErrorMessage(e.what());
     }
@@ -89,6 +84,15 @@ NAN_METHOD(Verify) {
   if (info.Length() != 3) {
     Nan::ThrowError("The number of arguments must be 3.");
     return;
+  }
+
+  if (!client) {
+    client.reset(new Client{
+        std::unique_ptr<FileTagSource>(
+            new dropbox::FileTagSource{TokenSourceInstance::Get()}),
+        std::unique_ptr<ProofSource>(new verify::NoServerProofSource{
+            std::unique_ptr<server::FetcherFactory>{
+                new dropbox::FetcherFactory{TokenSourceInstance::Get()}}})});
   }
 
   String::Utf8Value param1(info[0]->ToString());

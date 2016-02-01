@@ -7,7 +7,7 @@ const BrowserWindow = require('electron').remote.BrowserWindow;
 window.onload = function() {
 
   native_module.login(function() {
-    return "dTCrjxub6z0AAAAAAAAD7SFv8n4ft-Jmlt39ZQ4zyJI";
+    return "";
   });
   
    //Initially, show all the files available
