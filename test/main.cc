@@ -20,7 +20,7 @@
 using namespace audit;
 
 int main() {
-  std::string file_name = "drunk";
+  std::string file_name = "test";
   if (RAND_load_file("/dev/urandom", 128) != 128) {
     return -1;
   }
@@ -34,9 +34,7 @@ int main() {
   upload::Client upload_client{std::unique_ptr<upload::ReusableStorage>{
       new dropbox::Storage{token_source}}};
 
-  std::stringstream content{"mynameisadambalogh"};
-
-  std::cout << content.str() << std::endl;
+  std::stringstream content{"thisisiatestfile"};
 
   upload::File file{content, file_name};
   upload_client.Upload(file, [](int percentage) {});
@@ -45,8 +43,8 @@ int main() {
       std::unique_ptr<verify::FileTagSource>(
           new dropbox::FileTagSource{token_source}),
       std::unique_ptr<verify::ProofSource>(new verify::NoServerProofSource{
-          std::unique_ptr<server::FetcherBuilder>{
-              new dropbox::FetcherBuilder{token_source}}})};
+          std::unique_ptr<server::FetcherFactory>{
+              new dropbox::FetcherFactory{token_source}}})};
 
   if (verify_client.Verify(file_name, 100)) {
     std::cout << "passed!!!" << std::endl;

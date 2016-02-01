@@ -46,11 +46,11 @@ class Fetcher : public DropboxClient, public server::Fetcher {
   std::ifstream block_tag_file_;
 };
 
-class FetcherBuilder : public server::FetcherBuilder {
+class FetcherFactory : public server::FetcherFactory {
  public:
-  FetcherBuilder(TokenSource& token_source) : token_source_(token_source) {}
+  FetcherFactory(TokenSource& token_source) : token_source_(token_source) {}
 
-  std::unique_ptr<server::Fetcher> build(
+  std::unique_ptr<server::Fetcher> Create(
       const proto::PublicFileTag& file_tag) override {
     return std::unique_ptr<server::Fetcher>{
         new Fetcher{token_source_, file_tag}};

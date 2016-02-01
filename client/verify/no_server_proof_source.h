@@ -14,17 +14,17 @@ namespace verify {
 //
 class NoServerProofSource : public ProofSource {
  public:
-  NoServerProofSource(std::unique_ptr<server::FetcherBuilder> fetcher_factory)
+  NoServerProofSource(std::unique_ptr<server::FetcherFactory> fetcher_factory)
       : fetcher_factory_(std::move(fetcher_factory)) {}
 
   virtual proto::Proof GetProof(const proto::Challenge& challenge) {
-    auto fetcher = fetcher_factory_->build(challenge.file_tag());
+    auto fetcher = fetcher_factory_->Create(challenge.file_tag());
     server::Prover prover{*fetcher, challenge};
     return prover.Prove();
   }
 
  private:
-  std::unique_ptr<server::FetcherBuilder> fetcher_factory_;
+  std::unique_ptr<server::FetcherFactory> fetcher_factory_;
 };
 }
 }

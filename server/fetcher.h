@@ -29,12 +29,12 @@ class Fetcher {
   const proto::PublicFileTag& file_tag_;
 };
 
-class FetcherBuilder {
+class FetcherFactory {
  public:
-  virtual std::unique_ptr<Fetcher> build(
+  virtual std::unique_ptr<Fetcher> Create(
       const proto::PublicFileTag& file_tag) = 0;
 
-  virtual ~FetcherBuilder() {}
+  virtual ~FetcherFactory() {}
 };
 }
 }
