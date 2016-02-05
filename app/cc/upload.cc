@@ -11,16 +11,15 @@
 #include "audit/client/prf.h"
 #include "audit/client/upload/client.h"
 #include "audit/client/upload/stats.h"
-#include "audit/providers/dropbox/storage.h"
+
 #include "audit/providers/dropbox/token_source.h"
 
 using namespace audit;
 
-using audit::dropbox::Storage;
-using audit::dropbox::TokenSource;
-using audit::dropbox::TokenSourceInstance;
-using audit::upload::ReusableStorage;
+using audit::providers::dropbox::TokenSource;
+using audit::providers::dropbox::TokenSourceInstance;
 using audit::upload::Client;
+using audit::upload::ReusableStorage;
 
 using v8::Local;
 using v8::Value;
@@ -32,8 +31,8 @@ using v8::String;
 using Nan::Callback;
 using Nan::New;
 
-static Client client{
-    std::unique_ptr<ReusableStorage>{new Storage{TokenSourceInstance::Get()}}};
+static Client client{std::unique_ptr<ReusableStorage>{
+    new Storage_t{TokenSourceInstance::Get()}}};
 
 class UploadWorker : public Nan::AsyncProgressWorker {
  public:

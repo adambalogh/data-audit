@@ -10,8 +10,6 @@
 #include "audit/util.h"
 #include "audit/client/verify/client.h"
 #include "audit/client/verify/no_server_proof_source.h"
-#include "audit/providers/dropbox/fetcher.h"
-#include "audit/providers/dropbox/file_tag_source.h"
 #include "audit/providers/dropbox/token_source.h"
 
 using namespace audit;
@@ -19,7 +17,9 @@ using namespace audit;
 using audit::verify::Client;
 using audit::verify::FileTagSource;
 using audit::verify::ProofSource;
-using audit::dropbox::TokenSourceInstance;
+using audit::verify::NoServerProofSource;
+using audit::providers::dropbox::TokenSourceInstance;
+using audit::providers::dropbox::FetcherFactory;
 
 using v8::Integer;
 using v8::Function;
@@ -89,10 +89,10 @@ NAN_METHOD(Verify) {
   if (!client) {
     client.reset(new Client{
         std::unique_ptr<FileTagSource>(
-            new dropbox::FileTagSource{TokenSourceInstance::Get()}),
-        std::unique_ptr<ProofSource>(new verify::NoServerProofSource{
-            std::unique_ptr<server::FetcherFactory>{
-                new dropbox::FetcherFactory{TokenSourceInstance::Get()}}})});
+            new FileTagSource_t{TokenSourceInstance::Get()}),
+        std::unique_ptr<ProofSource>(
+            new NoServerProofSource{std::unique_ptr<server::FetcherFactory>{
+                new FetcherFactory{TokenSourceInstance::Get()}}})});
   }
 
   String::Utf8Value param1(info[0]->ToString());

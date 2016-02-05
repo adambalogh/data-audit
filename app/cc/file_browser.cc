@@ -6,10 +6,10 @@
 
 #include "audit/files/file_browser.h"
 #include "audit/files/file_list_source.h"
-#include "audit/providers/dropbox/file_list_source.h"
-#include "audit/providers/dropbox/token_source.h"
 
 using namespace audit;
+
+using audit::providers::dropbox::TokenSourceInstance;
 
 using v8::Value;
 using v8::Local;
@@ -30,9 +30,8 @@ void RefreshFiles(const FunctionCallbackInfo<Value>& info) {
 
 void GetFiles(const FunctionCallbackInfo<Value>& info) {
   if (!file_browser) {
-    file_browser.reset(
-        new audit::FileBrowser{std::unique_ptr<audit::FileListSource>(
-            new dropbox::FileListSource{dropbox::TokenSourceInstance::Get()})});
+    file_browser.reset(new audit::FileBrowser{std::unique_ptr<FileListSource>(
+        new FileListSource_t{TokenSourceInstance::Get()})});
   }
 
   Local<Function> cb;

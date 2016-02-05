@@ -17,7 +17,7 @@ using Nan::MakeCallback;
 using Nan::GetCurrentContext;
 using Nan::New;
 
-using audit::dropbox::TokenSourceInstance;
+using audit::providers::dropbox::TokenSourceInstance;
 
 void GetAuthorizeUrl(const Nan::FunctionCallbackInfo<Value>& info) {
   Local<Function> cb = info[0].As<Function>();
