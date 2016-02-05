@@ -22,8 +22,7 @@ namespace audit {
 namespace providers {
 namespace dropbox {
 
-const std::string TokenSource::SECRETS_FILE{
-    "/users/adambalogh/Developer/audit/providers/dropbox/secrets.json"};
+const std::string TokenSource::SECRETS_FILE{application_dir + "secrets.json"};
 
 const std::string TokenSource::TOKEN_FILE{application_dir + "token.json"};
 
@@ -39,8 +38,13 @@ std::string TokenSource::GetValueFromSecret(const std::string& key) {
         "Could not open file containing Dropbox client secrets (" +
         SECRETS_FILE + ")");
   }
-  auto secrets = json::parse(secrets_file);
-  return secrets.at(key);
+  try {
+    auto secrets = json::parse(secrets_file);
+    return secrets.at(key);
+  } catch (std::exception& e) {
+    throw std::runtime_error(std::string{"Error parsing secrets file: "} +
+                             e.what());
+  }
 }
 
 std::string TokenSource::GetClientId() {
@@ -127,8 +131,6 @@ std::string TokenSource::GetToken() {
   }
   return token_;
 }
-
-TokenSource TokenSourceInstance::token_source_{};
 }
 }
 }

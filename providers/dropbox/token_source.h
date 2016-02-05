@@ -74,16 +74,6 @@ class TokenSource : public TokenSourceInterface {
 
   bool has_token_{false};
 };
-
-// This should be used in order to make sure that we don't
-// authenticate users more than one time
-class TokenSourceInstance {
- public:
-  static TokenSource& Get() { return token_source_; }
-
- private:
-  static TokenSource token_source_;
-};
 }
 }
 }

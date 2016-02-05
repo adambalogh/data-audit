@@ -40,6 +40,7 @@
           "/users/adambalogh/Developer/bazel-bin/audit/providers/dropbox/libfile_tag_source.a",
           "/users/adambalogh/Developer/bazel-bin/audit/providers/dropbox/libfile_list_source.a",
           "/users/adambalogh/Developer/bazel-bin/audit/providers/dropbox/libtoken_source.a",
+          "/users/adambalogh/Developer/bazel-bin/audit/providers/dropbox/libtoken_source_instance.a",
 
           "/users/adambalogh/Developer/bazel-bin/audit/providers/local_disk/libstorage.a",
           "/users/adambalogh/Developer/bazel-bin/audit/providers/local_disk/libfetcher.a",

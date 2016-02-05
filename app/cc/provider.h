@@ -31,6 +31,7 @@
 #include "audit/providers/dropbox/file_list_source.h"
 #include "audit/providers/dropbox/file_tag_source.h"
 #include "audit/providers/dropbox/token_source.h"
+#include "audit/providers/dropbox/token_source_instance.h"
 
 #include "audit/providers/local_disk/storage.h"
 #include "audit/providers/local_disk/fetcher.h"

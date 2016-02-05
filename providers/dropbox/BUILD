@@ -43,6 +43,15 @@ cc_binary(
 )
 
 cc_library(
+    name = "token_source_instance",
+    hdrs = ["token_source_instance.h"],
+    srcs = ["token_source_instance.cc"],
+    deps = [
+        ":token_source",
+    ]
+)
+
+cc_library(
     name = "dropbox_client",
     hdrs = ["dropbox_client.h"],
     srcs = ["dropbox_client.cc"],
