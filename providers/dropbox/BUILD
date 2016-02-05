@@ -38,6 +38,7 @@ cc_binary(
     srcs = ["token_source_test.cc"],
     deps = [
         "//audit/third_party/gtest:gtest",
+        "//audit/third_party/cpprestsdk:cpprestsdk",
         ":token_source",
     ]
 )
