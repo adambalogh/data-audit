@@ -1,20 +1,38 @@
 #include "gtest/gtest.h"
 #include "audit/providers/dropbox/token_source.h"
 
+#include <string>
+
+#include "audit/common.h"
+
 using namespace audit::providers::dropbox;
 
-// IMPORTANT: This test should not be run with Bazel because it doesn't let us
-// enter the received code from Dropbox.
+void RemoveTokenFile() { std::remove(TokenSource::TOKEN_FILE.c_str()); }
 
-TEST(TokenSource, GetToken) {
+TEST(TokenSource, NeedToAuthorizeWhenNoTokenFile) {
+  RemoveTokenFile();
   TokenSource source;
+  EXPECT_TRUE(source.NeedToAuthorize());
+}
 
-  source.Initialize([]() {
-    std::string code;
-    std::cin >> code;
-    return code;
-  });
-  std::cout << source.GetToken();
+TEST(TokenSource, NeedToAuthorizeWhenTokenFileIsInvalid) {
+  {
+    std::ofstream token_file{TokenSource::TOKEN_FILE};
+    token_file << "ferigrjogierje";
+  }
+  TokenSource source;
+  EXPECT_TRUE(source.NeedToAuthorize());
+}
+
+TEST(TokenSource, RetrieveTokenFromFile) {
+  std::string token{"abcdefgh"};
+  {
+    std::ofstream token_file{TokenSource::TOKEN_FILE};
+    token_file << "{\"token\":\"" + token + "\"}";
+  }
+  TokenSource source;
+  EXPECT_FALSE(source.NeedToAuthorize());
+  EXPECT_EQ(token, source.GetToken());
 }
 
 int main(int argc, char **argv) {

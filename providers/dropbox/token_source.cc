@@ -51,7 +51,7 @@ std::string TokenSource::GetClientSecret() {
   return GetValueFromSecret("client_secret");
 }
 
-bool TokenSource::NeedToAuthorize() { return has_token_; }
+bool TokenSource::NeedToAuthorize() { return !has_token_; }
 
 bool TokenSource::GetTokenFromFile() {
   std::ifstream in_file{TOKEN_FILE};

@@ -53,6 +53,12 @@ class TokenSource : public TokenSourceInterface {
   // Dropbox
   void ExchangeCodeForToken(const std::string& code);
 
+  // The full path to the file that contains all the client secrets
+  const static std::string SECRETS_FILE;
+
+  // The fulle path to the file that may contain a token
+  const static std::string TOKEN_FILE;
+
  private:
   bool GetTokenFromFile();
   void SaveTokenToFile();
@@ -60,12 +66,6 @@ class TokenSource : public TokenSourceInterface {
   std::string GetValueFromSecret(const std::string& key);
   std::string GetClientId();
   std::string GetClientSecret();
-
-  // The full path to the file that contains all the client secrets
-  const static std::string SECRETS_FILE;
-
-  // The fulle path to the file that may contain a token
-  const static std::string TOKEN_FILE;
 
   const std::string client_id_;
   const std::string client_secret_;

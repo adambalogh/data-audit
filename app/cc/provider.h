@@ -5,6 +5,8 @@
 // Change provider here to dropbox, local_disk etc...
 #define PROVIDER_TYPE dropbox
 
+// Generates an unique method name for a given provider, e.g.
+// PROVIDER_METHOD(dropbox, Hello) = dropboxHello
 #define PROVIDER_METHOD(provider, name) provider ## name
 
 #define EVAL(a, b) PROVIDER_METHOD(a, b)
