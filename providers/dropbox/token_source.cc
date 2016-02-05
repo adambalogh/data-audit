@@ -8,6 +8,7 @@
 #include "cpprest/http_client.h"
 #include "nlohmann/json.hpp"
 
+#include "audit/common.h"
 #include "audit/providers/dropbox/dropbox_urls.h"
 
 using json = nlohmann::json;
@@ -23,6 +24,13 @@ namespace dropbox {
 
 const std::string TokenSource::SECRETS_FILE{
     "/users/adambalogh/Developer/audit/providers/dropbox/secrets.json"};
+
+const std::string TokenSource::TOKEN_FILE{application_dir + "token.json"};
+
+TokenSource::TokenSource()
+    : client_id_(GetClientId()), client_secret_(GetClientSecret()) {
+  GetTokenFromFile();
+}
 
 std::string TokenSource::GetValueFromSecret(const std::string& key) {
   std::ifstream secrets_file{SECRETS_FILE};
@@ -43,8 +51,36 @@ std::string TokenSource::GetClientSecret() {
   return GetValueFromSecret("client_secret");
 }
 
-TokenSource::TokenSource()
-    : client_id_(GetClientId()), client_secret_(GetClientSecret()) {}
+bool TokenSource::NeedToAuthorize() { return has_token_; }
+
+bool TokenSource::GetTokenFromFile() {
+  std::ifstream in_file{TOKEN_FILE};
+  if (!in_file) {
+    return false;
+  }
+  try {
+    auto token_file = json::parse(in_file);
+    token_ = token_file.at("token").get<std::string>();
+    has_token_ = true;
+    return true;
+  } catch (...) {
+    return false;
+  }
+}
+
+void TokenSource::SaveTokenToFile() {
+  if (!has_token_) {
+    throw std::logic_error(
+        "The token must be acquired before it can be saved to file");
+  }
+  json token_file;
+  token_file["token"] = token_;
+  std::ofstream out_file{TOKEN_FILE};
+  if (!out_file) {
+    throw std::runtime_error("Could not open token file. (" + TOKEN_FILE + ")");
+  }
+  out_file << token_file.dump();
+}
 
 std::string TokenSource::GetAuthorizeUrl() const {
   uri_builder builder{AUTHORIZE_URL};
@@ -81,6 +117,7 @@ void TokenSource::ExchangeCodeForToken(const std::string& code) {
 
   has_token_ = true;
   token_ = response.at("access_token");
+  SaveTokenToFile();
 }
 
 std::string TokenSource::GetToken() {
