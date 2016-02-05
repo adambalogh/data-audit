@@ -41,6 +41,11 @@
           "/users/adambalogh/Developer/bazel-bin/audit/providers/dropbox/libfile_list_source.a",
           "/users/adambalogh/Developer/bazel-bin/audit/providers/dropbox/libtoken_source.a",
 
+          "/users/adambalogh/Developer/bazel-bin/audit/providers/local_disk/libstorage.a",
+          "/users/adambalogh/Developer/bazel-bin/audit/providers/local_disk/libfetcher.a",
+          "/users/adambalogh/Developer/bazel-bin/audit/providers/local_disk/libfile_tag_source.a",
+          "/users/adambalogh/Developer/bazel-bin/audit/providers/local_disk/libfile_list_source.a",
+
           "/users/adambalogh/Developer/bazel-bin/audit/proto/libcpor.a",
 
           "/users/adambalogh/Developer/bazel-bin/audit/server/libprover.a",

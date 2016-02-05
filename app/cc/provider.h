@@ -30,6 +30,11 @@
 #include "audit/providers/dropbox/file_tag_source.h"
 #include "audit/providers/dropbox/token_source.h"
 
+#include "audit/providers/local_disk/storage.h"
+#include "audit/providers/local_disk/fetcher.h"
+#include "audit/providers/local_disk/file_list_source.h"
+#include "audit/providers/local_disk/file_tag_source.h"
+
 using audit::upload::ReusableStorage;
 using audit::verify::FileTagSource;
 using audit::server::FetcherFactory;
@@ -37,6 +42,7 @@ using audit::FileListSource;
 
 using audit::providers::dropbox::TokenSourceInstance;
 
+// Dropbox Methods
 std::unique_ptr<ReusableStorage> PROVIDER_METHOD(dropbox, GetStorage)() {
   return std::unique_ptr<ReusableStorage>(
       new audit::providers::dropbox::Storage{TokenSourceInstance::Get()});
@@ -57,4 +63,27 @@ std::unique_ptr<FileListSource> PROVIDER_METHOD(dropbox, GetFileListSource)() {
 std::unique_ptr<FileTagSource> PROVIDER_METHOD(dropbox, GetFileTagSource)() {
   return std::unique_ptr<FileTagSource>(
       new audit::providers::dropbox::FileTagSource{TokenSourceInstance::Get()});
+}
+
+// Local Disk methods
+std::unique_ptr<ReusableStorage> PROVIDER_METHOD(local_disk, GetStorage)() {
+  return std::unique_ptr<ReusableStorage>(
+      new audit::providers::local_disk::Storage);
+}
+
+std::unique_ptr<FetcherFactory> PROVIDER_METHOD(local_disk,
+                                                GetFetcherFactory)() {
+  return std::unique_ptr<FetcherFactory>(
+      new audit::providers::local_disk::FetcherFactory);
+}
+
+std::unique_ptr<FileListSource> PROVIDER_METHOD(local_disk,
+                                                GetFileListSource)() {
+  return std::unique_ptr<FileListSource>(
+      new audit::providers::local_disk::FileListSource);
+}
+
+std::unique_ptr<FileTagSource> PROVIDER_METHOD(local_disk, GetFileTagSource)() {
+  return std::unique_ptr<FileTagSource>(
+      new audit::providers::local_disk::FileTagSource);
 }

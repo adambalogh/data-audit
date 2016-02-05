@@ -24,6 +24,14 @@ class Fetcher : public server::Fetcher {
   std::ifstream file_;
   std::ifstream block_tag_file_;
 };
+
+class FetcherFactory : public server::FetcherFactory {
+ public:
+  std::unique_ptr<server::Fetcher> Create(
+      const proto::PublicFileTag& file_tag) override {
+    return std::unique_ptr<server::Fetcher>{new Fetcher{file_tag}};
+  }
+};
 }
 }
 }
