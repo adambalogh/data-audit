@@ -4,12 +4,7 @@
       "target_name": "native_module",
 
       "sources": [ 
-        "cc/upload.cc",
-        "cc/verify.cc",
-        "cc/login.cc",
-        "cc/file_browser.cc",
         "cc/module.cc",
-        "cc/provider.h",
       ],
 
       "include_dirs": [
