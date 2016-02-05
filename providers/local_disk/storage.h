@@ -6,13 +6,16 @@
 #include "audit/proto/cpor.pb.h"
 
 namespace audit {
-namespace upload {
+namespace providers {
+namespace local_disk {
 
 // Storage implementation that stores all the data on the local disk.
 //
 // It is only created for testing purposes.
-class LocalDiskStorage : public ReusableStorage {
+class Storage : public upload::ReusableStorage {
  public:
+  typedef upload::StorageListener StorageListener;
+
   void StoreFile(const std::string& file_name, std::istream& stream,
                  StorageListener& listener) override;
 
@@ -47,5 +50,6 @@ class LocalDiskStorage : public ReusableStorage {
   // This is a separate sub-directory for storing all the tags
   static const std::string tags_dir;
 };
+}
 }
 }

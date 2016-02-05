@@ -4,11 +4,13 @@
 #include "audit/proto/cpor.pb.h"
 
 namespace audit {
-namespace verify {
+namespace providers {
+namespace local_disk {
 
-class LocalDiskFileTagSource : public FileTagSource {
+class FileTagSource : public verify::FileTagSource {
  public:
   proto::PrivateFileTag GetFileTag(const std::string& file_name) override;
 };
+}
 }
 }

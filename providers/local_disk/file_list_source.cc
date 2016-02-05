@@ -1,17 +1,19 @@
-#include "audit/files/local_file_list_source.h"
+#include "audit/providers/local_disk/file_list_source.h"
 
 #include <iostream>
 
 #include <dirent.h>
 
-#include "audit/providers/local_disk/local_disk_storage.h"
+#include "audit/providers/local_disk/storage.h"
 
 namespace audit {
+namespace providers {
+namespace local_disk {
 
-std::vector<const std::string> LocalFileListSource::GetFiles() {
+std::vector<const std::string> FileListSource::GetFiles() {
   std::vector<const std::string> files;
 
-  auto dir_name = upload::LocalDiskStorage::files_dir;
+  auto dir_name = Storage::files_dir;
 
   DIR *dp;
   struct dirent *ep;
@@ -30,5 +32,7 @@ std::vector<const std::string> LocalFileListSource::GetFiles() {
   (void)closedir(dp);
 
   return files;
+}
+}
 }
 }
