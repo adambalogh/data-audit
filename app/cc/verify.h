@@ -10,12 +10,11 @@
 #include "provider.h"
 #include "audit/util.h"
 #include "audit/client/verify/client.h"
+#include "audit/client/verify/proof_source.h"
 #include "audit/client/verify/no_server_proof_source.h"
-#include "audit/providers/dropbox/token_source.h"
 
 using namespace audit;
 
-using audit::verify::FileTagSource;
 using audit::verify::ProofSource;
 using audit::verify::NoServerProofSource;
 

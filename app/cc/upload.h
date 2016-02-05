@@ -12,11 +12,8 @@
 #include "audit/client/prf.h"
 #include "audit/client/upload/client.h"
 #include "audit/client/upload/stats.h"
-#include "audit/providers/dropbox/token_source.h"
 
 using namespace audit;
-
-using audit::upload::ReusableStorage;
 
 using v8::Local;
 using v8::Value;

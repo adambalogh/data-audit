@@ -5,7 +5,6 @@
 #include <iostream>
 
 #include "provider.h"
-#include "audit/providers/dropbox/token_source.h"
 
 using v8::Function;
 using v8::FunctionTemplate;
@@ -17,8 +16,6 @@ using Nan::Callback;
 using Nan::MakeCallback;
 using Nan::GetCurrentContext;
 using Nan::New;
-
-using audit::providers::dropbox::TokenSourceInstance;
 
 NAN_METHOD(GetAuthorizeUrl);
 NAN_METHOD(ExchangeCodeForToken);

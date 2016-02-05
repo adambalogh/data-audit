@@ -5,12 +5,10 @@
 #include <memory>
 
 #include "provider.h"
+
 #include "audit/files/file_browser.h"
-#include "audit/files/file_list_source.h"
 
 using namespace audit;
-
-using audit::providers::dropbox::TokenSourceInstance;
 
 using v8::Value;
 using v8::Local;
