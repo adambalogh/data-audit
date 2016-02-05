@@ -6,6 +6,7 @@
 #include "cpprest/uri.h"
 
 namespace audit {
+namespace providers {
 namespace dropbox {
 
 // Dropbox storage
@@ -47,5 +48,6 @@ class Storage : public DropboxClient, public upload::ReusableStorage {
 
   const static web::uri UPLOAD_URL;
 };
+}
 }
 }

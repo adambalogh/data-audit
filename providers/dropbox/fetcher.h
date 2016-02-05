@@ -5,6 +5,7 @@
 #include "audit/providers/dropbox/dropbox_client.h"
 
 namespace audit {
+namespace providers {
 namespace dropbox {
 
 class Fetcher : public DropboxClient, public server::Fetcher {
@@ -59,5 +60,6 @@ class FetcherFactory : public server::FetcherFactory {
  private:
   TokenSource& token_source_;
 };
+}
 }
 }

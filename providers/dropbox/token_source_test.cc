@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 #include "audit/providers/dropbox/token_source.h"
 
-using namespace audit::dropbox;
+using namespace audit::providers::dropbox;
 
 // IMPORTANT: This test should not be run with Bazel because it doesn't let us
 // enter the received code from Dropbox.

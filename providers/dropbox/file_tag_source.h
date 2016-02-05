@@ -7,6 +7,7 @@
 #include "cpprest/uri.h"
 
 namespace audit {
+namespace providers {
 namespace dropbox {
 
 class FileTagSource : public verify::FileTagSource, public DropboxClient {
@@ -16,5 +17,6 @@ class FileTagSource : public verify::FileTagSource, public DropboxClient {
 
   proto::PrivateFileTag GetFileTag(const std::string& file_name) override;
 };
+}
 }
 }

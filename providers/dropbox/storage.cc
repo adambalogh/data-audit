@@ -17,6 +17,7 @@ using web::http::http_request;
 using audit::upload::StorageListener;
 
 namespace audit {
+namespace providers {
 namespace dropbox {
 
 void Storage::StoreFile(const std::string& file_name, std::istream& stream,
@@ -59,6 +60,7 @@ void Storage::SaveFileToDropbox(const std::string& path, std::istream& stream,
 
   auto response = SendRequest(request);
   // TODO check returned values
+}
 }
 }
 }

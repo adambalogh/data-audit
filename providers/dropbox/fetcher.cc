@@ -20,6 +20,7 @@ using web::http::http_request;
 using Concurrency::streams::file_stream;
 
 namespace audit {
+namespace providers {
 namespace dropbox {
 
 const std::string Fetcher::files_dir_{application_dir + "dropboxfiles/"};
@@ -113,6 +114,7 @@ proto::BlockTag Fetcher::FetchBlockTag(unsigned long index) {
   proto::BlockTag tag;
   tag.ParseFromArray(binary.data(), binary.size());
   return tag;
+}
 }
 }
 }

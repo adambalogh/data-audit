@@ -8,6 +8,7 @@
 #include "audit/providers/dropbox/dropbox_urls.h"
 
 namespace audit {
+namespace providers {
 namespace dropbox {
 
 // DropboxClient provides a convenient way to access the DropBox API, all
@@ -28,5 +29,6 @@ class DropboxClient {
 
   web::http::client::http_client client_;
 };
+}
 }
 }

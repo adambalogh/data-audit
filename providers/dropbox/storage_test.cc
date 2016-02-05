@@ -6,7 +6,7 @@
 
 #include <sstream>
 
-using namespace audit::dropbox;
+using namespace audit::providers::dropbox;
 
 class TokenSourceStub : public TokenSourceInterface {
  public:

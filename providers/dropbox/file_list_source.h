@@ -5,6 +5,7 @@
 #include "audit/providers/dropbox/dropbox_urls.h"
 
 namespace audit {
+namespace providers {
 namespace dropbox {
 
 class FileListSource : public DropboxClient, public audit::FileListSource {
@@ -14,5 +15,6 @@ class FileListSource : public DropboxClient, public audit::FileListSource {
 
   std::vector<const std::string> GetFiles() override;
 };
+}
 }
 }

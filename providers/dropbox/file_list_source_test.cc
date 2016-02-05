@@ -2,7 +2,7 @@
 #include "audit/providers/dropbox/token_source.h"
 #include "audit/providers/dropbox/file_list_source.h"
 
-using namespace audit::dropbox;
+using namespace audit::providers::dropbox;
 
 TEST(FileListSource, GetFiles) {
   TokenSource source;

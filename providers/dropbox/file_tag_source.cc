@@ -14,6 +14,7 @@ using web::uri;
 using web::http::http_request;
 
 namespace audit {
+namespace providers {
 namespace dropbox {
 
 proto::PrivateFileTag FileTagSource::GetFileTag(const std::string& file_name) {
@@ -31,6 +32,7 @@ proto::PrivateFileTag FileTagSource::GetFileTag(const std::string& file_name) {
   tag.ParseFromArray(binary.data(), binary.size());
 
   return tag;
+}
 }
 }
 }

@@ -18,6 +18,7 @@ using web::http::client::http_client;
 using web::http::http_request;
 
 namespace audit {
+namespace providers {
 namespace dropbox {
 
 const std::string TokenSource::SECRETS_FILE{
@@ -91,5 +92,6 @@ std::string TokenSource::GetToken() {
 }
 
 TokenSource TokenSourceInstance::token_source_{};
+}
 }
 }

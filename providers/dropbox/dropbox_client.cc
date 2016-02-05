@@ -14,6 +14,7 @@ using web::http::http_request;
 using web::http::client::http_client;
 
 namespace audit {
+namespace providers {
 namespace dropbox {
 
 http_response DropboxClient::SendRequest(http_request& request) {
@@ -28,6 +29,7 @@ http_response DropboxClient::SendRequest(http_request& request) {
   }
 
   return response;
+}
 }
 }
 }

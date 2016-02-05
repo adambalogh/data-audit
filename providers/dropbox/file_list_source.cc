@@ -12,6 +12,7 @@ using web::uri;
 using web::http::http_request;
 
 namespace audit {
+namespace providers {
 namespace dropbox {
 
 std::vector<const std::string> FileListSource::GetFiles() {
@@ -41,6 +42,7 @@ std::vector<const std::string> FileListSource::GetFiles() {
   }
 
   return files;
+}
 }
 }
 }

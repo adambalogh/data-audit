@@ -6,6 +6,7 @@
 #include "cpprest/uri.h"
 
 namespace audit {
+namespace providers {
 namespace dropbox {
 
 class TokenSourceInterface {
@@ -50,5 +51,6 @@ class TokenSourceInstance {
  private:
   static TokenSource token_source_;
 };
+}
 }
 }
