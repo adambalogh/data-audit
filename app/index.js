@@ -6,29 +6,35 @@ const BrowserWindow = require('electron').remote.BrowserWindow;
 
 window.onload = function() {
 
-  native_module.getAuthorizeUrl(function(url) {
-    remote.require('child_process').exec("open \"" + url + "\"");
-  });
-
-  swal({
-    title: "Authentication",
-    text: "Please enter the code you received from Dropbox",
-    type: "input",
-    showCancelButton: false,
-    closeOnConfirm: true,
-    inputPlaceholder: "Code"
-  }, function(code){
-    if (code === false) return false;
-    if (code === "") {
-      swal.showInputError("Please enter the code you received from Dropbox");
-      return false;
-    }
-
-    native_module.exchangeCodeForToken(code, function() {
+  native_module.hasToLogin(function(need_login) {
+    if (!need_login) {
       main();
-    });
-  });
+    } else {
 
+      native_module.getAuthorizeUrl(function(url) {
+          remote.require('child_process').exec("open \"" + url + "\"");
+        });
+
+        swal({
+          title: "Log In",
+          text: "Please enter the code you received from Dropbox",
+          type: "input",
+          showCancelButton: false,
+          closeOnConfirm: true,
+          inputPlaceholder: "Code"
+        }, function(code){
+          if (code === false) return false;
+          if (code === "") {
+            swal.showInputError("Please enter the code you received from Dropbox");
+            return false;
+          }
+
+          native_module.exchangeCodeForToken(code, function() {
+            main();
+          });
+        });
+     }
+  });
 }
 
 function main() {

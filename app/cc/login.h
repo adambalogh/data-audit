@@ -19,6 +19,14 @@ using Nan::New;
 
 NAN_METHOD(GetAuthorizeUrl);
 NAN_METHOD(ExchangeCodeForToken);
+NAN_METHOD(HasToLogin);
+
+void HasToLogin(const Nan::FunctionCallbackInfo<Value>& info) {
+  Local<Function> cb = info[0].As<Function>();
+  const unsigned argc = 1;
+  Local<Value> argv[argc] = {New(GetAuthorizationNeeded())};
+  MakeCallback(GetCurrentContext()->Global(), cb, argc, argv);
+}
 
 void GetAuthorizeUrl(const Nan::FunctionCallbackInfo<Value>& info) {
   Local<Function> cb = info[0].As<Function>();

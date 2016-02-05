@@ -16,6 +16,7 @@
 #define GetFetcherFactory GET_PROVIDER_METHOD(GetFetcherFactory)
 #define GetFileListSource GET_PROVIDER_METHOD(GetFileListSource)
 #define GetFileTagSource GET_PROVIDER_METHOD(GetFileTagSource)
+#define GetAuthorizationNeeded GET_PROVIDER_METHOD(GetAuthorizationNeeded)
 
 // clang-format on
 
@@ -45,6 +46,8 @@ using audit::FileListSource;
 
 using audit::providers::dropbox::TokenSourceInstance;
 
+// TODO make these factories
+
 // Dropbox Methods
 std::unique_ptr<ReusableStorage> PROVIDER_METHOD(dropbox, GetStorage)() {
   return std::unique_ptr<ReusableStorage>(
@@ -66,6 +69,10 @@ std::unique_ptr<FileListSource> PROVIDER_METHOD(dropbox, GetFileListSource)() {
 std::unique_ptr<FileTagSource> PROVIDER_METHOD(dropbox, GetFileTagSource)() {
   return std::unique_ptr<FileTagSource>(
       new audit::providers::dropbox::FileTagSource{TokenSourceInstance::Get()});
+}
+
+bool PROVIDER_METHOD(dropbox, GetAuthorizationNeeded)() {
+  return TokenSourceInstance::Get().NeedToAuthorize();
 }
 
 // Local Disk methods
@@ -90,3 +97,5 @@ std::unique_ptr<FileTagSource> PROVIDER_METHOD(local_disk, GetFileTagSource)() {
   return std::unique_ptr<FileTagSource>(
       new audit::providers::local_disk::FileTagSource);
 }
+
+bool PROVIDER_METHOD(local_disk, GetAuthorizationNeeded)() { return false; }
