@@ -24,6 +24,7 @@ using v8::String;
 
 using Nan::Callback;
 using Nan::New;
+using Nan::HandleScope;
 
 NAN_METHOD(Upload);
 
@@ -63,6 +64,19 @@ class UploadWorker : public Nan::AsyncProgressWorker {
     Local<Value> argv[] = {
         New<Integer>(*reinterpret_cast<int*>(const_cast<char*>(data)))};
     progress_bar_callback_->Call(1, argv);
+  }
+
+  void HandleErrorCallback() override {
+    ::HandleScope scope;
+    Local<Value> argv[] = {
+        v8::Exception::Error(New<String>(ErrorMessage()).ToLocalChecked())};
+    callback->Call(1, argv);
+  }
+
+  void HandleOKCallback() override {
+    HandleScope scope;
+    Local<Value> argv[] = {Nan::Null()};
+    callback->Call(1, argv);
   }
 
  private:
