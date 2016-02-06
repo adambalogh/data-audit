@@ -6,11 +6,10 @@
 #include "audit/util.h"
 #include "audit/client/prf.h"
 #include "audit/client/upload/client.h"
-#include "audit/providers/local_disk/local_disk_storage.h"
-#include "audit/providers/local_disk/local_disk_file_tag_source.h"
 #include "audit/providers/dropbox/storage.h"
 #include "audit/providers/dropbox/fetcher.h"
 #include "audit/providers/dropbox/file_tag_source.h"
+#include "audit/providers/dropbox/token_source.h"
 #include "audit/server/fetcher.h"
 #include "audit/client/verify/client.h"
 #include "audit/client/verify/proof_source.h"
@@ -18,6 +17,7 @@
 #include "audit/proto/cpor.pb.h"
 
 using namespace audit;
+using namespace audit::providers;
 
 int main() {
   std::string file_name = "test";
@@ -25,26 +25,25 @@ int main() {
     return -1;
   }
 
-  dropbox::TokenSourceInstance::Get().Initialize([]() {
-    std::string code;
-    std::cin >> code;
-    return code;
-  });
+  dropbox::TokenSource token_source;
 
   upload::Client upload_client{std::unique_ptr<upload::ReusableStorage>{
-      new dropbox::Storage{dropbox::TokenSourceInstance::Get()}}};
+      new dropbox::Storage{token_source}}};
 
   std::stringstream content{"thisisiatestfile"};
 
   upload::File file{content, file_name};
-  upload_client.Upload(file, [](int percentage) {});
+  upload_client.Upload(
+      file, [](int percentage) { std::cout << percentage << std::endl; });
+
+  return 0;
 
   verify::Client verify_client{
       std::unique_ptr<verify::FileTagSource>(
-          new dropbox::FileTagSource{dropbox::TokenSourceInstance::Get()}),
+          new dropbox::FileTagSource{token_source}),
       std::unique_ptr<verify::ProofSource>(new verify::NoServerProofSource{
-          std::unique_ptr<server::FetcherFactory>{new dropbox::FetcherFactory{
-              dropbox::TokenSourceInstance::Get()}}})};
+          std::unique_ptr<server::FetcherFactory>{
+              new dropbox::FetcherFactory{token_source}}})};
 
   if (verify_client.Verify(file_name, 100)) {
     std::cout << "passed!!!" << std::endl;

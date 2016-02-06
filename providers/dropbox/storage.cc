@@ -10,6 +10,8 @@
 
 #include "audit/providers/dropbox/dropbox_urls.h"
 
+using namespace web::http::message_direction;
+
 using json = nlohmann::json;
 
 using web::uri;
@@ -31,7 +33,6 @@ void Storage::StoreFileTag(const std::string& file_name,
   auto binary = file_tag.SerializeAsString();
   std::stringstream stream{binary};
   SaveFileToDropbox(GetFileTagPath(file_name), stream, listener);
-  listener.OnChunkStored(file_tag.ByteSize());
 }
 
 void Storage::StoreBlockTagFile(const std::string& file_name,
@@ -57,6 +58,14 @@ void Storage::SaveFileToDropbox(const std::string& path, std::istream& stream,
   request.headers().add("Dropbox-API-Arg", parameters.dump());
   Concurrency::streams::stdio_istream<uint8_t> c_stream{stream};
   request.set_body(c_stream);
+  size_t bytes_uploaded = 0;
+  request.set_progress_handler(
+      [&listener, &bytes_uploaded](direction d, size_t bytes) {
+        if (d == direction::upload) {
+          listener.OnChunkStored(bytes - bytes_uploaded);
+          bytes_uploaded = bytes;
+        }
+      });
 
   auto response = SendRequest(request);
   // TODO check returned values

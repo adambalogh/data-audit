@@ -30,9 +30,12 @@ Stats Client::Upload(const File& file, ProgressBar::CallbackType callback) {
 
   FileContext context{file, params, std::move(alphas), std::move(p),
                       std::unique_ptr<PRF>(new HMACPRF)};
+  auto private_tag = context.Proto();
 
-  size_t total_size = file.size + file.size / context.parameters().num_sectors +
-                      file.size % context.parameters().num_sectors;
+  size_t total_size = file.size;
+  total_size += private_tag.ByteSize();
+  total_size += context.num_blocks() * context.parameters().sector_size;
+  total_size += context.num_blocks() * context.parameters().sector_size;
 
   ProgressBar progress_bar{total_size, callback};
   ProgressBarListener progress_listener{progress_bar};
@@ -49,7 +52,6 @@ Stats Client::Upload(const File& file, ProgressBar::CallbackType callback) {
     stats.block_tags_size += tag.ByteSize();
   }
 
-  auto private_tag = context.Proto();
   *private_tag.mutable_public_tag()->mutable_block_tag_map() =
       serializer.Done();
   stats.file_tag_size = private_tag.ByteSize();
@@ -61,7 +63,7 @@ Stats Client::Upload(const File& file, ProgressBar::CallbackType callback) {
 
   serializer.DeleteTempFile();
 
-  // assert(progress_bar.Done() == true);
+  assert(progress_bar.Done() == true);
 
   return stats;
 }

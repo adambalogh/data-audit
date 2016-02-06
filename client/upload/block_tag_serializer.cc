@@ -23,10 +23,10 @@ void BlockTagSerializer::Flush() {
     tag.SerializeToArray(buffer.data() + buffer_end, buffer.size());
     buffer_end += tag.ByteSize();
   }
-  assert(buffer_end == buffer.size());
-  progress_bar_.Progress(buffer.size());
+  assert(buffer_end = buffer.size());
+  progress_bar_.Progress(buffer_end);
 
-  out_file_.write((char*)buffer.data(), buffer.size());
+  out_file_.write((char*)buffer.data(), buffer_end);
 
   tags_.clear();
   buffer_size_ = 0;
