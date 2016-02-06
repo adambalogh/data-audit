@@ -20,31 +20,29 @@ using namespace audit;
 using namespace audit::providers;
 
 // TODO build benchmark as Release
-static std::vector<std::string> files;
+std::vector<std::string> files;
+std::vector<std::string> file_contents;
 
-static const char alphanum[] =
+upload::Client upload_client{
+    std::unique_ptr<upload::ReusableStorage>{new local_disk::Storage}};
+
+const char alphanum[] =
     "0123456789"
     "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     "abcdefghijklmnopqrstuvwxyz";
 
-static char RandomChar() { return alphanum[rand() % (sizeof(alphanum) - 1)]; }
+char RandomChar() { return alphanum[rand() % (sizeof(alphanum) - 1)]; }
 
-static void SetUpFiles() {
-  upload::Client upload_client{
-      std::unique_ptr<upload::ReusableStorage>{new local_disk::Storage}};
-
+void SetUpFiles() {
   // 1MB, 10MB, 100MB
   for (int i = 0; i < 3; ++i) {
     size_t megabytes = pow(10, i);
-    files.push_back(std::to_string(megabytes) + " MBs");
-
     size_t bytes = megabytes * 1000 * 1000;
     std::string str(bytes, 'a');
     std::generate(str.begin(), str.end(), RandomChar);
-    std::stringstream content{str};
 
-    upload::File file{content, files[i]};
-    upload_client.Upload(file, [](int) {});
+    files.push_back(std::to_string(megabytes));
+    file_contents.push_back(str);
   }
 }
 
@@ -56,17 +54,29 @@ static void DeleteFiles() {
   }
 }
 
+static void Upload(benchmark::State& state) {
+  std::stringstream s{std::move(file_contents[state.range_x()])};
+
+  while (state.KeepRunning()) {
+    upload_client.Upload(upload::File{s, files[state.range_x()]}, [](int) {});
+    s.clear();
+  }
+}
+
 static void Verify(benchmark::State& state) {
   verify::Client client{
       std::unique_ptr<verify::FileTagSource>(new local_disk::FileTagSource),
       std::unique_ptr<verify::ProofSource>(new verify::NoServerProofSource{
           std::unique_ptr<server::FetcherFactory>{
               new local_disk::FetcherFactory}})};
-
   while (state.KeepRunning()) {
     assert(client.Verify(files[state.range_x()], 100) == true);
   }
 }
+
+// Upload must be executed first, otherwise Verify won't have any files to
+// verify
+BENCHMARK(Upload)->Arg(0)->Arg(1)->Arg(2);
 
 BENCHMARK(Verify)->Arg(0)->Arg(1)->Arg(2);
 
