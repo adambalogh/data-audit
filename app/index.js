@@ -104,15 +104,25 @@ function displayFiles(files) {
     files_list.removeChild(files_list.firstChild);
   }
   files.forEach(function(file) {
+    var verifyButton = document.createElement("span");
+    verifyButton.setAttribute("class", "verify-button");
+    verifyButton.setAttribute("data-file", file);
+    verifyButton.appendChild(document.createTextNode("Verify"));
+    verifyButton.onclick = function() {
+      verify_file(this.getAttribute("data-file"));
+    }
+    
     var icon = document.createElement("span");
     icon.setAttribute("class", "octicon octicon-file-text icon");
-    
+
+    var fileNameLabel = document.createElement("span");
+    fileNameLabel.setAttribute("class", "file-name-label");
+    fileNameLabel.appendChild(icon);
+    fileNameLabel.appendChild(document.createTextNode(file));
+
     var div = document.createElement("div");
-    div.appendChild(icon);
-    div.appendChild(document.createTextNode(file));
-    div.onclick = function() {
-      verify_file(this.innerText);
-    }
+    div.appendChild(fileNameLabel);
+    div.appendChild(verifyButton);
 
     var li = document.createElement("li");
     li.appendChild(div);
