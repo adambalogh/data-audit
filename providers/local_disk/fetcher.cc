@@ -10,7 +10,11 @@ namespace providers {
 namespace local_disk {
 
 Fetcher::Fetcher(const proto::PublicFileTag& file_tag)
-    : server::Fetcher(file_tag), block_tag_map_(file_tag.block_tag_map()) {
+    : server::Fetcher(file_tag),
+      block_tag_map_(file_tag.block_tag_map()),
+      block_size_(file_tag_.num_sectors() * file_tag_.sector_size()),
+      block_binary_(block_size_, 'a'),
+      block_tag_binary_(block_tag_map_.MaxSize(), 'a') {
   file_.open(Storage::GetFilePath(file_tag.file_name()), std::ifstream::binary);
   if (!file_) {
     throw std::runtime_error("Could not open file (" +
@@ -29,29 +33,32 @@ Fetcher::Fetcher(const proto::PublicFileTag& file_tag)
 // TODO Check if index is not out of range
 std::unique_ptr<std::basic_istream<char>> Fetcher::FetchBlock(
     unsigned long index) {
-  auto block_size = file_tag_.num_sectors() * file_tag_.sector_size();
-  file_.seekg(index * block_size);
+  file_.seekg(index * block_size_);
+  file_.read(&block_binary_[0], block_binary_.size());
 
-  std::vector<unsigned char> binary(block_size);
-  file_.read((char*)binary.data(), binary.size());
-
-  std::string str(binary.begin(), binary.begin() + file_.gcount());
+  if (file_.gcount() != block_size_) {
+    std::string str(block_binary_.begin(),
+                    block_binary_.begin() + file_.gcount());
+    return std::unique_ptr<std::basic_istream<char>>{
+        new std::stringstream{std::move(str)}};
+  }
   return std::unique_ptr<std::basic_istream<char>>{
-      new std::stringstream{std::move(str)}};
+      new std::stringstream{block_binary_}};
 }
 
 proto::BlockTag Fetcher::FetchBlockTag(unsigned long index) {
   size_t start;
   size_t end;
   std::tie(start, end) = block_tag_map_.FindBlockTag(index);
+  auto size = end - start;
+  assert(size <= block_tag_binary_.size());
 
   block_tag_file_.seekg(start);
-  std::vector<unsigned char> buffer(end - start);
-  block_tag_file_.read((char*)buffer.data(), buffer.size());
+  block_tag_file_.read(&block_tag_binary_[0], size);
 
   proto::BlockTag tag;
-  tag.ParseFromArray(buffer.data(), buffer.size());
-  return tag;
+  tag.ParseFromArray(&block_tag_binary_[0], size);
+  return std::move(tag);
 }
 }
 }

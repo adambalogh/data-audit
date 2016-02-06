@@ -23,6 +23,11 @@ class Fetcher : public server::Fetcher {
 
   std::ifstream file_;
   std::ifstream block_tag_file_;
+
+  size_t block_size_;
+  std::string block_binary_;
+
+  std::string block_tag_binary_;
 };
 
 class FetcherFactory : public server::FetcherFactory {

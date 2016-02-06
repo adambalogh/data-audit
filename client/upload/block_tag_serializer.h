@@ -35,6 +35,7 @@ class BlockTagSerializer {
           "Could not open file to serialize BlockTags to. (" + file_name_ +
           ")");
     }
+    block_tag_map_.set_max_size(0);
   }
 
   // Each BlockTag of the file must be added

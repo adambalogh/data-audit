@@ -10,6 +10,7 @@ message BlockTag {
 message BlockTagMap {
   repeated uint64 end = 1;
   repeated uint64 index = 2;
+  int32 max_size = 3;
 }
 
 message PublicFileTag {
