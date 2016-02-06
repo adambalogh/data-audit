@@ -85,10 +85,14 @@ TEST(BlockTagSerializer, BlockTagMap) {
 
   EXPECT_EQ(2, block_tag_map.end_size());
   EXPECT_EQ(2, block_tag_map.index_size());
+
   EXPECT_EQ(10, block_tag_map.index(0));
   EXPECT_EQ(tag.ByteSize(), block_tag_map.end(0));
+
   EXPECT_EQ(1, block_tag_map.index(1));
   EXPECT_EQ(tag.ByteSize() + tag2.ByteSize(), block_tag_map.end(1));
+
+  EXPECT_EQ(tag2.ByteSize(), block_tag_map.max_size());
 }
 
 int main(int argc, char** argv) {

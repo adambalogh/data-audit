@@ -55,7 +55,8 @@ void BlockTagSerializer::Add(const proto::BlockTag& tag) {
 
   block_tag_map_.add_index(tag.index());
   block_tag_map_.add_end(file_end_);
-  block_tag_map_.set_max_size(std::max(block_tag_map.max_size(), tag.ByteSize());
+  block_tag_map_.set_max_size(
+      std::max(block_tag_map_.max_size(), tag.ByteSize()));
 }
 }
 }

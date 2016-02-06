@@ -1,6 +1,7 @@
 #pragma once
 
 #include <unordered_map>
+#include <string>
 
 #include "audit/proto/cpor.pb.h"
 
@@ -27,7 +28,15 @@ class BlockTagMap {
 
   size_t MaxSize() const { return max_size_; }
 
-  ValueType FindBlockTag(KeyType index) const { return map_.at(index); }
+  ValueType FindBlockTag(KeyType index) const {
+    try {
+      return map_.at(index);
+    } catch (std::out_of_range&) {
+      throw std::out_of_range(
+          std::string{"BlockTag does not exist with index "} +
+          std::to_string(index));
+    }
+  }
 
  private:
   std::unordered_map<KeyType, ValueType> map_;
