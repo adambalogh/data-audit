@@ -17,7 +17,9 @@ cc_binary(
         "//audit/client/verify:client",
         "//audit/client/verify:proof_source",
         "//audit/server:prover",
+        "//audit/client/upload:client",
         "//audit/providers/local_disk:fetcher",
         "//audit/providers/local_disk:file_tag_source",
+        "//audit/providers/local_disk:storage",
     ]
 )
