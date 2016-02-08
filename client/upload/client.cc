@@ -16,7 +16,8 @@ namespace audit {
 namespace upload {
 
 Stats Client::Upload(const File& file, ProgressBar::CallbackType callback) {
-  TaggingParameters params{10, 128};
+  // These 2 parameters seem to produce the best results
+  TaggingParameters params{30, 96};
 
   BN_ptr p{BN_new(), ::BN_free};
   BN_generate_prime_ex(p.get(), params.sector_size * 8, false, NULL, NULL,
@@ -62,8 +63,6 @@ Stats Client::Upload(const File& file, ProgressBar::CallbackType callback) {
   storage_->StoreFile(file.file_name, file.stream, progress_listener);
 
   serializer.DeleteTempFile();
-
-  assert(progress_bar.Done() == true);
 
   return stats;
 }

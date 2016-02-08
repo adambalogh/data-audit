@@ -58,8 +58,8 @@ static void Upload(benchmark::State& state) {
   std::stringstream s{std::move(file_contents[state.range_x()])};
 
   while (state.KeepRunning()) {
-    upload_client.Upload(upload::File{s, files[state.range_x()]}, [](int) {});
     s.clear();
+    upload_client.Upload(upload::File{s, files[state.range_x()]}, [](int) {});
   }
 }
 

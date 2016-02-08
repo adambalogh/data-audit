@@ -2,57 +2,31 @@
   "targets": [
     {
       "target_name": "native_module",
-
       "sources": [ 
         "cc/module.cc",
       ],
-
       "include_dirs": [
         "<!(node -e \"require('nan')\")",
         "/usr/local/include",
         "../..",
         "/users/adambalogh/Developer",
       ],
-
       "link_settings": {
         "libraries": [
-
           "/usr/local/lib/libcryptopp.a",
           "/usr/local/lib/libprotobuf.a",
           "/usr/local/lib/libcrypto.a",
           "/usr/local/lib/libcpprest.dylib",
 
-          "/users/adambalogh/Developer/bazel-bin/audit/libutil.a",
+          "/users/adambalogh/Developer/audit/lib/libfiles.a",
+          "/users/adambalogh/Developer/audit/lib/libcpor.a",
+          "/users/adambalogh/Developer/audit/lib/liblocal_disk.a",
+          "/users/adambalogh/Developer/audit/lib/libdropbox.a",
+          "/users/adambalogh/Developer/audit/lib/libserver.a",
+          "/users/adambalogh/Developer/audit/lib/libclient.a",
 
-          "/users/adambalogh/Developer/bazel-bin/audit/files/libfile_browser.a",
-
-          "/users/adambalogh/Developer/bazel-bin/audit/client/libprf.a",
-          "/users/adambalogh/Developer/bazel-bin/audit/client/upload/libblock_tagger.a",
-          "/users/adambalogh/Developer/bazel-bin/audit/client/upload/libblock_tag_serializer.a",
-          "/users/adambalogh/Developer/bazel-bin/audit/client/upload/libclient.a",
-          "/users/adambalogh/Developer/bazel-bin/audit/client/upload/libfile.a",
-          "/users/adambalogh/Developer/bazel-bin/audit/client/verify/libclient.a",
-          "/users/adambalogh/Developer/bazel-bin/audit/client/verify/libverify_file.a",
-
-          "/users/adambalogh/Developer/bazel-bin/audit/providers/dropbox/libdropbox_client.a",
-          "/users/adambalogh/Developer/bazel-bin/audit/providers/dropbox/libstorage.a",
-          "/users/adambalogh/Developer/bazel-bin/audit/providers/dropbox/libfetcher.a",
-          "/users/adambalogh/Developer/bazel-bin/audit/providers/dropbox/libfile_tag_source.a",
-          "/users/adambalogh/Developer/bazel-bin/audit/providers/dropbox/libfile_list_source.a",
-          "/users/adambalogh/Developer/bazel-bin/audit/providers/dropbox/libtoken_source.a",
-          "/users/adambalogh/Developer/bazel-bin/audit/providers/dropbox/libtoken_source_instance.a",
-
-          "/users/adambalogh/Developer/bazel-bin/audit/providers/local_disk/libstorage.a",
-          "/users/adambalogh/Developer/bazel-bin/audit/providers/local_disk/libfetcher.a",
-          "/users/adambalogh/Developer/bazel-bin/audit/providers/local_disk/libfile_tag_source.a",
-          "/users/adambalogh/Developer/bazel-bin/audit/providers/local_disk/libfile_list_source.a",
-
-          "/users/adambalogh/Developer/bazel-bin/audit/proto/libcpor.a",
-
-          "/users/adambalogh/Developer/bazel-bin/audit/server/libprover.a",
         ],
       },
-
       "conditions": [
         [ 'OS!="win"', {
           "cflags+": [ "-std=c++11" ],
@@ -75,8 +49,6 @@
           },
         }],
       ],
-
     },
-
   ]
 }
