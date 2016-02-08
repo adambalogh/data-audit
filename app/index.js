@@ -37,6 +37,7 @@ window.onload = function() {
   });
 }
 
+// Main called after user is logged in - if needed
 function main() {
     
   //Initially, show all the files available
@@ -60,9 +61,11 @@ function main() {
         closable: false,
       });
       uploadWin.loadURL('file://' + __dirname + '/upload.html');
+      uploadWin.show();
 
       var file = files[0];
-      native_module.uploadAsync(
+      uploadWin.webContents.on('did-finish-load', function() {
+        native_module.uploadAsync(
           file,
           function(progress) {
             uploadWin.webContents.send('progress', progress);
@@ -71,11 +74,7 @@ function main() {
           function(error) {
             uploadWin.webContents.send('finished', error);
           }
-      );
-
-      uploadWin.show();
-
-      uploadWin.webContents.on('did-finish-load', function() {
+        );
         uploadWin.webContents.send('fileName', file);
       });
 
@@ -134,10 +133,28 @@ function displayFiles(files) {
 
 // Verifies the given file's integrity, and displays the result
 function verify_file(file_name) {
-  native_module.verifyAsync(file_name, function(percentage) {}, function(result, error) {
-    if (error != null) {
-      alert(error);
-    }
-    alert(result);
+  var verifyWin = new BrowserWindow({
+    width: 540,
+    height: 160,
+    title: "Verify File",
+    resizable: false,
+    maximizable: false,
+    minimizable: false,
+    fullscreen: false,
+    closable: false,
+  });
+  verifyWin.loadURL('file://' + __dirname + '/verify.html');
+  verifyWin.show();
+
+  verifyWin.webContents.on('did-finish-load', function() {
+    verifyWin.webContents.send('fileName', file_name);
+
+    native_module.verifyAsync(file_name, function(percentage) {}, function(result, error) {
+      if (error) {
+        verifyWin.webContents.send('error', error);
+      } else {
+        verifyWin.webContents.send('result', result);
+      }
+    });
   });
 }

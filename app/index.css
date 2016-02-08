@@ -6,6 +6,7 @@ body {
   font-family: 'Helvetica Neue';
   overflow: hidden;
   resize: none;
+  -webkit-user-select: none;
 }
 
 div {
@@ -27,6 +28,7 @@ li {
   border-bottom: 1px solid transparent;
   border-image: linear-gradient(to right, #ddd 1%,#f5f7f8 95%);
   border-image-slice: 1;
+  cursor: default;
 }
 
 li:hover {
@@ -143,6 +145,19 @@ a.main:visited {
 
 #files_container {
   width: 100%;
+  max-height: calc(100% - 58px);
 
   overflow-y: scroll;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+ 
+::-webkit-scrollbar-track {
+  background: #eee;
+}
+ 
+::-webkit-scrollbar-thumb {
+  background: #bdc3c7; 
 }

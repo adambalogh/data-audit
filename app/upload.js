@@ -5,7 +5,6 @@ window.ready = false;
 
 window.onload = function() {
 
-
   var closeButton = document.getElementById("close");
   closeButton.onclick = function() {
     window.close();
