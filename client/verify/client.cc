@@ -41,7 +41,8 @@ proto::Challenge Client::BuildChallenge(const proto::PublicFileTag& public_tag,
   return challenge;
 }
 
-bool Client::Verify(const std::string& file_full_path, int percent_blocks) {
+bool Client::Verify(const std::string& file_full_path, int percent_blocks,
+                    Stats& stats) {
   if (percent_blocks < 0 || percent_blocks > 100) {
     throw std::logic_error(
         "The percentage of blocks checked must be between 0 and 100.");
@@ -50,6 +51,8 @@ bool Client::Verify(const std::string& file_full_path, int percent_blocks) {
   auto file_tag = file_tag_source_->GetFileTag(file_full_path);
   auto challenge = BuildChallenge(file_tag.public_tag(), percent_blocks);
   auto proof = proof_source_->GetProof(challenge);
+
+  stats = Stats{proof.ByteSize()};
 
   return VerifyFile<audit::HMACPRF>(file_tag, challenge, proof);
 }

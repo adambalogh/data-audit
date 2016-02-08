@@ -64,13 +64,14 @@ static void Upload(benchmark::State& state) {
 }
 
 static void Verify(benchmark::State& state) {
+  verify::Stats stats;
   verify::Client client{
       std::unique_ptr<verify::FileTagSource>(new local_disk::FileTagSource),
       std::unique_ptr<verify::ProofSource>(new verify::NoServerProofSource{
           std::unique_ptr<server::FetcherFactory>{
               new local_disk::FetcherFactory}})};
   while (state.KeepRunning()) {
-    assert(client.Verify(files[state.range_x()], 100) == true);
+    assert(client.Verify(files[state.range_x()], 100, stats) == true);
   }
 }
 

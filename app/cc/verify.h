@@ -12,6 +12,7 @@
 #include "audit/client/verify/client.h"
 #include "audit/client/verify/proof_source.h"
 #include "audit/client/verify/no_server_proof_source.h"
+#include "audit/client/verify/stats.h"
 
 using namespace audit;
 
@@ -44,7 +45,11 @@ class VerifyWorker : public Nan::AsyncProgressWorker {
   void Execute(const AsyncProgressWorker::ExecutionProgress& execution_progress)
       override {
     try {
-      result_ = verify_client->Verify(file_name_, 100);
+      verify::Stats stats;
+      result_ = verify_client->Verify(file_name_, 100, stats);
+
+      std::cout << "Stats for verifying " << file_name_ << ": " << std::endl;
+      std::cout << stats.to_string() << std::endl << std::endl;
     } catch (std::exception& e) {
       SetErrorMessage(e.what());
     }

@@ -24,7 +24,6 @@ NAN_MODULE_INIT(InitAll) {
            Nan::GetFunction(New<FunctionTemplate>(ExchangeCodeForToken))
                .ToLocalChecked());
 #endif
-
   Nan::Set(
       target, New<String>("hasToLogin").ToLocalChecked(),
       Nan::GetFunction(New<FunctionTemplate>(HasToLogin)).ToLocalChecked());

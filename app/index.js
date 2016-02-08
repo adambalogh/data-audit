@@ -134,7 +134,7 @@ function displayFiles(files) {
 // Verifies the given file's integrity, and displays the result
 function verify_file(file_name) {
   var verifyWin = new BrowserWindow({
-    width: 540,
+    width: 500,
     height: 160,
     title: "Verify " + file_name,
     resizable: false,
