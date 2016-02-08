@@ -1,24 +1,16 @@
 const electron = require('electron');
-const app = electron.app;  // Module to control application life.
-const BrowserWindow = electron.BrowserWindow;  // Module to create native browser window.
+const app = electron.app;
+const BrowserWindow = electron.BrowserWindow;
 
-electron.crashReporter.start({
-  productName: 'YourName',
-  companyName: 'YourCompany',
-  submitURL: 'https://your-domain.com/url-to-submit',
-  autoSubmit: false
-});
+electron.crashReporter.start({});
 
 var mainWindow = null;
-
-app.commandLine.appendSwitch('enable-logging', "true");
 
 app.on('window-all-closed', function() {
   app.quit();
 });
 
 app.on('ready', function() {
-  // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 650,
     height: 450,
@@ -27,17 +19,11 @@ app.on('ready', function() {
     fullscreenable: false,
     title: "File Check",
   });
-
-  // and load the index.html of the app.
   mainWindow.loadURL('file://' + __dirname + '/index.html');
 
+  // TODO disable for Release
   mainWindow.webContents.openDevTools();
-
-  // Emitted when the window is closed.
   mainWindow.on('closed', function() {
-    // Dereference the window object, usually you would store windows
-    // in an array if your app supports multi windows, this is the time
-    // when you should delete the corresponding element.
     mainWindow = null;
   });
 });

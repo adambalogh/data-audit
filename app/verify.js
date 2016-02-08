@@ -11,6 +11,12 @@ window.onload = function() {
     window.close();
   }
 
+  var line = new ProgressBar.Line('#progress', {
+    strokeWidth: 2,
+    duration: 100,
+    color: '#f39c12'
+  });
+
   electron.ipcRenderer.on('fileName', function(event, fileName) {
     window.fileName = fileName;
     var title = document.getElementById("title");

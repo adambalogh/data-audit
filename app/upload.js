@@ -11,8 +11,9 @@ window.onload = function() {
   }
 
   var line = new ProgressBar.Line('#progress', {
-    strokeWidth: 3,
-    duration: 100
+    strokeWidth: 2,
+    duration: 100,
+    color: '#95a5a6'
   });
 
   electron.ipcRenderer.on('fileName', function(event, fileName) {

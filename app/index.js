@@ -136,7 +136,7 @@ function verify_file(file_name) {
   var verifyWin = new BrowserWindow({
     width: 540,
     height: 160,
-    title: "Verify File",
+    title: "Verify " + file_name,
     resizable: false,
     maximizable: false,
     minimizable: false,
