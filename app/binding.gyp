@@ -24,7 +24,6 @@
           "/users/adambalogh/Developer/audit/lib/libdropbox.a",
           "/users/adambalogh/Developer/audit/lib/libserver.a",
           "/users/adambalogh/Developer/audit/lib/libclient.a",
-
         ],
       },
       "conditions": [

@@ -13,9 +13,17 @@ link_directories(/usr/local/lib)
 set(LIBRARIES server client local_disk cpor cryptopp crypto)
 set(TEST_LIBRARIES gtest gtest_main test_util ${LIBRARIES})
 
+enable_testing()
+
+macro (create_test target target_file)
+  add_executable(${target} ${target_file})
+  target_link_libraries(${target} ${TEST_LIBRARIES})
+  add_test (${target} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${target})
+endmacro (create_test)
+
 add_library(dropbox
   providers/dropbox/dropbox_client.cc
-  providers/dropbox/fetcher.cc
+  #providers/dropbox/fetcher.cc
   providers/dropbox/file_list_source.cc
   providers/dropbox/file_tag_source.cc
   providers/dropbox/storage.cc
@@ -58,10 +66,14 @@ add_library(test_util test_util.cc)
 add_executable(benchmark_main benchmark/main.cc)
 target_link_libraries(benchmark_main benchmark ${LIBRARIES})
 
-add_executable(block_tag_map_test block_tag_map_test.cc)
-target_link_libraries(block_tag_map_test ${TEST_LIBRARIES})
+# Tests
 
-add_executable(prover_test server/prover_test.cc)
-target_link_libraries(prover_test ${LIBRARIES})
-
-
+create_test(util_test util_test.cc)
+create_test(block_tag_map_test block_tag_map_test.cc)
+create_test(prf_test client/prf_test.cc)
+create_test(progress_bar_test client/progress_bar_test.cc)
+create_test(block_tag_serializer_test client/upload/block_tag_serializer_test.cc)
+create_test(block_tagger_test client/upload/block_tagger_test.cc)
+create_test(file_test client/upload/file_test.cc)
+create_test(verify_file_test client/verify/verify_file_test.cc)
+create_test(prover_test server/prover_test.cc)
