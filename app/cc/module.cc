@@ -16,14 +16,15 @@ using v8::FunctionTemplate;
 using v8::String;
 
 NAN_MODULE_INIT(InitAll) {
-#if PROVIDER_TYPE == dropbox
-  Nan::Set(target, New<String>("getAuthorizeUrl").ToLocalChecked(),
-           Nan::GetFunction(New<FunctionTemplate>(GetAuthorizeUrl))
-               .ToLocalChecked());
-  Nan::Set(target, New<String>("exchangeCodeForToken").ToLocalChecked(),
-           Nan::GetFunction(New<FunctionTemplate>(ExchangeCodeForToken))
-               .ToLocalChecked());
-#endif
+  //#if PROVIDER_TYPE == dropbox
+  //  Nan::Set(target, New<String>("getAuthorizeUrl").ToLocalChecked(),
+  //           Nan::GetFunction(New<FunctionTemplate>(GetAuthorizeUrl))
+  //               .ToLocalChecked());
+  //  Nan::Set(target, New<String>("exchangeCodeForToken").ToLocalChecked(),
+  //           Nan::GetFunction(New<FunctionTemplate>(ExchangeCodeForToken))
+  //               .ToLocalChecked());
+  //#endif
+  //
   Nan::Set(
       target, New<String>("hasToLogin").ToLocalChecked(),
       Nan::GetFunction(New<FunctionTemplate>(HasToLogin)).ToLocalChecked());

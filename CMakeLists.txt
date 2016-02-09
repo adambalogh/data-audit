@@ -24,15 +24,15 @@ macro (create_test target target_file)
   add_test (${target} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${target})
 endmacro (create_test)
 
-add_library(dropbox
-  providers/dropbox/dropbox_client.cc
-  #providers/dropbox/fetcher.cc
-  providers/dropbox/file_list_source.cc
-  providers/dropbox/file_tag_source.cc
-  providers/dropbox/storage.cc
-  providers/dropbox/token_source.cc
-  providers/dropbox/token_source_instance.cc
-)
+#add_library(dropbox
+#  providers/dropbox/dropbox_client.cc
+#  providers/dropbox/fetcher.cc
+#  providers/dropbox/file_list_source.cc
+#  providers/dropbox/file_tag_source.cc
+#  providers/dropbox/storage.cc
+#  providers/dropbox/token_source.cc
+#  providers/dropbox/token_source_instance.cc
+#)
 
 add_library(client
   util.cc

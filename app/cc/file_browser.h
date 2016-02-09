@@ -8,11 +8,10 @@
 
 #include "audit/files/file_browser.h"
 
-using namespace audit;
-
 using v8::Value;
 using v8::Local;
 using v8::Function;
+using v8::Object;
 using v8::String;
 using v8::Array;
 
@@ -23,20 +22,21 @@ using Nan::New;
 NAN_METHOD(GetFiles);
 NAN_METHOD(RefreshFiles);
 
-static std::unique_ptr<audit::FileBrowser> file_browser;
+static std::unique_ptr<audit::file_browser::FileBrowser> fb;
 
 void RefreshFiles(const FunctionCallbackInfo<Value>& info) {
-  file_browser.reset(nullptr);
+  fb.reset(nullptr);
   return GetFiles(info);
 }
 
 void GetFiles(const FunctionCallbackInfo<Value>& info) {
-  if (!file_browser) {
-    file_browser.reset(new audit::FileBrowser{std::move(GetFileListSource())});
+  if (!fb) {
+    fb.reset(
+        new audit::file_browser::FileBrowser{std::move(GetFileListSource())});
   }
 
   Local<Function> cb;
-  std::vector<const std::string> files;
+  std::vector<audit::file_browser::File> files;
 
   try {
     if (info.Length() == 2) {
@@ -44,10 +44,10 @@ void GetFiles(const FunctionCallbackInfo<Value>& info) {
       std::string query{*param1};
 
       cb = info[1].As<Function>();
-      files = file_browser->Search(query);
+      files = fb->Search(query);
     } else {
       cb = info[0].As<Function>();
-      files = file_browser->GetAllFiles();
+      files = fb->GetAllFiles();
     }
   } catch (std::exception& e) {
     std::cout << e.what();
@@ -55,7 +55,11 @@ void GetFiles(const FunctionCallbackInfo<Value>& info) {
 
   Local<Array> output = New<Array>(files.size());
   for (size_t i = 0; i < files.size(); ++i) {
-    output->Set(i, Nan::New(files[i]).ToLocalChecked());
+    Local<Array> file = New<Array>(2);
+    file->Set(0, New<String>(files[i].name).ToLocalChecked());
+    file->Set(1, New<String>(files[i].Size()).ToLocalChecked());
+
+    output->Set(i, file);
   }
 
   const unsigned argc = 1;

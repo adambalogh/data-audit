@@ -7,6 +7,7 @@
 #include "audit/files/file_list_source.h"
 
 namespace audit {
+namespace file_browser {
 
 class FileBrowser {
  public:
@@ -14,12 +15,13 @@ class FileBrowser {
       : files_(file_list_source->GetFiles()) {}
 
   // Returns all the files available
-  std::vector<const std::string> GetAllFiles();
+  std::vector<File> GetAllFiles();
 
   // Returns all the files with names that start with the given string
-  std::vector<const std::string> Search(const std::string& query);
+  std::vector<File> Search(const std::string& query);
 
  private:
-  const std::vector<const std::string> files_;
+  const std::vector<File> files_;
 };
+}
 }

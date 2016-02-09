@@ -21,7 +21,6 @@
           "/users/adambalogh/Developer/audit/lib/libfiles.a",
           "/users/adambalogh/Developer/audit/lib/libcpor.a",
           "/users/adambalogh/Developer/audit/lib/liblocal_disk.a",
-          "/users/adambalogh/Developer/audit/lib/libdropbox.a",
           "/users/adambalogh/Developer/audit/lib/libserver.a",
           "/users/adambalogh/Developer/audit/lib/libclient.a",
         ],

@@ -6,9 +6,9 @@ namespace audit {
 namespace providers {
 namespace local_disk {
 
-class FileListSource : public audit::FileListSource {
+class FileListSource : public audit::file_browser::FileListSource {
  public:
-  std::vector<const std::string> GetFiles();
+  std::vector<audit::file_browser::File> GetFiles();
 };
 }
 }
