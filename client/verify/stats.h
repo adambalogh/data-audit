@@ -3,23 +3,23 @@
 #include <string>
 #include <sstream>
 
+#include "audit/client/stats.h"
+
 namespace audit {
 namespace verify {
 
-struct Stats {
+struct Stats : public ::audit::Stats {
   Stats() {}
 
-  Stats(int proof_size) : proof_size(proof_size) {}
-
-  int proof_size;
+  Stats(size_t proof_size) : proof_size(proof_size) {}
 
   std::string to_string() const {
     std::stringstream repr;
-    repr << "Proof size: ";
-    repr << proof_size;
-    repr << " bytes";
+    repr << "Proof size: " << ToMB(proof_size) << " MB" << std::endl;
     return repr.str();
   }
+
+  size_t proof_size;
 };
 }
 }

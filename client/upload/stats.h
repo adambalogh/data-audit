@@ -1,13 +1,16 @@
 #pragma once
 
-#include <math.h>
+#include <string>
+#include <sstream>
+
+#include "audit/client/stats.h"
 
 namespace audit {
 namespace upload {
 
 // Stats is used for keeping track of how much space is used to store the
 // file and its tags
-struct Stats {
+struct Stats : public ::audit::Stats {
  public:
   Stats() {}
 
@@ -17,12 +20,12 @@ struct Stats {
         block_tags_size(block_tags_size) {}
 
   // Returns string representation of stats
-  std::string String() const {
-    std::string out;
-    out += "File Size: " + std::to_string(ToMB(file_size)) + " MB\n";
-    out += "FileTag Size: " + std::to_string(ToMB(file_tag_size)) + " MB\n";
-    out += "BlockTags Size: " + std::to_string(ToMB(block_tags_size)) + " MB\n";
-    return out;
+  std::string to_string() const {
+    std::stringstream repr;
+    repr << "File Size: " << ToMB(file_size) << " MB\n";
+    repr << "FileTag Size: " << ToMB(file_tag_size) << " MB\n";
+    repr << "BlockTags Size: " << ToMB(block_tags_size) << " MB\n";
+    return repr.str();
   }
 
   // The actual size of the file we uploaded in bytes
@@ -33,13 +36,6 @@ struct Stats {
 
   // The size of all the uploaded BlockTags together, in bytes
   size_t block_tags_size{0};
-
- private:
-  // Returns the number of Megabytes the given bytes are equal to, rounded to 3
-  // decimal places
-  static double ToMB(size_t bytes) {
-    return static_cast<double>(floor(bytes / 1000)) / 1000;
-  }
 };
 }
 }

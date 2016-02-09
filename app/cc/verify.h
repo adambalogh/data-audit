@@ -49,7 +49,7 @@ class VerifyWorker : public Nan::AsyncProgressWorker {
       result_ = verify_client->Verify(file_name_, 100, stats);
 
       std::cout << "Stats for verifying " << file_name_ << ": " << std::endl;
-      std::cout << stats.to_string() << std::endl << std::endl;
+      std::cout << stats.to_string() << std::endl;
     } catch (std::exception& e) {
       SetErrorMessage(e.what());
     }

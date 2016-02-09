@@ -52,7 +52,7 @@ bool Client::Verify(const std::string& file_full_path, int percent_blocks,
   auto challenge = BuildChallenge(file_tag.public_tag(), percent_blocks);
   auto proof = proof_source_->GetProof(challenge);
 
-  stats = Stats{proof.ByteSize()};
+  stats = Stats{static_cast<size_t>(proof.ByteSize())};
 
   return VerifyFile<audit::HMACPRF>(file_tag, challenge, proof);
 }

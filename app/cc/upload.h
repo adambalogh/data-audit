@@ -50,8 +50,8 @@ class UploadWorker : public Nan::AsyncProgressWorker {
                                     sizeof(int));
           });
 
-      std::cout << "Stats for: " + GetFileName() << std::endl;
-      std::cout << stats.String();
+      std::cout << "Stats for uploading " << GetFileName() << ":" << std::endl;
+      std::cout << stats.to_string() << std::endl;
 
     } catch (std::exception& e) {
       std::string error = "Error: " + std::string(e.what());
