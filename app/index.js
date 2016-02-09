@@ -74,7 +74,6 @@ function main() {
 
           },
           function(error) {
-            alert("done");
             uploadWin.webContents.send('finished', error);
           }
         );

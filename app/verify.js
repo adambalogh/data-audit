@@ -20,7 +20,7 @@ window.onload = function() {
   electron.ipcRenderer.on('fileName', function(event, fileName) {
     window.fileName = fileName;
     var title = document.getElementById("title");
-    title.firstChild.textContent = "Verifying \"" + window.fileName + "\"...";
+    title.firstChild.textContent = "Verifying " + window.fileName;
   });
 
   electron.ipcRenderer.on('error', function(event, error) {

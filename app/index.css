@@ -17,7 +17,7 @@ div {
 #files_container {
   margin-top: 14px;
   width: 100%;
-  max-height: calc(100% - 58px);
+  max-height: calc(100% - 72px);
 
   overflow-y: scroll;
 }
@@ -166,17 +166,17 @@ a.main:visited {
   background: linear-gradient(to right, #136a8a , #267871); 
 }
 
-::-webkit-scrollbar {
-  width: 6px;
-}
+/*::-webkit-scrollbar {      */
+/*  width: 6px;              */
+/*}                          */
  
-::-webkit-scrollbar-track {
-  background: #eee;
-}
+/*::-webkit-scrollbar-track {*/
+/*  background: #eee;        */
+/*}                          */
  
-::-webkit-scrollbar-thumb {
-  background: #bdc3c7; 
-}
+/*::-webkit-scrollbar-thumb {*/
+/*  background: #bdc3c7;     */
+/*}                          */
 
 /* loading */
 
