@@ -105,6 +105,10 @@ function displayFiles(files) {
     files_list.removeChild(files_list.firstChild);
   }
   files.forEach(function(file) {
+    var infoSpan = document.createElement("span");
+    infoSpan.appendChild(document.createTextNode("103.4 MB"));
+    infoSpan.setAttribute("class", "icon-info");
+  
     var verifyButton = document.createElement("span");
     verifyButton.setAttribute("class", "verify-button");
     verifyButton.setAttribute("data-file", file);
@@ -123,6 +127,7 @@ function displayFiles(files) {
 
     var div = document.createElement("div");
     div.appendChild(fileNameLabel);
+    div.appendChild(infoSpan);
     div.appendChild(verifyButton);
 
     var li = document.createElement("li");

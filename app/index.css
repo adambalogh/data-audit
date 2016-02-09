@@ -37,8 +37,6 @@ li {
   cursor: default;
   
   box-shadow: 0px 0px 9px -5px #333;
-  
-  
 }
 
 li:hover {
@@ -55,11 +53,26 @@ li>div {
   vertical-align: middle;
   display: inline-block;
   padding: 15px 16px;
-  width: calc(100% - 52px - 26px - 24px);
+  width: calc(100% - 52px - 26px - 140px);
+  max-width: calc(100% - 52px - 26px - 140px);
+  overflow-x: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .icon {
   margin-right: 10px;
+}
+
+.icon-info {
+  text-align: right;
+  margin-right: 45px;
+  color: #777;
+  font-size: 12px;
+  width: 70px;
+  display: inline-block;
+  position: relative;
+  bottom: -2px;
 }
 
 .verify-button {
@@ -150,9 +163,7 @@ a.main:visited {
 
 #menu {
   padding: 13px 16px;
-  background: #34495e;
-background: linear-gradient(to right, #136a8a , #267871); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-  
+  background: linear-gradient(to right, #136a8a , #267871); 
 }
 
 ::-webkit-scrollbar {
