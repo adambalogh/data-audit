@@ -51,15 +51,15 @@ class VerifyWorker : public Nan::AsyncProgressWorker {
       std::cout << "Stats for verifying " << file_name_ << ": " << std::endl;
       std::cout << stats.to_string() << std::endl;
     } catch (std::exception& e) {
-      SetErrorMessage(e.what());
+      auto error = std::string{e.what()};
+      SetErrorMessage(error.c_str());
     }
   }
 
   void HandleErrorCallback() override {
     ::HandleScope scope;
-    Local<Value> argv[] = {
-        New(false),
-        v8::Exception::Error(New<String>(ErrorMessage()).ToLocalChecked())};
+    Local<Value> argv[] = {New(false),
+                           New<String>(ErrorMessage()).ToLocalChecked()};
     callback->Call(2, argv);
   }
 

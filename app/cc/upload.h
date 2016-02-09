@@ -54,7 +54,7 @@ class UploadWorker : public Nan::AsyncProgressWorker {
       std::cout << stats.to_string() << std::endl;
 
     } catch (std::exception& e) {
-      std::string error = "Error: " + std::string(e.what());
+      auto error = std::string{e.what()};
       SetErrorMessage(error.c_str());
     }
   }
@@ -64,19 +64,6 @@ class UploadWorker : public Nan::AsyncProgressWorker {
     Local<Value> argv[] = {
         New<Integer>(*reinterpret_cast<int*>(const_cast<char*>(data)))};
     progress_bar_callback_->Call(1, argv);
-  }
-
-  void HandleErrorCallback() override {
-    ::HandleScope scope;
-    Local<Value> argv[] = {
-        v8::Exception::Error(New<String>(ErrorMessage()).ToLocalChecked())};
-    callback->Call(1, argv);
-  }
-
-  void HandleOKCallback() override {
-    HandleScope scope;
-    Local<Value> argv[] = {Nan::Null()};
-    callback->Call(1, argv);
   }
 
  private:

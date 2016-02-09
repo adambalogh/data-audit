@@ -74,6 +74,7 @@ function main() {
 
           },
           function(error) {
+            alert("done");
             uploadWin.webContents.send('finished', error);
           }
         );
@@ -105,13 +106,16 @@ function displayFiles(files) {
     files_list.removeChild(files_list.firstChild);
   }
   files.forEach(function(file) {
+    var fileName = file[0];
+    var fileSize = file[1];
+
     var infoSpan = document.createElement("span");
-    infoSpan.appendChild(document.createTextNode(file[1]));
+    infoSpan.appendChild(document.createTextNode(fileSize));
     infoSpan.setAttribute("class", "icon-info");
   
     var verifyButton = document.createElement("span");
     verifyButton.setAttribute("class", "verify-button");
-    verifyButton.setAttribute("data-file", file);
+    verifyButton.setAttribute("data-file", fileName); 
     verifyButton.appendChild(document.createTextNode("Verify"));
     verifyButton.onclick = function() {
       verify_file(this.getAttribute("data-file"));
@@ -123,7 +127,7 @@ function displayFiles(files) {
     var fileNameLabel = document.createElement("span");
     fileNameLabel.setAttribute("class", "file-name-label");
     fileNameLabel.appendChild(icon);
-    fileNameLabel.appendChild(document.createTextNode(file[0]));
+    fileNameLabel.appendChild(document.createTextNode(fileName));
 
     var div = document.createElement("div");
     div.appendChild(fileNameLabel);
