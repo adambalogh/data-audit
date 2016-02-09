@@ -1,12 +1,12 @@
 body {
-  background: #f5f7f8;
   padding: 0px;
   margin: 0px;
   color: #eee;
-  font-family: 'Helvetica';
+  font-family: 'Open Sans';
   overflow: hidden;
   resize: none;
   -webkit-user-select: none;
+  background: #f3f3f3;
 }
 
 div {
@@ -14,25 +14,35 @@ div {
   padding: 0px;
 }
 
+#files_container {
+  margin-top: 14px;
+  width: 100%;
+  max-height: calc(100% - 58px);
+
+  overflow-y: scroll;
+}
+
+
 ul {
   margin: 0px;
-  padding: 6px 10px;
-  font-size: 14px;
+  padding: 0px;
+  font-size: 13px;
 }
 
 li {
+  margin: 0px 10px 0px 10px;
   list-style-type: none;
-  color: #111;
-
-  border: 0px;
-  border-bottom: 1px solid transparent;
-  border-image: linear-gradient(to right, #ddd 1%,#f5f7f8 95%);
-  border-image-slice: 1;
+  color: #191919;
+  background: #fbfcfc;
   cursor: default;
+  
+  box-shadow: 0px 0px 9px -5px #333;
+  
+  
 }
 
 li:hover {
-  background: #f1f2f3;
+  background: #fff;
 }
 
 li>div {
@@ -44,8 +54,8 @@ li>div {
 .file-name-label {
   vertical-align: middle;
   display: inline-block;
-  padding: 14px 14px;
-  width: calc(100% - 52px - 26px - 14px);
+  padding: 15px 16px;
+  width: calc(100% - 52px - 26px - 24px);
 }
 
 .icon {
@@ -141,13 +151,8 @@ a.main:visited {
 #menu {
   padding: 13px 16px;
   background: #34495e;
-}
-
-#files_container {
-  width: 100%;
-  max-height: calc(100% - 58px);
-
-  overflow-y: scroll;
+background: linear-gradient(to right, #136a8a , #267871); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  
 }
 
 ::-webkit-scrollbar {
@@ -160,4 +165,48 @@ a.main:visited {
  
 ::-webkit-scrollbar-thumb {
   background: #bdc3c7; 
+}
+
+/* loading */
+
+#spinner {
+  width: 40px;
+  height: 40px;
+
+  position: relative;
+  margin: 100px auto;
+}
+
+.double-bounce1, .double-bounce2 {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: #333;
+  opacity: 0.6;
+  position: absolute;
+  top: 0;
+  left: 0;
+  
+  -webkit-animation: sk-bounce 2.0s infinite ease-in-out;
+  animation: sk-bounce 2.0s infinite ease-in-out;
+}
+
+.double-bounce2 {
+  -webkit-animation-delay: -1.0s;
+  animation-delay: -1.0s;
+}
+
+@-webkit-keyframes sk-bounce {
+  0%, 100% { -webkit-transform: scale(0.0) }
+  50% { -webkit-transform: scale(1.0) }
+}
+
+@keyframes sk-bounce {
+  0%, 100% { 
+    transform: scale(0.0);
+    -webkit-transform: scale(0.0);
+  } 50% { 
+    transform: scale(1.0);
+    -webkit-transform: scale(1.0);
+  }
 }

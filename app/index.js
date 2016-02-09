@@ -42,6 +42,8 @@ function main() {
     
   //Initially, show all the files available
   native_module.getFiles(function(files) {
+    var spinner = document.getElementById("spinner");
+    spinner.style.display = "none";
     displayFiles(files);
   });
 
