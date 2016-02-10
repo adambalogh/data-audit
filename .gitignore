@@ -1,0 +1,15 @@
+.DS_Store
+app/res
+secrets.json
+*.swp
+node_modules
+files_dir
+build
+*.pb.h
+*.pb.cc
+CMakeFiles
+CMakeCache.txt
+bin/
+lib/
+Makefile
+*.cmake

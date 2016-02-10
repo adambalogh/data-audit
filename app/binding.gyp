@@ -18,11 +18,11 @@
           "/usr/local/lib/libcrypto.a",
           "/usr/local/lib/libcpprest.dylib",
 
-          "/users/adambalogh/Developer/audit/lib/libfiles.a",
-          "/users/adambalogh/Developer/audit/lib/libcpor.a",
-          "/users/adambalogh/Developer/audit/lib/liblocal_disk.a",
-          "/users/adambalogh/Developer/audit/lib/libserver.a",
-          "/users/adambalogh/Developer/audit/lib/libclient.a",
+          "/users/adambalogh/Developer/audit/lib/libfile_browserlib.a",
+          "/users/adambalogh/Developer/audit/lib/libcporlib.a",
+          "/users/adambalogh/Developer/audit/lib/liblocal_disklib.a",
+          "/users/adambalogh/Developer/audit/lib/libserverlib.a",
+          "/users/adambalogh/Developer/audit/lib/libclientlib.a",
         ],
       },
       "conditions": [

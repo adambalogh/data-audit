@@ -8,22 +8,18 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-include_directories(../)
+enable_testing()
+
+include_directories(${PROJECT_SOURCE_DIR}/../)
 include_directories(/usr/local/include)
 
 link_directories(/usr/local/lib)
 
-set(LIBRARIES server client local_disk cpor cryptopp crypto proxygenlib
-    proxygenhttpserver pthread)
-set(TEST_LIBRARIES gtest gtest_main test_util ${LIBRARIES})
+set(THIRD_PARTY_LIBRARIES cryptopp crypto cpprest)
+set(LIBRARIES serverlib clientlib local_disklib cporlib)
+set(TEST_LIBRARIES gtest gtest_main test_util ${THIRD_PARTY_LIBRARIES} ${LIBRARIES})
 
-enable_testing()
-
-macro (create_test target target_file)
-  add_executable(${target} ${target_file})
-  target_link_libraries(${target} ${TEST_LIBRARIES})
-  add_test (${target} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${target})
-endmacro (create_test)
+# Data Audit libraries
 
 #add_library(dropbox
 #  providers/dropbox/dropbox_client.cc
@@ -35,7 +31,7 @@ endmacro (create_test)
 #  providers/dropbox/token_source_instance.cc
 #)
 
-add_library(client
+add_library(clientlib
   util.cc
   client/prf.cc
   client/upload/block_tag_serializer.cc
@@ -48,30 +44,44 @@ add_library(client
   client/verify/verify_file.cc
 )
 
-add_library(server 
+add_library(serverlib
   util.cc
   server/prover.cc
-  server/proof_handler.cc
 )
 
-add_library(local_disk
+add_library(local_disklib
   providers/local_disk/fetcher.cc
   providers/local_disk/storage.cc
   providers/local_disk/file_tag_source.cc
   providers/local_disk/file_list_source.cc
 )
 
-add_library(cpor proto/cpor.pb.cc)
-target_link_libraries(cpor protobuf)
+add_library(cporlib proto/cpor.pb.cc)
+target_link_libraries(cporlib protobuf)
 
-add_library(files files/file_browser.cc)
+add_library(file_browserlib files/file_browser.cc)
 
 add_library(test_util test_util.cc)
 
+# Server binary
+
+#add_executable(server server/proof_handler.cc) 
+#target_link_libraries(server ${THIRD_PARTY_LIBRARIES} serverlib proxygenlib proxygenhttpserver)
+
+# Benchmark
+
 add_executable(benchmark_main benchmark/main.cc)
-target_link_libraries(benchmark_main benchmark ${LIBRARIES})
+target_link_libraries(benchmark_main benchmark ${THIRD_PARTY_LIBRARIES}
+  ${LIBRARIES})
 
 # Tests
+
+
+macro (create_test target target_file)
+  add_executable(${target} ${target_file})
+  target_link_libraries(${target} ${TEST_LIBRARIES})
+  add_test (${target} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${target})
+endmacro (create_test)
 
 create_test(util_test util_test.cc)
 create_test(block_tag_map_test block_tag_map_test.cc)
