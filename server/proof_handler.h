@@ -9,8 +9,6 @@ namespace server {
 
 class ProofHandler : public proxygen::RequestHandler {
    public:
-    ProofHandler(Fetcher& fetcher) : fetcher_(fetcher) {}
-
     void onRequest(
         std::unique_ptr<proxygen::HTTPMessage> headers) noexcept override;
 
@@ -25,7 +23,7 @@ class ProofHandler : public proxygen::RequestHandler {
     void onError(proxygen::ProxygenError err) noexcept override;
 
    private:
-    Fetcher& fetcher_;
+    std::unique_ptr<Fetcher> fetcher_;
 
     std::unique_ptr<folly::IOBuf> body_;
 };

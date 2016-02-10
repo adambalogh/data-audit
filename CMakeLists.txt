@@ -74,7 +74,7 @@ add_library(test_util test_util.cc)
 if (${SERVER_SIDE})
 
 add_executable(server server/main.cc server/proof_handler.cc) 
-target_link_libraries(server serverlib cporlib ${THIRD_PARTY_LIBRARIES} proxygenlib
+target_link_libraries(server serverlib cporlib local_disklib ${THIRD_PARTY_LIBRARIES} proxygenlib
   proxygenhttpserver folly wangle glog gflags)
 
 endif (${SERVER_SIDE})
