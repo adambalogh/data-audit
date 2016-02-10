@@ -5,14 +5,14 @@
 #include <fstream>
 #include <string>
 
+#include "audit/common.h"
 #include "audit/proto/cpor.pb.h"
 
 namespace audit {
 namespace providers {
 namespace local_disk {
 
-const std::string Storage::files_dir{
-    "/users/adambalogh/Developer/audit/files_dir/"};
+const std::string Storage::files_dir{application_dir + "files_dir/"};
 
 const std::string Storage::tags_dir{files_dir + "tags/"};
 

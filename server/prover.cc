@@ -1,5 +1,6 @@
 #include "prover.h"
 
+#include <algorithm>
 #include <assert.h>
 
 #include "openssl/bn.h"

@@ -4,11 +4,13 @@
 #include <fstream>
 #include <iostream>
 
+#include "audit/common.h"
+
 namespace audit {
 namespace upload {
 
-const std::string BlockTagSerializer::files_dir{
-    "/users/adambalogh/Developer/audit/files_dir/tags_files/"};
+const std::string BlockTagSerializer::files_dir{application_dir +
+                                                "files_dir/tags_files/"};
 
 void BlockTagSerializer::Flush() {
   size_t required_size = 0;

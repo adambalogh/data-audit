@@ -15,9 +15,8 @@ div {
 }
 
 #files_container {
-  margin-top: 14px;
   width: 100%;
-  max-height: calc(100% - 72px);
+  max-height: calc(100% - 56px);
 
   overflow-y: scroll;
 }
@@ -27,6 +26,14 @@ ul {
   margin: 0px;
   padding: 0px;
   font-size: 13px;
+}
+
+li:first-child {
+  margin-top: 14px;
+}
+
+li:last-child {
+  margin-bottom: 14px;
 }
 
 li {
