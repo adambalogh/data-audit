@@ -8,25 +8,26 @@ namespace audit {
 namespace server {
 
 class ProofHandler : public proxygen::RequestHandler {
- public:
-  ProofHandler(Fetcher& fetcher) : fetcher_(fetcher) {}
+   public:
+    ProofHandler(Fetcher& fetcher) : fetcher_(fetcher) {}
 
-  void onRequest(std::unique_ptr<proxygen::HTTPMessage> headers) override;
+    void onRequest(
+        std::unique_ptr<proxygen::HTTPMessage> headers) noexcept override;
 
-  void onBody(std::unique_ptr<folly::IOBuf> body) override;
+    void onBody(std::unique_ptr<folly::IOBuf> body) noexcept override;
 
-  void onEOM() override;
+    void onEOM() noexcept override;
 
-  void onUpgrade(proxygen::UpgradeProtocol proto) override;
+    void onUpgrade(proxygen::UpgradeProtocol proto) noexcept override;
 
-  void requestComplete() override;
+    void requestComplete() noexcept override;
 
-  void onError(proxygen::ProxygenError err) override;
+    void onError(proxygen::ProxygenError err) noexcept override;
 
- private:
-  Fetcher& fetcher_;
+   private:
+    Fetcher& fetcher_;
 
-  std::unique_ptr<folly::IOBuf> body_;
+    std::unique_ptr<folly::IOBuf> body_;
 };
 }
 }

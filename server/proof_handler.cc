@@ -4,42 +4,45 @@
 #include "proxygen/httpserver/ResponseBuilder.h"
 
 #include "audit/proto/cpor.pb.h"
+#include "audit/server/prover.h"
+
+using namespace proxygen;
+using folly::IOBuf;
 
 namespace audit {
 namespace server {
 
-void ProofHandler::onRequest(std::unique_ptr<HTTPMessage> headers) {
-  stats_->recordRequest();
+void ProofHandler::onRequest(std::unique_ptr<HTTPMessage> headers) noexcept {}
+
+void ProofHandler::onBody(std::unique_ptr<folly::IOBuf> body) noexcept {
+    if (body_) {
+        body_->prependChain(std::move(body));
+    } else {
+        body_ = std::move(body);
+    }
 }
 
-void ProofHandler::onBody(std::unique_ptr<folly::IOBuf> body) {
-  if (body_) {
-    body_->prependChain(std::move(body));
-  } else {
-    body_ = std::move(body);
-  }
+void ProofHandler::onEOM() noexcept {
+    proto::Challenge challenge;
+    challenge.ParseFromArray(body_->data(), body_->length());
+
+    Prover prover{fetcher_, challenge};
+    auto proof = prover.Prove();
+
+    auto response_body = IOBuf::create(proof.ByteSize());
+    proof.SerializeToArray(response_body->writableData(),
+                           response_body->capacity());
+
+    ResponseBuilder(downstream_)
+        .status(200, "OK")
+        .body(std::move(response_body))
+        .sendWithEOM();
 }
 
-void ProofHandler::onEOM() {
-  proto::Challenge challenge;
-  challenge.ParseFromArray(body_.data(), body_.tail());
+void ProofHandler::onUpgrade(UpgradeProtocol protocol) noexcept {}
 
-  Prover prover{fetcher_, challenge};
-  auto proof = prover.Prove();
+void ProofHandler::requestComplete() noexcept { delete this; }
 
-  auto response_body = IOBuf::create(proof.ByteSize());
-  proof.SerializeToArray(response_body.data(), response_body.capacity());
-
-  ResponseBuilder(downstream_)
-      .status(200, "OK")
-      .body(std::move(response_body))
-      .sendWithEOM();
-}
-
-void ProofHandler::onUpgrade(UpgradeProtocol protocol) {}
-
-void ProofHandler::requestComplete() { delete this; }
-
-void ProofHandler::onError(ProxygenError err) { delete this; }
+void ProofHandler::onError(ProxygenError err) noexcept { delete this; }
 }
 }

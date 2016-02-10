@@ -8,12 +8,13 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-include_directories(/users/adambalogh/Developer)
+include_directories(../)
 include_directories(/usr/local/include)
 
 link_directories(/usr/local/lib)
 
-set(LIBRARIES server client local_disk cpor cryptopp crypto)
+set(LIBRARIES server client local_disk cpor cryptopp crypto proxygenlib
+    proxygenhttpserver pthread)
 set(TEST_LIBRARIES gtest gtest_main test_util ${LIBRARIES})
 
 enable_testing()
@@ -50,6 +51,7 @@ add_library(client
 add_library(server 
   util.cc
   server/prover.cc
+  server/proof_handler.cc
 )
 
 add_library(local_disk
