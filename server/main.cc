@@ -19,8 +19,8 @@ using folly::SocketAddress;
 
 using Protocol = HTTPServer::Protocol;
 
-DEFINE_int32(http_port, 11000, "Port to listen on with HTTP protocol");
-DEFINE_string(ip, "localhost", "IP/Hostname to bind to");
+DEFINE_int32(http_port, 8080, "Port to listen on with HTTP protocol");
+DEFINE_string(ip, "10.0.0.4", "IP/Hostname to bind to");
 DEFINE_int32(threads, 0,
              "Number of threads to listen on. Numbers <= 0 "
              "will use the number of cores on this machine.");
