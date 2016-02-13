@@ -11,36 +11,45 @@ window.onload = function() {
     window.close();
   }
 
-  var line = new ProgressBar.Line('#progress', {
-    strokeWidth: 2,
-    duration: 100,
-    color: '#f39c12'
-  });
-
   electron.ipcRenderer.on('fileName', function(event, fileName) {
     window.fileName = fileName;
     var title = document.getElementById("title");
-    title.firstChild.textContent = "Verifying " + window.fileName;
+    title.appendChild(document.createTextNode("Verifying " + window.fileName));
   });
 
   electron.ipcRenderer.on('error', function(event, error) {
-    finished("Error: " + error);
+    finished("Error during verification: " + error, false);
   });
 
   electron.ipcRenderer.on('result', function(event, result) {
+    var progress = document.getElementById("progress");
+    progress.style.display = 'none';
     if (result === true) {
-      title.style.color = "#27ae60";
-      finished(window.fileName + " is intact");
+      finished(window.fileName + " successfully verified.", true);
     } else {
-      title.style.color = "#FF0000";
-      finished(window.fileName + " is corrupted.");
+      finished(window.fileName + " is corrupted.", false);
     }
   });
 }
 
-function finished(text) {
+function finished(text, successful) {
   window.ready = true;
   var closeButton = document.getElementById("close").style.display = "inline-block";
   var title = document.getElementById("title");
-  title.firstChild.textContent = text;
+  title.removeChild(title.firstChild);
+
+  if (successful) { 
+    var icon = document.createElement("span");
+    icon.setAttribute("class", "octicon octicon-check icon");
+
+    title.appendChild(icon);
+    title.appendChild(document.createTextNode(text));
+  } else {
+    var icon = document.createElement("span");
+    icon.setAttribute("class", "octicon octicon-circle-slash icon");
+
+    title.appendChild(icon);
+    title.appendChild(document.createTextNode(text));
+
+  }
 }
