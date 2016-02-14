@@ -53,13 +53,6 @@ add_library(clientlib
   client/verify/verify_file.cc
 )
 
-endif(${CLIENT_SIDE})
-
-add_library(serverlib
-  util.cc
-  server/prover.cc
-)
-
 add_library(local_disklib
   providers/local_disk/fetcher.cc
   providers/local_disk/storage.cc
@@ -72,10 +65,17 @@ add_library(azurelib
   providers/azure/storage.cc
 )
 
+add_library(file_browserlib files/file_browser.cc)
+
+endif(${CLIENT_SIDE})
+
+add_library(serverlib
+  util.cc
+  server/prover.cc
+)
+
 add_library(cporlib proto/cpor.pb.cc)
 target_link_libraries(cporlib protobuf)
-
-add_library(file_browserlib files/file_browser.cc)
 
 add_library(test_util test_util.cc)
 
