@@ -9,6 +9,7 @@
 #include <unistd.h>
 
 #include "audit/server/proof_handler.h"
+#include "audit/server/storage_handler.h"
 
 using namespace proxygen;
 using namespace audit::server;
@@ -25,45 +26,51 @@ DEFINE_int32(threads, 0,
              "Number of threads to listen on. Numbers <= 0 "
              "will use the number of cores on this machine.");
 
-class ProofHandlerFactory : public RequestHandlerFactory {
- public:
-  virtual void onServerStart() noexcept {}
-  virtual void onServerStop() noexcept {}
+class RequestRouter : public RequestHandlerFactory {
+   public:
+    virtual void onServerStart() noexcept {}
+    virtual void onServerStop() noexcept {}
 
-  RequestHandler* onRequest(RequestHandler*, HTTPMessage*) noexcept override {
-    std::cout << "new request" << std::endl;
-    return new ProofHandler();
-  }
+    RequestHandler* onRequest(RequestHandler*,
+                              HTTPMessage* msg) noexcept override {
+        std::cout << "new request" << std::endl;
+        if (msg->getPath() == "/upload") {
+            return new StorageHandler();
+        }
+        // if (msg->getPath() == "/prove") {
+        return new ProofHandler();
+        //}
+    }
 };
 
 int main(int argc, char* argv[]) {
-  gflags::ParseCommandLineFlags(&argc, &argv, true);
-  google::InitGoogleLogging(argv[0]);
-  google::InstallFailureSignalHandler();
+    gflags::ParseCommandLineFlags(&argc, &argv, true);
+    google::InitGoogleLogging(argv[0]);
+    google::InstallFailureSignalHandler();
 
-  std::vector<HTTPServer::IPConfig> IPs = {
-      {SocketAddress(FLAGS_ip, FLAGS_http_port, true), Protocol::HTTP},
-  };
+    std::vector<HTTPServer::IPConfig> IPs = {
+        {SocketAddress(FLAGS_ip, FLAGS_http_port, true), Protocol::HTTP},
+    };
 
-  if (FLAGS_threads <= 0) {
-    FLAGS_threads = sysconf(_SC_NPROCESSORS_ONLN);
-    CHECK(FLAGS_threads > 0);
-  }
+    if (FLAGS_threads <= 0) {
+        FLAGS_threads = sysconf(_SC_NPROCESSORS_ONLN);
+        CHECK(FLAGS_threads > 0);
+    }
 
-  HTTPServerOptions options;
-  options.threads = static_cast<size_t>(FLAGS_threads);
-  options.idleTimeout = std::chrono::milliseconds(60000);
-  options.shutdownOn = {SIGINT, SIGTERM};
-  options.enableContentCompression = true;
-  options.handlerFactories =
-      RequestHandlerChain().addThen<ProofHandlerFactory>().build();
+    HTTPServerOptions options;
+    options.threads = static_cast<size_t>(FLAGS_threads);
+    options.idleTimeout = std::chrono::milliseconds(60000);
+    options.shutdownOn = {SIGINT, SIGTERM};
+    options.enableContentCompression = true;
+    options.handlerFactories =
+        RequestHandlerChain().addThen<RequestRouter>().build();
 
-  HTTPServer server(std::move(options));
-  server.bind(IPs);
+    HTTPServer server(std::move(options));
+    server.bind(IPs);
 
-  // Start HTTPServer mainloop in a separate thread
-  std::thread t([&]() { server.start(); });
+    // Start HTTPServer mainloop in a separate thread
+    std::thread t([&]() { server.start(); });
 
-  t.join();
-  return 0;
+    t.join();
+    return 0;
 }
