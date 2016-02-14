@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <string>
+#include <stddef.h>
 
 #include "openssl/bn.h"
 

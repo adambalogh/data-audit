@@ -1,5 +1,7 @@
 #include "audit/client/prf.h"
 
+#include <string>
+
 #include "cryptopp/integer.h"
 #include "cryptopp/hmac.h"
 #include "cryptopp/sha.h"
