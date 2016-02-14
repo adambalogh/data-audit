@@ -22,7 +22,7 @@ window.onload = function() {
   });
 
   electron.ipcRenderer.on('result', function(event, result) {
-    var progress = document.getElementById("progress");
+    var progress = document.getElementById("progress-loader");
     progress.style.display = 'none';
     if (result === true) {
       finished(window.fileName + " successfully verified.", true);
