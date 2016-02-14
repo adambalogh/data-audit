@@ -18,8 +18,16 @@ class Client {
       : file_tag_source_(std::move(file_tag_source)),
         proof_source_(std::move(proof_source)) {}
 
-  bool Verify(const std::string& file_full_path, int percent_blocks,
-              Stats& stats);
+  // Verify returns true if the given file's integrity could be verified.
+  //
+  // @param file_name: the name of the file we want to verify
+  // @param percent_blocks: this many percentage of the blocks in the file will
+  //   be verified. The blocks are randomly selected, but they will have an
+  //   equal distribution.
+  // @param stats: stats related to the verification will be placed into this
+  //   object
+  //
+  bool Verify(const std::string& file_name, int percent_blocks, Stats& stats);
 
  private:
   proto::Challenge BuildChallenge(const proto::PublicFileTag& public_tag,

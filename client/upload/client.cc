@@ -30,7 +30,7 @@ Stats Client::Upload(const File& file, ProgressBar::CallbackType callback) {
   }
 
   FileContext context{file, params, std::move(alphas), std::move(p),
-                      std::unique_ptr<PRF>(new HMACPRF)};
+                      std::unique_ptr<PRF>(new PrfType)};
   auto private_tag = context.Proto();
 
   size_t total_size = file.size;

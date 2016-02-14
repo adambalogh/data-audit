@@ -6,16 +6,20 @@
 
 #include "audit/util.h"
 #include "audit/client/prf.h"
+#include "audit/client/upload/client.h"
 #include "audit/client/verify/verify_file.h"
 #include "audit/proto/cpor.pb.h"
 
 namespace audit {
 namespace verify {
 
+// BuildChallenge constructs a proto::Challenge object for the given file.
 proto::Challenge Client::BuildChallenge(const proto::PublicFileTag& public_tag,
                                         int percent_blocks) {
   proto::Challenge challenge;
   *challenge.mutable_file_tag() = public_tag;
+
+  // This is the actual number of blocks we will vefify
   int num_blocks_checked =
       static_cast<double>((public_tag.num_blocks() * percent_blocks)) /
       static_cast<double>(100);
@@ -41,20 +45,20 @@ proto::Challenge Client::BuildChallenge(const proto::PublicFileTag& public_tag,
   return challenge;
 }
 
-bool Client::Verify(const std::string& file_full_path, int percent_blocks,
+bool Client::Verify(const std::string& file_name, int percent_blocks,
                     Stats& stats) {
   if (percent_blocks < 0 || percent_blocks > 100) {
     throw std::logic_error(
         "The percentage of blocks checked must be between 0 and 100.");
   }
 
-  auto file_tag = file_tag_source_->GetFileTag(file_full_path);
+  auto file_tag = file_tag_source_->GetFileTag(file_name);
   auto challenge = BuildChallenge(file_tag.public_tag(), percent_blocks);
   auto proof = proof_source_->GetProof(challenge);
 
   stats = Stats{static_cast<size_t>(proof.ByteSize())};
 
-  return VerifyFile<audit::HMACPRF>(file_tag, challenge, proof);
+  return VerifyFile<upload::Client::PrfType>(file_tag, challenge, proof);
 }
 }
 }

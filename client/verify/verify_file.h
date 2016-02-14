@@ -13,7 +13,7 @@
 namespace audit {
 namespace verify {
 
-// Verifies a file's integrity based on the proof recieved from the server.
+// Verifies a file's integrity using the Proof recieved from the server.
 // Returns true if the file is intact.
 template <typename PRF>
 bool VerifyFile(const proto::PrivateFileTag& file_tag,

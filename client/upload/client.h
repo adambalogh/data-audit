@@ -17,6 +17,8 @@ namespace upload {
 // This client class should be used to tag and upload files.
 class Client {
  public:
+  typedef HMACPRF PrfType;
+
   Client(std::unique_ptr<ReusableStorage> storage)
       : storage_(std::move(storage)) {}
 

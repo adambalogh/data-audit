@@ -49,8 +49,6 @@ add_library(clientlib
   client/upload/file.cc
   client/upload/storage.cc
   client/verify/client.cc
-  client/verify/proof_source.cc
-  client/verify/verify_file.cc
 )
 
 add_library(local_disklib

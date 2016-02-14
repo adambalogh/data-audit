@@ -8,9 +8,10 @@ namespace audit {
 namespace verify {
 
 // In theory, the proof should come from the server that contains the
-// requested file, however this is impossible, since we cannot run our own
-// code on cloud storage services. As a result, we need to run the proof
-// generating code locally. This class does this.
+// requested file, however this is not possible if we want to use this system
+// with actual cloud storage providers like Dropbox, because of the limitations
+// of the API. As a result, we need to download the file and tags, and generate
+// the proof locally.
 //
 class NoServerProofSource : public ProofSource {
  public:
