@@ -60,6 +60,9 @@ void Storage::UploadFile(const std::string& file_name, std::istream& stream,
           bytes_uploaded = bytes;
         }
       });
+
+  auto response = client_.request(request).get();
+  response.extract_string().get();
 }
 }
 }

@@ -3,8 +3,10 @@
 #include <string>
 
 #include "cpprest/uri.h"
+#include "cpprest/http_client.h"
 
 #include "audit/client/upload/storage.h"
+#include "audit/providers/azure/urls.h"
 
 namespace audit {
 namespace providers {
@@ -14,8 +16,6 @@ namespace azure {
 //
 class Storage : public upload::ReusableStorage {
  public:
-  Storage(const web::uri& host_uri) : host_url_(host_uri) {}
-
   void StoreFile(const std::string& file_name, std::istream& stream,
                  ::audit::upload::StorageListener& listener) override;
 
@@ -43,7 +43,7 @@ class Storage : public upload::ReusableStorage {
   void UploadFile(const std::string& file_name, std::istream& stream,
                   ::audit::upload::StorageListener& listener);
 
-  const web::uri host_url_;
+  web::http::client::http_client client_{BASE_URL};
 };
 }
 }

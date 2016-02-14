@@ -21,6 +21,7 @@
           "/users/adambalogh/Developer/audit/lib/libfile_browserlib.a",
           "/users/adambalogh/Developer/audit/lib/libcporlib.a",
           "/users/adambalogh/Developer/audit/lib/liblocal_disklib.a",
+          "/users/adambalogh/Developer/audit/lib/libazurelib.a",
           "/users/adambalogh/Developer/audit/lib/libserverlib.a",
           "/users/adambalogh/Developer/audit/lib/libclientlib.a",
         ],
