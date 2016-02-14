@@ -48,6 +48,7 @@ void Storage::UploadFile(const std::string& file_name, std::istream& stream,
   params["file_name"] = file_name;
 
   http_request request{"POST"};
+  request.set_request_uri(UPLOAD_URL);
   request.headers().add("Data-Audit-Params", params.dump());
   Concurrency::streams::stdio_istream<uint8_t> c_stream{stream};
   request.set_body(c_stream);

@@ -2,17 +2,53 @@ syntax = "proto3";
 
 package audit.proto;
 
+// A single BlockTag can be used to verify the intergrity of the block with the
+// same index in the file.
+//
 message BlockTag {
+  // The index of the corresponsing block within the file
   uint64 index = 1;
+
+  // Sequence of bytes, containing the data used for verification
   bytes sigma = 2;
 }
 
+// BlockTagMap is produced by audit::upload::BlockTagSerializer.
+// BlockTagSerializer writes all the BlockTags into a single file, and
+// BlockTagMap can be used to get the location of individual BlockTags within
+// this file.
+// 
+// index: indicates the original index of the BlockTag, since BlockTagSerializer
+// may not save all the tags in order.
+//
+// end: indicates where the given BlockTag with this index ends within the file,
+// 
+// For example, we have a 50 bytes long file containing BlockTags of a tagged file with the
+// following content: 
+//
+// --------------------------------------------
+// |  BlockTag #3 | BlockTag #2 | BlockTag #1 |
+// --------------------------------------------
+// 0             20             40            50
+//
+// The BlockTagMap for this file would look like this:
+// BlockTagMap {
+//   index = [3, 2, 1]
+//   end = [20, 40, 50]
+//   max_size = 20
+// }
+//
 message BlockTagMap {
   repeated uint64 end = 1;
   repeated uint64 index = 2;
+
+  // indicates the size of the largest BlockTag in bytes
   int32 max_size = 3;
 }
 
+// Contains all the information the Cloud Storage Provider needs to know in
+// order calculate a Proof for a given file. 
+//
 message PublicFileTag {
   // The total number of blocks in the file
   int32 num_blocks = 1;
@@ -25,38 +61,61 @@ message PublicFileTag {
 
   bytes p = 4;
 
+  // The name of the file
   string file_name = 5;
 
   BlockTagMap block_tag_map = 6;
 
+  // The size of the file in bytes
   uint64 file_size = 7;
 }
 
+// Contains all the information we - on the client side - need in order to
+// verify that the Cloud Storage Provider has not corrupted our file
+//
 message PrivateFileTag {
+  // The PublicFileTag of the file
   PublicFileTag public_tag = 1;
 
+  // Alphas are large random numbers, there must be exaclty num_sectors alphas
   repeated bytes alphas = 2;
 
   bytes hmac_code = 3;
 
+  // Secret key used for the PRF function
   bytes prf_key = 4;
 }
 
+// A ChallangeItem instructs the Cloud Storage Provider to include the selected
+// block in the Proof.
+// 
+// If there is a corruption in block #1 and we don't send a ChallengeItem for
+// this block, than the corruption won't be noticed.
+//
+// The more ChallengeItems we include in a Challenge, the more time it will take
+// to generate the Proof.
 message ChallengeItem {
-  // index of requested block from file
+  // The index of the block in the file we want to include in the Proof.
   int32 index = 1;
 
-  // weight of requested block
+  // A randomly assigned weight for this block
   bytes weight = 2;
 }
 
-// Challenge sent to server from client to prove that it stores a file
+// A Challenge is sent to the Cloud Storage Provider, in order to initiate a
+// verification of a file.
 message Challenge {
+  // The PublicFileTag of the file we want to verify
   PublicFileTag file_tag = 1;
+
+  // list of ChallengeItems
   repeated ChallengeItem items = 2;
 }
 
+// Proof contains all the information the client needs to verify the integrity
+// of a file.
 message Proof {
   bytes sigma = 1;
+
   repeated bytes mus = 2;
 }

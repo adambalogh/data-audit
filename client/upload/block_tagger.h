@@ -13,18 +13,11 @@
 namespace audit {
 namespace upload {
 
-// BlockTagger returns a BlockTag for each block in the given file.
+// BlockTagger generates a proto::BlockTag for each block in the given file.
 //
-// A block consists of num_sectors sectors, and each sector has a size
-// of sector_size bytes. Therefore, the size of a block is equal to
-// num_sectors * sector_size bytes. By increasing the block size, we can
-// decrease the storage size needed for all the tags, in exchange for
-// less accuracy.
+// See TaggingParameters for more information about how to tune BlockTagger.
 //
-// The num_blocks field of the passed FileTag will be set to the correct
-// value.
-//
-// Example:
+// Example usage:
 //
 //   BlockTagger f{...};
 //   while (f.HasNext()) {
