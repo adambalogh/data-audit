@@ -54,7 +54,7 @@ function main() {
 
       var uploadWin = new BrowserWindow({
         width: 540,
-        height: 160,
+        height: 150,
         title: "Uploading File",
         resizable: false,
         maximizable: false,
@@ -145,7 +145,7 @@ function displayFiles(files) {
 function verify_file(file_name) {
   var verifyWin = new BrowserWindow({
     width: 500,
-    height: 160,
+    height: 150,
     title: "Verify " + file_name,
     resizable: false,
     maximizable: false,

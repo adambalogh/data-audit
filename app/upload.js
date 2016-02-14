@@ -11,14 +11,15 @@ window.onload = function() {
   }
 
   var line = new ProgressBar.Line('#progress', {
-    strokeWidth: 2,
+    strokeWidth: 1,
     duration: 100,
-    color: '#95a5a6'
+    color: '#2980b9'
   });
 
   electron.ipcRenderer.on('fileName', function(event, fileName) {
     var title = document.getElementById("title");
-    title.firstChild.textContent = "Uploading \"" + fileName + "\"...";
+    title.appendChild(document.createTextNode("Uploading file: " + fileName));
+    window.fileName = fileName;
   });
 
   electron.ipcRenderer.on('progress', function(event, percentage) {
@@ -29,13 +30,20 @@ window.onload = function() {
     window.ready = true;
     var closeButton = document.getElementById("close").style.display = "inline-block";
     var title = document.getElementById("title");
+    title.removeChild(title.firstChild);
 
     if (!error) {
-      title.firstChild.textContent = "Successfully Uploaded File";
-      title.style.color = "#27ae60";
+      var icon = document.createElement("span");
+      icon.setAttribute("class", "octicon octicon-check icon");
+
+      title.appendChild(icon);
+      title.appendChild(document.createTextNode(window.fileName + " successfully uploaded"));
     } else {
-      title.firstChild.textContent = error;
-      title.style.color = "#FF0000";
+      var icon = document.createElement("span");
+      icon.setAttribute("class", "octicon octicon-circle-slash icon");
+
+      title.appendChild(icon);
+      title.appendChild(document.createTextNode(error));
     }
   });
 

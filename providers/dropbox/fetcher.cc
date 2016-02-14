@@ -91,28 +91,28 @@ void Fetcher::DeleteBlockTagFile() {
 
 std::unique_ptr<std::basic_istream<char>> Fetcher::FetchBlock(
     unsigned long index) {
-  size_t block_size = file_tag_.sector_size() * file_tag_.num_sectors();
+  auto block_size = file_tag_.num_sectors() * file_tag_.sector_size();
   file_.seekg(index * block_size);
 
   std::vector<unsigned char> binary(block_size);
   file_.read((char*)binary.data(), binary.size());
 
-  std::string str{binary.begin(), binary.begin() + file_.gcount()};
-  return std::unique_ptr<std::basic_istream<char>>{new std::stringstream{str}};
+  std::string str(binary.begin(), binary.begin() + file_.gcount());
+  return std::unique_ptr<std::basic_istream<char>>{
+      new std::stringstream{std::move(str)}};
 }
 
 proto::BlockTag Fetcher::FetchBlockTag(unsigned long index) {
-  BlockTagMap block_tag_map{file_tag_.block_tag_map()};
   size_t start;
   size_t end;
-  std::tie(start, end) = block_tag_map.FindBlockTag(index);
+  std::tie(start, end) = block_tag_map_.FindBlockTag(index);
 
-  std::vector<unsigned char> binary(end - start);
   block_tag_file_.seekg(start);
-  block_tag_file_.read((char*)binary.data(), binary.size());
+  std::vector<unsigned char> buffer(end - start);
+  block_tag_file_.read((char*)buffer.data(), buffer.size());
 
   proto::BlockTag tag;
-  tag.ParseFromArray(binary.data(), binary.size());
+  tag.ParseFromArray(buffer.data(), buffer.size());
   return tag;
 }
 }
