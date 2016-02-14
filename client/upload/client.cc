@@ -1,6 +1,7 @@
 #include "audit/client/upload/client.h"
 
 #include <iostream>
+#include <thread>
 
 #include "openssl/bn.h"
 
@@ -57,10 +58,22 @@ Stats Client::Upload(const File& file, ProgressBar::CallbackType callback) {
       serializer.Done();
   stats.file_tag_size = private_tag.ByteSize();
 
-  storage_->StoreBlockTagFile(file.file_name, serializer.FileName(),
-                              progress_listener);
-  storage_->StoreFileTag(file.file_name, private_tag, progress_listener);
-  storage_->StoreFile(file.file_name, file.stream, progress_listener);
+  // Execute the 3 stores in parallel
+  std::thread t1{[&]() {
+    storage_->StoreBlockTagFile(file.file_name, serializer.FileName(),
+                                progress_listener);
+
+  }};
+  std::thread t2{[&]() {
+    storage_->StoreFileTag(file.file_name, private_tag, progress_listener);
+  }};
+  std::thread t3{[&]() {
+    storage_->StoreFile(file.file_name, file.stream, progress_listener);
+  }};
+
+  t1.join();
+  t2.join();
+  t3.join();
 
   serializer.DeleteTempFile();
 
