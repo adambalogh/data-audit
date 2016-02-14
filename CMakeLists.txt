@@ -2,14 +2,18 @@ cmake_minimum_required(VERSION 3.2)
 
 project(Data-Audit)
 
-set (CMAKE_CXX_STANDARD 14)
+set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
+
+set(CMAKE_CXX_STANDARD 14)
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-set(SERVER_SIDE true)
-set(CLIENT_SIDE !${SERVER_SIDE})
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O3 -D _TURN_OFF_PLATFORM_STRING")
+
+set(SERVER_SIDE false)
+set(CLIENT_SIDE true)
 
 enable_testing()
 
@@ -63,6 +67,11 @@ add_library(local_disklib
   providers/local_disk/file_list_source.cc
 )
 
+add_library(azurelib
+  providers/azure/proof_source.cc
+  providers/azure/storage.cc
+)
+
 add_library(cporlib proto/cpor.pb.cc)
 target_link_libraries(cporlib protobuf)
 
@@ -76,7 +85,8 @@ if (${SERVER_SIDE})
 add_executable(server
   server/main.cc
   server/proof_handler.cc
-  server/storage_handler.cc) 
+  server/storage_handler.cc
+) 
 
 target_link_libraries(server serverlib cporlib local_disklib ${THIRD_PARTY_LIBRARIES} proxygenlib
   proxygenhttpserver folly wangle glog gflags)
