@@ -51,18 +51,28 @@ struct TaggingParameters {
   const size_t sector_size;
 };
 
+// FileContext holds all the objects and values we need to tag and store a file
+// and its tags.
+//
 class FileContext {
  public:
   FileContext(const File& file, const TaggingParameters& parameters,
               std::vector<BN_ptr> alphas, BN_ptr p, std::unique_ptr<PRF> prf);
 
   const File& file() { return file_; }
+
   const TaggingParameters& parameters() const { return parameters_; }
+
   int num_blocks() const { return num_blocks_; }
+
   const std::vector<BN_ptr>& alphas() const { return alphas_; }
+
   const BIGNUM* p() const { return p_.get(); }
+
   const PRF& prf() const { return *prf_; }
 
+  // Returns a fully initialized PrivateFileTag, populated with the members of
+  // this object
   proto::PrivateFileTag Proto() const;
 
  private:

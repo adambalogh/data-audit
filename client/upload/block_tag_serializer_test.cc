@@ -22,7 +22,7 @@ TEST(BlockTagSerializer, WriteOne) {
   serializer.Add(tag);
   serializer.Done();
 
-  std::ifstream tag_file{serializer.FileName(), std::ifstream::binary};
+  std::ifstream tag_file{serializer.FilePath(), std::ifstream::binary};
 
   proto::BlockTag read_tag;
   EXPECT_TRUE(read_tag.ParseFromIstream(&tag_file));
@@ -52,7 +52,7 @@ TEST(BlockTagSerializer, WriteThree) {
   }
   serializer.Done();
 
-  std::ifstream tag_file{serializer.FileName(), std::ifstream::binary};
+  std::ifstream tag_file{serializer.FilePath(), std::ifstream::binary};
 
   size_t start = 0;
   for (auto& tag : tags) {

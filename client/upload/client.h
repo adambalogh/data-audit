@@ -19,13 +19,13 @@ class Client {
  public:
   typedef HMACPRF PrfType;
 
-  Client(std::unique_ptr<ReusableStorage> storage)
-      : storage_(std::move(storage)) {}
+  Client(std::unique_ptr<FileStorage> file_storage)
+      : storage_(std::move(file_storage)) {}
 
   Stats Upload(const File& file, ProgressBar::CallbackType callback);
 
  private:
-  std::unique_ptr<ReusableStorage> storage_;
+  Storage storage_;
 };
 }
 }

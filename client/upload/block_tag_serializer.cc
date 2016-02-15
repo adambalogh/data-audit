@@ -10,7 +10,7 @@ namespace audit {
 namespace upload {
 
 const std::string BlockTagSerializer::files_dir{application_dir +
-                                                "files_dir/tags_files/"};
+                                                "temp_tags_files/"};
 
 void BlockTagSerializer::Flush() {
   size_t required_size = 0;

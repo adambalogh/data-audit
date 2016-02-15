@@ -4,7 +4,9 @@
 #include <sys/stat.h>
 #include <dirent.h>
 
-#include "audit/providers/local_disk/storage.h"
+#include "audit/providers/local_disk/file_storage.h"
+
+using audit::upload::Storage;
 
 namespace audit {
 namespace providers {
@@ -15,7 +17,7 @@ using audit::file_browser::File;
 std::vector<File> FileListSource::GetFiles() {
   std::vector<File> files;
 
-  auto dir_name = Storage::files_dir;
+  auto dir_name = FileStorage::dir + Storage::GetFilesDir();
 
   DIR *dp;
   struct dirent *ep;

@@ -53,14 +53,14 @@ add_library(clientlib
 
 add_library(local_disklib
   providers/local_disk/fetcher.cc
-  providers/local_disk/storage.cc
+  providers/local_disk/file_storage.cc
   providers/local_disk/file_tag_source.cc
   providers/local_disk/file_list_source.cc
 )
 
 add_library(azurelib
   providers/azure/proof_source.cc
-  providers/azure/storage.cc
+  providers/azure/file_storage.cc
 )
 
 add_library(file_browserlib files/file_browser.cc)
@@ -91,9 +91,12 @@ target_link_libraries(server serverlib cporlib local_disklib ${THIRD_PARTY_LIBRA
 
 endif (${SERVER_SIDE})
 
-# Benchmark
+# Benchmark and Simple test
 
 if(${CLIENT_SIDE})
+
+add_executable(test_main test/main.cc)
+target_link_libraries(test_main ${THIRD_PARTY_LIBRARIES} ${LIBRARIES})
 
 add_executable(benchmark_main benchmark/main.cc)
 target_link_libraries(benchmark_main benchmark ${THIRD_PARTY_LIBRARIES}
@@ -102,7 +105,6 @@ target_link_libraries(benchmark_main benchmark ${THIRD_PARTY_LIBRARIES}
 endif(${CLIENT_SIDE})
 
 # Tests
-
 
 macro (create_test target target_file)
   add_executable(${target} ${target_file})

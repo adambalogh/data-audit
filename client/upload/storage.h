@@ -56,32 +56,64 @@ class ProgressBarListener : public StorageListener {
   ProgressBar& progress_bar_;
 };
 
-// ReusableStorage is an generic interface for storing the File, the File Tag
+// FileStorage is an interface for storing files with a specified name.
+// It may be used to store the user's file, the file containing the BlockTags,
+// or any other file we need to store.
+//
+// Implementations of this interface should be thread-safe and reusable for
+// several files.
+//
+class FileStorage {
+ public:
+  virtual ~FileStorage() {}
+
+  virtual void StoreFile(const std::string& file_name, std::istream& stream,
+                         StorageListener& listener) = 0;
+};
+
+// Storage is an interface for storing the File, the File Tag
 // and the Block Tags.
 //
 // All the files and tags should be stored in a way, so that they can be
 // retrieved later using a Fetcher.
 //
-// Implementations of this interface should be thread safe and they should be
-// reusable for several files.
+// This class is thread-safe, and can be used for several files
 //
-class ReusableStorage {
+class Storage {
  public:
+  Storage(std::unique_ptr<FileStorage> file_storage)
+      : file_storage_(std::move(file_storage)) {}
+
   // Stores the given file.
-  virtual void StoreFile(const std::string& file_name, std::istream& stream,
-                         StorageListener& listener) = 0;
+  void StoreFile(const std::string& file_name, std::istream& stream,
+                 StorageListener& listener);
 
   // Stores a PrivateFileTag associated with the given file
-  virtual void StoreFileTag(const std::string& file_name,
-                            const proto::PrivateFileTag& file_tag,
-                            StorageListener& listener) = 0;
+  void StoreFileTag(const std::string& file_name,
+                    const proto::PrivateFileTag& file_tag,
+                    StorageListener& listener);
 
   // Stores a BlockTag associated with the given file
-  virtual void StoreBlockTagFile(const std::string& file_name,
-                                 const std::string& block_file_path,
-                                 StorageListener& listener) = 0;
+  void StoreBlockTagFile(const std::string& file_name,
+                         const std::string& block_file_path,
+                         StorageListener& listener);
 
-  virtual ~ReusableStorage() {}
+  static std::string GetFilesDir() { return "files_dir/"; }
+
+  static std::string GetFilePath(const std::string& file_name) {
+    return GetFilesDir() + file_name;
+  }
+
+  static std::string GetFileTagPath(const std::string& file_name) {
+    return "file_tags/" + file_name;
+  }
+
+  static std::string GetBlockTagFilePath(const std::string& file_name) {
+    return "block_tags/" + file_name;
+  }
+
+ private:
+  std::unique_ptr<FileStorage> file_storage_;
 };
 }
 }

@@ -3,9 +3,10 @@
 #include "audit/client/verify/client.h"
 #include "audit/client/verify/no_server_proof_source.h"
 #include "audit/providers/local_disk/fetcher.h"
-#include "audit/providers/local_disk/storage.h"
+#include "audit/providers/local_disk/file_storage.h"
 #include "audit/providers/local_disk/file_tag_source.h"
 #include "audit/client/upload/client.h"
+#include "audit/client/upload/storage.h"
 
 #include <assert.h>
 #include <cstdlib>
@@ -18,13 +19,14 @@
 
 using namespace audit;
 using namespace audit::providers;
+using audit::upload::Storage;
 
 // TODO build benchmark as Release
 std::vector<std::string> files;
 std::vector<std::string> file_contents;
 
 upload::Client upload_client{
-    std::unique_ptr<upload::ReusableStorage>{new local_disk::Storage}};
+    std::unique_ptr<upload::FileStorage>{new local_disk::FileStorage}};
 
 const char alphanum[] =
     "0123456789"
@@ -48,9 +50,9 @@ void SetUpFiles() {
 
 static void DeleteFiles() {
   for (auto file : files) {
-    std::remove(local_disk::Storage::GetFilePath(file).c_str());
-    std::remove(local_disk::Storage::GetBlockTagFilePath(file).c_str());
-    std::remove(local_disk::Storage::GetFileTagPath(file).c_str());
+    std::remove(Storage::GetFilePath(file).c_str());
+    std::remove(Storage::GetBlockTagFilePath(file).c_str());
+    std::remove(Storage::GetFileTagPath(file).c_str());
   }
 }
 

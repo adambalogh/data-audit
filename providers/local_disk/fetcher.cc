@@ -3,7 +3,10 @@
 #include <sstream>
 
 #include "audit/block_tag_map.h"
-#include "audit/providers/local_disk/storage.h"
+#include "audit/client/upload/storage.h"
+#include "audit/providers/local_disk/file_storage.h"
+
+using audit::upload::Storage;
 
 namespace audit {
 namespace providers {
@@ -15,14 +18,16 @@ Fetcher::Fetcher(const proto::PublicFileTag& file_tag)
       block_size_(file_tag_.num_sectors() * file_tag_.sector_size()),
       block_binary_(block_size_, 'a'),
       block_tag_binary_(block_tag_map_.MaxSize(), 'a') {
-  file_.open(Storage::GetFilePath(file_tag.file_name()), std::ifstream::binary);
+  file_.open(FileStorage::dir + Storage::GetFilePath(file_tag.file_name()),
+             std::ifstream::binary);
   if (!file_) {
     throw std::runtime_error("Could not open file (" +
                              Storage::GetFilePath(file_tag.file_name()) + ")");
   }
 
-  block_tag_file_.open(Storage::GetBlockTagFilePath(file_tag.file_name()),
-                       std::ifstream::binary);
+  block_tag_file_.open(
+      FileStorage::dir + Storage::GetBlockTagFilePath(file_tag.file_name()),
+      std::ifstream::binary);
   if (!block_tag_file_) {
     throw std::runtime_error(
         "Could not open file containing BlockTags (" +

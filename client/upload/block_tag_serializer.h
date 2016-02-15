@@ -14,14 +14,25 @@ namespace upload {
 // BlockTagSerizer combines all the BlockTags of a file into a single binary
 // file.
 //
-// After we added all the BlockTags, Done() must be called to write all the
-// tags to the file.
+// After we added all the BlockTags, Done() must be called to make sure all the
+// tags are written to the file.
+//
+// Once Done() has returned, the temporary file located at FileName() will
+// contain all the added tags. It must saved to the server before the
+// BlockTagSerializer object is destroyed, as it will automatically remove this
+// temporary file.
 //
 // The location of specific BlockTags can be found in the returned
 // proto::BlockTagMap, see it's comments for more explanation.
 //
-// Once the file containing the BlockTags has been properly stored,
-// DeleteTempFile must be called to delete the local copy.
+// Example:
+//
+//    BlockTagSerializer s{...};
+//    for (BlockTag& tag : tags) {
+//      s.Add(tag);
+//    }
+//    s.Done();
+//    StoreFile(s.FileName(), ...);
 //
 class BlockTagSerializer {
  public:
@@ -38,24 +49,28 @@ class BlockTagSerializer {
     block_tag_map_.set_max_size(0);
   }
 
+  ~BlockTagSerializer() { DeleteTempFile(); }
+
   // Each BlockTag of the file must be added
   void Add(const proto::BlockTag& tag);
 
   // Must be called when we added all the BlockTags
+  //
+  // It returns a BlockTagMap containing all the information needed to retrieve
+  // individual BlockTags later
   proto::BlockTagMap Done();
 
   // Returns the full path and name of the file where the serialized tags are
   // stored
-  std::string FileName() const { return file_name_; }
-
-  // Deletes the temporary file where the BlockTags are stored, must be called
-  // after we stored the file
-  void DeleteTempFile() const;
+  std::string FilePath() const { return file_name_; }
 
   // The directory under which all the tag files are stored
   static const std::string files_dir;
 
  private:
+  // Deletes the temporary file where the BlockTags are stored
+  void DeleteTempFile() const;
+
   // Writes the content of the buffer to out_file
   void Flush();
 

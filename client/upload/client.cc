@@ -60,22 +60,20 @@ Stats Client::Upload(const File& file, ProgressBar::CallbackType callback) {
 
   // Execute the 3 stores in parallel
   std::thread t1{[&]() {
-    storage_->StoreBlockTagFile(file.file_name, serializer.FileName(),
-                                progress_listener);
+    storage_.StoreBlockTagFile(file.file_name, serializer.FilePath(),
+                               progress_listener);
 
   }};
   std::thread t2{[&]() {
-    storage_->StoreFileTag(file.file_name, private_tag, progress_listener);
+    storage_.StoreFileTag(file.file_name, private_tag, progress_listener);
   }};
   std::thread t3{[&]() {
-    storage_->StoreFile(file.file_name, file.stream, progress_listener);
+    storage_.StoreFile(file.file_name, file.stream, progress_listener);
   }};
 
   t1.join();
   t2.join();
   t3.join();
-
-  serializer.DeleteTempFile();
 
   return stats;
 }
