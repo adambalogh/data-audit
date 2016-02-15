@@ -2,7 +2,7 @@
 
 #include <sstream>
 
-#include "audit/block_tag_map.h"
+#include "audit/server/block_tag_map.h"
 #include "audit/client/upload/storage.h"
 #include "audit/providers/local_disk/file_storage.h"
 

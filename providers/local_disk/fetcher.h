@@ -1,7 +1,7 @@
 #include <fstream>
 #include <string>
 
-#include "audit/block_tag_map.h"
+#include "audit/server/block_tag_map.h"
 #include "audit/server/fetcher.h"
 
 namespace audit {

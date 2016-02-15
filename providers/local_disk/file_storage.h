@@ -11,6 +11,8 @@ namespace local_disk {
 
 // Saves files to local disk.
 //
+// All the files are stored under the dir path.
+//
 class FileStorage : public upload::FileStorage {
  public:
   typedef upload::StorageListener StorageListener;

@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#include "audit/block_tag_map.h"
+#include "audit/server/block_tag_map.h"
 
 using namespace audit;
 

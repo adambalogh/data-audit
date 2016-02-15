@@ -63,7 +63,6 @@ Stats Client::Upload(const File& file, ProgressBar::CallbackType callback) {
   std::thread t1{[&]() {
     storage_.StoreBlockTagFile(file.file_name, serializer.FilePath(),
                                progress_listener);
-
   }};
   std::thread t2{[&]() {
     storage_.StoreFileTag(file.file_name, private_tag, progress_listener);

@@ -125,7 +125,7 @@ endmacro (create_test)
 if(${CLIENT_SIDE})
 
 create_test(util_test util_test.cc)
-create_test(block_tag_map_test block_tag_map_test.cc)
+create_test(block_tag_map_test server/block_tag_map_test.cc)
 create_test(prf_test client/prf_test.cc)
 create_test(progress_bar_test client/upload/progress_bar_test.cc)
 create_test(block_tag_serializer_test client/upload/block_tag_serializer_test.cc)

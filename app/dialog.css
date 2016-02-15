@@ -43,24 +43,23 @@ body {
 .button {
   float: right;
 	display:inline-block;
-  background-image: linear-gradient(to bottom, #f7f9fa, #dcdee0);
+  background: linear-gradient(to right, rgba(79,133,187,1) 0%,rgba(79,133,187,1) 100%); 
 	cursor:pointer;
 	font-size:13px;
 	font-weight:bold;
-  color: #222;
+  color: #f1f1f1;
 	text-decoration:none;
-  border-radius: 2px;
+  border-radius: 16px;
   outline: 0;
-  padding: 4px 14px;
-  border: 1px solid #eee;
+  padding: 6px 20px;
 }
 
 .button:hover {
-  background-image: linear-gradient(to bottom, #e8e5e8, #dedede);
+  color: #eee;
 }
 
 .button:active {
-  background: #ccc;
+  color: #bbb;
 }
 
 .icon {
