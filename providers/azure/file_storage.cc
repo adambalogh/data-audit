@@ -31,6 +31,7 @@ void FileStorage::UploadFile(const std::string& file_name, std::istream& stream,
   http_request request{"POST"};
   request.set_request_uri(UPLOAD_URL);
   request.headers().add("Data-Audit-Params", params.dump());
+
   Concurrency::streams::stdio_istream<uint8_t> c_stream{stream};
   request.set_body(c_stream);
 
@@ -44,6 +45,8 @@ void FileStorage::UploadFile(const std::string& file_name, std::istream& stream,
       });
 
   auto response = client_.request(request).get();
+
+  // Read response
   response.extract_string().get();
 }
 }

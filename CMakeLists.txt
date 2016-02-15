@@ -62,6 +62,8 @@ add_library(local_disklib
 add_library(azurelib
   providers/azure/proof_source.cc
   providers/azure/file_storage.cc
+  providers/azure/file_list_source.cc
+  providers/azure/file_tag_source.cc
 )
 
 add_library(file_browserlib files/file_browser.cc)

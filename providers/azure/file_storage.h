@@ -12,16 +12,16 @@ namespace audit {
 namespace providers {
 namespace azure {
 
-// Storage implementation that stores all the data on an Azure VM.
+// FileStorage that stores all the data on an Azure VM's disk.
 //
 class FileStorage : public upload::FileStorage {
  public:
   void StoreFile(const std::string& file_name, std::istream& stream,
-                 ::audit::upload::StorageListener& listener) override;
+                 audit::upload::StorageListener& listener) override;
 
  private:
   void UploadFile(const std::string& file_name, std::istream& stream,
-                  ::audit::upload::StorageListener& listener);
+                  audit::upload::StorageListener& listener);
 
   web::http::client::http_client client_{BASE_URL};
 };
