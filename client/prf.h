@@ -11,7 +11,7 @@
 
 namespace audit {
 
-// PRF is a cryptographic algorithm that encodes an unsigned integer using a
+// PRF is a cryptographic algorithm that encrypts an unsigned integer using a
 // secret key.
 class PRF {
  public:
@@ -29,9 +29,13 @@ class HMACPRF : public PRF {
   typedef std::array<unsigned char,
                      CryptoPP::HMAC<CryptoPP::SHA1>::DEFAULT_KEYLENGTH> KeyType;
 
+  // Constructs an HMACPRF with a randomly generated secret key
   HMACPRF();
+
+  // Constructs an HMACPRF with the given secret key
   HMACPRF(const std::string& key);
 
+  // Returns the secret key
   std::string Key() const override;
 
   BN_ptr Encode(unsigned int i) const override;

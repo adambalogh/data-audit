@@ -50,9 +50,12 @@ void SetUpFiles() {
 
 static void DeleteFiles() {
   for (auto file : files) {
-    std::remove(Storage::GetFilePath(file).c_str());
-    std::remove(Storage::GetBlockTagFilePath(file).c_str());
-    std::remove(Storage::GetFileTagPath(file).c_str());
+    std::remove(
+        (local_disk::FileStorage::dir + Storage::GetFilePath(file)).c_str());
+    std::remove((local_disk::FileStorage::dir +
+                 Storage::GetBlockTagFilePath(file)).c_str());
+    std::remove(
+        (local_disk::FileStorage::dir + Storage::GetFileTagPath(file)).c_str());
   }
 }
 

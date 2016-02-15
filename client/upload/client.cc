@@ -11,6 +11,7 @@
 #include "audit/client/upload/block_tag_serializer.h"
 #include "audit/client/upload/file.h"
 #include "audit/client/upload/storage.h"
+#include "audit/client/upload/progress_bar.h"
 #include "audit/proto/cpor.pb.h"
 
 namespace audit {

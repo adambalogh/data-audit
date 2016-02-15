@@ -6,7 +6,6 @@
 #include "openssl/bn.h"
 
 #include "audit/util.h"
-#include "audit/client/progress_bar.h"
 #include "audit/client/upload/block_tagger.h"
 #include "audit/client/upload/file.h"
 #include "audit/client/upload/storage.h"

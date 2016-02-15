@@ -3,8 +3,8 @@
 #include <istream>
 #include <string>
 
-#include "audit/client/progress_bar.h"
 #include "audit/client/upload/file.h"
+#include "audit/client/upload/progress_bar.h"
 #include "audit/client/upload/stats.h"
 #include "audit/proto/cpor.pb.h"
 

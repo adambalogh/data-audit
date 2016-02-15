@@ -28,7 +28,7 @@ void FileStorage::UploadFile(const std::string& file_name, std::istream& stream,
   json params;
   params["file_name"] = file_name;
 
-  http_request request{"POST"};
+  http_request request{"PUT"};
   request.set_request_uri(UPLOAD_URL);
   request.headers().add("Data-Audit-Params", params.dump());
 

@@ -13,8 +13,14 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 SET(CMAKE_CXX_FLAGS 
   "${CMAKE_CXX_FLAGS} -Wall -O3 -D _TURN_OFF_PLATFORM_STRING")
 
-set(SERVER_SIDE false)
-set(CLIENT_SIDE true)
+set(SERVER_SIDE true)
+set(CLIENT_SIDE false)
+
+# Build client when we are on Mac
+if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+  set(CLIENT_SIDE true)
+  set(SERVER_SIDE false)
+endif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin") 
 
 enable_testing()
 
@@ -121,7 +127,7 @@ if(${CLIENT_SIDE})
 create_test(util_test util_test.cc)
 create_test(block_tag_map_test block_tag_map_test.cc)
 create_test(prf_test client/prf_test.cc)
-create_test(progress_bar_test client/progress_bar_test.cc)
+create_test(progress_bar_test client/upload/progress_bar_test.cc)
 create_test(block_tag_serializer_test client/upload/block_tag_serializer_test.cc)
 create_test(block_tagger_test client/upload/block_tagger_test.cc)
 create_test(file_test client/upload/file_test.cc)

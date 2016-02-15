@@ -13,3 +13,5 @@ bin/
 lib/
 Makefile
 *.cmake
+/Testing
+compile_commands.json

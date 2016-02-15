@@ -1,5 +1,8 @@
 # Data Audit
 
-This system can be used to check the integrity of remotely stored files. 
+This project is still under development.
+
+It can be used to efficiently check the integrity of files that are stored on remote
+servers. 
 
 It relies on the method described in [Compact Proofs of Retrievability.](https://cseweb.ucsd.edu/~hovav/dist/verstore.pdf)

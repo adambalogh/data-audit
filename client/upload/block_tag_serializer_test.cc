@@ -4,7 +4,7 @@
 #include <fstream>
 #include <iostream>
 
-#include "audit/client/progress_bar.h"
+#include "audit/client/upload/progress_bar.h"
 #include "audit/proto/cpor.pb.h"
 
 using namespace audit;

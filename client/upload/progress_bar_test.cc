@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#include "audit/client/progress_bar.h"
+#include "audit/client/upload/progress_bar.h"
 
 using namespace audit;
 
