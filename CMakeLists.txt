@@ -133,5 +133,6 @@ create_test(block_tagger_test client/upload/block_tagger_test.cc)
 create_test(file_test client/upload/file_test.cc)
 create_test(verify_file_test client/verify/verify_file_test.cc)
 create_test(prover_test server/prover_test.cc)
+create_test(local_file_storage providers/local_disk/file_storage_test.cc)
 
 endif(${CLIENT_SIDE})
