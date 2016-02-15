@@ -29,7 +29,9 @@ proto::PrivateFileTag FileTagSource::GetFileTag(const std::string& file_name) {
   auto tag_str = response.extract_string().get();
 
   proto::PrivateFileTag tag;
-  tag.ParseFromString(tag_str);
+  if (!tag.ParseFromString(tag_str)) {
+    // error
+  }
   return tag;
 }
 }

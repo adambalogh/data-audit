@@ -23,7 +23,9 @@ proto::Proof ProofSource::GetProof(const proto::Challenge& challenge) {
   auto body_str = response.extract_string().get();
 
   proto::Proof proof;
-  proof.ParseFromString(body_str);
+  if (!proof.ParseFromString(body_str)) {
+    // error
+  }
   return proof;
 }
 }

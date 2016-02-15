@@ -119,3 +119,12 @@ message Proof {
 
   repeated bytes mus = 2;
 }
+
+message File {
+  string name = 1;
+  uint64 size = 2;
+}
+
+message FileList {
+  repeated File files = 1;
+}
