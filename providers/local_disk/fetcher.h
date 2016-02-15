@@ -9,6 +9,7 @@ namespace providers {
 namespace local_disk {
 
 // Fetches from local disk
+//
 class Fetcher : public server::Fetcher {
  public:
   Fetcher(const proto::PublicFileTag& file_tag);
@@ -22,11 +23,16 @@ class Fetcher : public server::Fetcher {
   const BlockTagMap block_tag_map_;
 
   std::ifstream file_;
+
   std::ifstream block_tag_file_;
 
+  // The size of a block within this file
   size_t block_size_;
+
+  // Buffer for reading the file
   std::string block_binary_;
 
+  // Buffer for reading the BlockTag file
   std::string block_tag_binary_;
 };
 

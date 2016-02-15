@@ -60,6 +60,9 @@ class ProgressBarListener : public StorageListener {
 // It may be used to store the user's file, the file containing the BlockTags,
 // or any other file we need to store.
 //
+// Files should be stored in a way, so that they can be retrieved later using a
+// server::Fetcher.
+//
 // Implementations of this interface should be thread-safe and reusable for
 // several files.
 //
@@ -71,13 +74,12 @@ class FileStorage {
                          StorageListener& listener) = 0;
 };
 
-// Storage is an interface for storing the File, the File Tag
-// and the Block Tags.
+// Storage can be used to store the user's File, the FileTag and BlockTags.
 //
-// All the files and tags should be stored in a way, so that they can be
-// retrieved later using a Fetcher.
+// This class is thread-safe.
 //
-// This class is thread-safe, and can be used for several files
+// The StorageListeners passed to each Store method are periodically called
+// after some chunk of the data is stored.
 //
 class Storage {
  public:
@@ -98,16 +100,27 @@ class Storage {
                          const std::string& block_file_path,
                          StorageListener& listener);
 
+  // The following methods can be used by objects, like Fetcher, that want to
+  // retrieve files, that were stored using a Storage, to locate them.
+  //
+  // Note: the paths returned from the following methods are relative, the
+  // absolute paths under which certain files are stored depend on the
+  // FileStorage
+
+  // Returns the directory under which all the files are stored.
   static std::string GetFilesDir() { return "files_dir/"; }
 
+  // Returns a relative path, where the file should be stored
   static std::string GetFilePath(const std::string& file_name) {
     return GetFilesDir() + file_name;
   }
 
+  // Returns a relative path, where the FileTag should be stored
   static std::string GetFileTagPath(const std::string& file_name) {
     return "file_tags/" + file_name;
   }
 
+  // Returns a relative path, where the BlockTagfile should be stored
   static std::string GetBlockTagFilePath(const std::string& file_name) {
     return "block_tags/" + file_name;
   }

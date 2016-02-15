@@ -10,7 +10,8 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O3 -D _TURN_OFF_PLATFORM_STRING")
+SET(CMAKE_CXX_FLAGS 
+  "${CMAKE_CXX_FLAGS} -Wall -O3 -D _TURN_OFF_PLATFORM_STRING")
 
 set(SERVER_SIDE false)
 set(CLIENT_SIDE true)
@@ -101,6 +102,7 @@ target_link_libraries(test_main ${THIRD_PARTY_LIBRARIES} ${LIBRARIES})
 add_executable(benchmark_main benchmark/main.cc)
 target_link_libraries(benchmark_main benchmark ${THIRD_PARTY_LIBRARIES}
   ${LIBRARIES})
+
 
 endif(${CLIENT_SIDE})
 

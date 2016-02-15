@@ -73,7 +73,8 @@ static void Verify(benchmark::State& state) {
           std::unique_ptr<server::FetcherFactory>{
               new local_disk::FetcherFactory}})};
   while (state.KeepRunning()) {
-    assert(client.Verify(files[state.range_x()], 100, stats) == true);
+    auto result = client.Verify(files[state.range_x()], 100, stats);
+    assert(result == true);
   }
 }
 

@@ -9,6 +9,8 @@ namespace audit {
 namespace providers {
 namespace local_disk {
 
+// Saves files to local disk.
+//
 class FileStorage : public upload::FileStorage {
  public:
   typedef upload::StorageListener StorageListener;
