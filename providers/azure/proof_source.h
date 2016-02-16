@@ -11,7 +11,7 @@ namespace azure {
 
 class ProofSource : public ::audit::verify::ProofSource {
  public:
-  virtual proto::Proof GetProof(const proto::Challenge& challenge) = 0;
+  virtual proto::Proof GetProof(const proto::Challenge& challenge) override;
 
  private:
   web::http::client::http_client client_{BASE_URL};

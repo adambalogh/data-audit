@@ -20,7 +20,7 @@ proto::Proof ProofSource::GetProof(const proto::Challenge& challenge) {
   request.set_body(challenge_str);
 
   auto response = client_.request(request).get();
-  auto body_str = response.extract_string().get();
+  auto body_str = response.extract_string(true).get();
 
   proto::Proof proof;
   if (!proof.ParseFromString(body_str)) {

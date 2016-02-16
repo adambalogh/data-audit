@@ -17,7 +17,7 @@ std::vector<File> FileListSource::GetFiles() {
   request.set_request_uri(FILELIST_URL);
 
   auto response = client_.request(request).get();
-  auto body_str = response.extract_string().get();
+  auto body_str = response.extract_string(true).get();
 
   proto::FileList file_list;
   if (!file_list.ParseFromString(body_str)) {
