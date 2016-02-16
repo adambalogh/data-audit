@@ -80,7 +80,7 @@ message PrivateFileTag {
   // Alphas are large random numbers, there must be exaclty num_sectors alphas
   repeated bytes alphas = 2;
 
-  required bytes hmac_code = 3;
+  optional bytes hmac_code = 3;
 
   // Secret key used for the PRF function
   required bytes prf_key = 4;
