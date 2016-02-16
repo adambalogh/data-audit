@@ -1,4 +1,4 @@
-syntax = "proto3";
+syntax = "proto2";
 
 package audit.proto;
 
@@ -7,10 +7,10 @@ package audit.proto;
 //
 message BlockTag {
   // The index of the corresponsing block within the file
-  uint64 index = 1;
+  required uint64 index = 1;
 
   // Sequence of bytes, containing the data used for verification
-  bytes sigma = 2;
+  required bytes sigma = 2;
 }
 
 // BlockTagMap is produced by audit::upload::BlockTagSerializer.
@@ -43,7 +43,7 @@ message BlockTagMap {
   repeated uint64 index = 2;
 
   // indicates the size of the largest BlockTag in bytes
-  int32 max_size = 3;
+  required int32 max_size = 3;
 }
 
 // Contains all the information the Cloud Storage Provider needs to know in
@@ -51,23 +51,23 @@ message BlockTagMap {
 //
 message PublicFileTag {
   // The total number of blocks in the file
-  int32 num_blocks = 1;
+  required int32 num_blocks = 1;
 
   // The number of sectors in a block
-  int32 num_sectors = 2;
+  required int32 num_sectors = 2;
 
   // The size of a block in bytes
-  int32 sector_size = 3;
+  required int32 sector_size = 3;
 
-  bytes p = 4;
+  required bytes p = 4;
 
   // The name of the file
-  string file_name = 5;
+  required string file_name = 5;
 
-  BlockTagMap block_tag_map = 6;
+  required BlockTagMap block_tag_map = 6;
 
   // The size of the file in bytes
-  uint64 file_size = 7;
+  required uint64 file_size = 7;
 }
 
 // Contains all the information we - on the client side - need in order to
@@ -75,15 +75,15 @@ message PublicFileTag {
 //
 message PrivateFileTag {
   // The PublicFileTag of the file
-  PublicFileTag public_tag = 1;
+  required PublicFileTag public_tag = 1;
 
   // Alphas are large random numbers, there must be exaclty num_sectors alphas
   repeated bytes alphas = 2;
 
-  bytes hmac_code = 3;
+  required bytes hmac_code = 3;
 
   // Secret key used for the PRF function
-  bytes prf_key = 4;
+  required bytes prf_key = 4;
 }
 
 // A ChallangeItem instructs the Cloud Storage Provider to include the selected
@@ -96,17 +96,17 @@ message PrivateFileTag {
 // to generate the Proof.
 message ChallengeItem {
   // The index of the block in the file we want to include in the Proof.
-  int32 index = 1;
+  required int32 index = 1;
 
   // A randomly assigned weight for this block
-  bytes weight = 2;
+  required bytes weight = 2;
 }
 
 // A Challenge is sent to the Cloud Storage Provider, in order to initiate a
 // verification of a file.
 message Challenge {
   // The PublicFileTag of the file we want to verify
-  PublicFileTag file_tag = 1;
+  required PublicFileTag file_tag = 1;
 
   // list of ChallengeItems
   repeated ChallengeItem items = 2;
@@ -115,14 +115,14 @@ message Challenge {
 // Proof contains all the information the client needs to verify the integrity
 // of a file.
 message Proof {
-  bytes sigma = 1;
+  required bytes sigma = 1;
 
   repeated bytes mus = 2;
 }
 
 message File {
-  string name = 1;
-  uint64 size = 2;
+  required string name = 1;
+  required uint64 size = 2;
 }
 
 message FileList {
