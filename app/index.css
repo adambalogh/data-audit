@@ -190,6 +190,16 @@ input#search {
   border: 1px solid #34495e;
 }
 
+.under-verification {
+  background: #eee;
+  border: 1px solid #999;
+  color: transparent;
+  background-image: url('res/loading.gif');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 24px;
+}
+
 a.main {
   width:auto;
   text-decoration: none;

@@ -39,46 +39,6 @@ window.onload = function() {
 
 // Main called after user is logged in - if needed
 function main() {
-	
-  if (!annyang) {
-    // Let's define a command.
-    var commands = {
-      "search *file": function(file) { 
-			  var searchBar = document.getElementById("search");
-				searchBar.value = file;
-        native_module.getFiles(file, function(files) {
-          displayFiles(files);
-        });
-      },
-      "clear": function(file) { 
-			  var searchBar = document.getElementById("search");
-				searchBar.value = "";
-        native_module.getFiles("", function(files) {
-          displayFiles(files);
-        });
-      },
-      "verify *id": function(id) {
-				var name;
-				if (!isNaN(parseInt(id))) {
-	        name = document.getElementById("file_" + id).getAttribute("data-name");
-				} else {
-					try {
-		        name = document.getElementById("file_" + text2num(id)).getAttribute("data-name");
-					} catch(e) {
-						return;
-					}
-				}
-			  verify_file(name);			
-      }
-
-    };
-
-    // Add our commands to annyang
-    annyang.addCommands(commands);
-
-    // Start listening.
-    annyang.start();
-  }
     
   //Initially, show all the files available
   native_module.getFiles(function(files) {
@@ -191,7 +151,10 @@ function displayFiles(files) {
     verifyButton.setAttribute("data-file", fileName); 
     verifyButton.appendChild(document.createTextNode("Verify"));
     verifyButton.onclick = function() {
-      verify_file(this.getAttribute("data-file"));
+			verifyButton.className += " under-verification";
+      verify_file(this.getAttribute("data-file"), function() {
+        verifyButton.classList.remove("under-verification");
+      });
     }
     
      var fileNameLabel = document.createElement("span");
@@ -213,30 +176,29 @@ function displayFiles(files) {
 }
 
 // Verifies the given file's integrity, and displays the result
-function verify_file(file_name) {
-  var verifyWin = new BrowserWindow({
-    width: 500,
-    height: 150,
-    title: "Verify " + file_name,
-    resizable: false,
-    maximizable: false,
-    minimizable: false,
-    fullscreen: false,
-    closable: false,
-  });
-  verifyWin.loadURL('file://' + __dirname + '/verify.html');
-  verifyWin.show();
-
-  verifyWin.webContents.on('did-finish-load', function() {
-    verifyWin.webContents.send('fileName', file_name);
-
-    native_module.verifyAsync(file_name, function(percentage) {}, function(result, error) {
-      if (error) {
-        verifyWin.webContents.send('error', error);
-      } else {
-        verifyWin.webContents.send('result', result);
-      }
-    });
+function verify_file(file_name, callback) {
+  native_module.verifyAsync(file_name, function(percentage) {}, function(result, error) {
+		callback();
+    if (error) {
+      alert(error);
+    } else {
+    	if (result == true) {
+    		swal({
+    			title:"", 
+					text: file_name + " successfully verified", 
+					type: "success",
+					animation: 'false',
+					confirmButtonColor: '#3498db'
+    		});
+    	} else {
+    		swal({
+    			title:"", 
+					text: file_name + " is corrupted", 
+					type: "error",
+					animation: 'false'
+    		});
+    	}
+    }
   });
 }
 
