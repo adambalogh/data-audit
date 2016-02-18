@@ -39,6 +39,46 @@ window.onload = function() {
 
 // Main called after user is logged in - if needed
 function main() {
+
+  if (annyang) {
+    // Let's define a command.
+    var commands = {
+      "search *file": function(file) { 
+			  var searchBar = document.getElementById("search");
+				searchBar.value = file;
+        native_module.getFiles(file, function(files) {
+          displayFiles(files);
+        });
+      },
+      "clear": function(file) { 
+			  var searchBar = document.getElementById("search");
+				searchBar.value = "";
+        native_module.getFiles("", function(files) {
+          displayFiles(files);
+        });
+      },
+      "verify *id": function(id) {
+				var name;
+				if (!isNaN(parseInt(id))) {
+	        name = document.getElementById("file_" + id).getAttribute("data-name");
+				} else {
+					try {
+		        name = document.getElementById("file_" + text2num(id)).getAttribute("data-name");
+					} catch(e) {
+						return;
+					}
+				}
+			  verify_file(name);			
+      }
+
+    };
+
+    // Add our commands to annyang
+    annyang.addCommands(commands);
+
+    // Start listening.
+    annyang.start();
+  }
     
   //Initially, show all the files available
   native_module.getFiles(function(files) {
@@ -104,9 +144,19 @@ function displayFiles(files) {
   while (files_list.firstChild) {
     files_list.removeChild(files_list.firstChild);
   }
+
+  var index = 0;
   files.forEach(function(file) {
+    index += 1;
+
     var fileName = file[0];
     var fileSize = file[1];
+
+    var indexSpan = document.createElement("span");
+    indexSpan.appendChild(document.createTextNode(index));
+    indexSpan.setAttribute("class", "index");
+    indexSpan.setAttribute("id", "file_" + index);
+    indexSpan.setAttribute("data-name", fileName);
 
     var infoSpan = document.createElement("span");
     infoSpan.appendChild(document.createTextNode(fileSize));
@@ -125,6 +175,7 @@ function displayFiles(files) {
 
     var fileNameLabel = document.createElement("span");
     fileNameLabel.setAttribute("class", "file-name-label");
+    fileNameLabel.appendChild(indexSpan);
     fileNameLabel.appendChild(icon);
     fileNameLabel.appendChild(document.createTextNode(fileName));
 
@@ -168,3 +219,73 @@ function verify_file(file_name) {
     });
   });
 }
+
+function isInt(n){
+    return Number(n) === n && n % 1 === 0;
+}
+
+// Taken from http://stackoverflow.com/a/12014376/3430265
+var Small = {
+    'zero': 0,
+    'one': 1,
+    'two': 2,
+    'three': 3,
+    'four': 4,
+    'five': 5,
+    'six': 6,
+    'seven': 7,
+    'eight': 8,
+    'nine': 9,
+    'ten': 10,
+    'eleven': 11,
+    'twelve': 12,
+    'thirteen': 13,
+    'fourteen': 14,
+    'fifteen': 15,
+    'sixteen': 16,
+    'seventeen': 17,
+    'eighteen': 18,
+    'nineteen': 19,
+    'twenty': 20,
+    'thirty': 30,
+    'forty': 40,
+    'fifty': 50,
+    'sixty': 60,
+    'seventy': 70,
+    'eighty': 80,
+    'ninety': 90
+};
+
+var Magnitude = {
+    'thousand':     1000
+};
+
+var a, n, g;
+
+function text2num(s) {
+    a = s.toString().split(/[\s-]+/);
+    n = 0;
+    g = 0;
+    a.forEach(feach);
+    return n + g;
+}
+
+function feach(w) {
+    var x = Small[w];
+    if (x != null) {
+        g = g + x;
+    }
+    else if (w == "hundred") {
+        g = g * 100;
+    }
+    else {
+        x = Magnitude[w];
+        if (x != null) {
+            n = n + g * x
+            g = 0;
+        }
+        else { 
+            throw("Unknown number: "+w); 
+        }
+    }
+};
