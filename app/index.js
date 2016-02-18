@@ -39,8 +39,8 @@ window.onload = function() {
 
 // Main called after user is logged in - if needed
 function main() {
-
-  if (annyang) {
+	
+  if (!annyang) {
     // Let's define a command.
     var commands = {
       "search *file": function(file) { 
@@ -86,6 +86,28 @@ function main() {
     spinner.style.display = "none";
     displayFiles(files);
   });
+	
+	// Set up menu highlight mechanism
+	var menuItems = document.getElementsByClassName("menu-item");
+	Array.prototype.forEach.call(menuItems, function(e) {
+		e.addEventListener('click', function() {
+			selectMenu(e.id)
+		});
+	});
+	
+	var recentFilesButton = document.getElementById("recent-files");
+	recentFilesButton.addEventListener('click', function() {
+		native_module.getRecentFiles(function (files) {
+			displayFiles(files);
+		});
+	});
+	
+	var allFilesButton = document.getElementById("all-files");
+	allFilesButton.addEventListener('click', function() {
+		native_module.getFiles(function (files) {
+			displayFiles(files);
+		});
+	});
 
   var uploadButton = document.getElementById("upload");
   uploadButton.onclick = function() {
@@ -121,6 +143,7 @@ function main() {
       });
 
       uploadWin.on('closed', function() {
+				selectMenu("all-files");
         native_module.refreshFiles(function(files) {
           displayFiles(files);
         });
@@ -131,6 +154,7 @@ function main() {
 
   var searchBar = document.getElementById("search");
   searchBar.oninput = function() {
+		selectMenu("all-files");
     native_module.getFiles(this.value, function(files) {
       displayFiles(files);
     });
@@ -170,13 +194,9 @@ function displayFiles(files) {
       verify_file(this.getAttribute("data-file"));
     }
     
-    var icon = document.createElement("span");
-    icon.setAttribute("class", "octicon octicon-file-text icon");
-
-    var fileNameLabel = document.createElement("span");
+     var fileNameLabel = document.createElement("span");
     fileNameLabel.setAttribute("class", "file-name-label");
     fileNameLabel.appendChild(indexSpan);
-    fileNameLabel.appendChild(icon);
     fileNameLabel.appendChild(document.createTextNode(fileName));
 
     var div = document.createElement("div");
@@ -218,6 +238,15 @@ function verify_file(file_name) {
       }
     });
   });
+}
+
+function selectMenu(id) {
+	var selected = document.getElementsByClassName("selected");
+	Array.prototype.forEach.call(selected, function(e) {
+		e.classList.remove("selected");
+	});
+	var menu = document.getElementById(id);
+	menu.classList.add("selected");
 }
 
 function isInt(n){

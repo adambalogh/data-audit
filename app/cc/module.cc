@@ -7,6 +7,7 @@
 #include "upload.h"
 #include "verify.h"
 #include "file_browser.h"
+#include "recent_files.h"
 
 using Nan::New;
 
@@ -16,6 +17,7 @@ using v8::FunctionTemplate;
 using v8::String;
 
 NAN_MODULE_INIT(InitAll) {
+  //
   //#if PROVIDER_TYPE == dropbox
   //  Nan::Set(target, New<String>("getAuthorizeUrl").ToLocalChecked(),
   //           Nan::GetFunction(New<FunctionTemplate>(GetAuthorizeUrl))
@@ -24,7 +26,6 @@ NAN_MODULE_INIT(InitAll) {
   //           Nan::GetFunction(New<FunctionTemplate>(ExchangeCodeForToken))
   //               .ToLocalChecked());
   //#endif
-  //
   //
   Nan::Set(
       target, New<String>("hasToLogin").ToLocalChecked(),
@@ -38,6 +39,9 @@ NAN_MODULE_INIT(InitAll) {
 
   Nan::Set(target, New<String>("getFiles").ToLocalChecked(),
            Nan::GetFunction(New<FunctionTemplate>(GetFiles)).ToLocalChecked());
+  Nan::Set(
+      target, New<String>("getRecentFiles").ToLocalChecked(),
+      Nan::GetFunction(New<FunctionTemplate>(GetRecentFiles)).ToLocalChecked());
   Nan::Set(
       target, New<String>("refreshFiles").ToLocalChecked(),
       Nan::GetFunction(New<FunctionTemplate>(RefreshFiles)).ToLocalChecked());

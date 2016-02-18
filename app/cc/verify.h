@@ -10,8 +10,6 @@
 #include "provider.h"
 #include "audit/util.h"
 #include "audit/client/verify/client.h"
-#include "audit/client/verify/proof_source.h"
-#include "audit/client/verify/no_server_proof_source.h"
 #include "audit/client/verify/stats.h"
 
 using namespace audit;
@@ -91,9 +89,8 @@ NAN_METHOD(Verify) {
   }
 
   if (!verify_client) {
-    verify_client.reset(new verify::Client{
-        GetFileTagSource(), std::unique_ptr<ProofSource>(
-                                new NoServerProofSource{GetFetcherFactory()})});
+    verify_client.reset(
+        new verify::Client{GetFileTagSource(), GetProofSource()});
   }
 
   String::Utf8Value param1(info[0]->ToString());
