@@ -31,7 +31,7 @@ const std::string recent_files_file =
     audit::application_dir + "recent_files.json";
 
 // The number of recent files we keep
-const int MAX_RECENT_FILES = 10;
+const int MAX_RECENT_FILES = 6;
 
 void WriteRecentFiles(const std::vector<File>&);
 

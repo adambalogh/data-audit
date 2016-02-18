@@ -3,7 +3,7 @@
 // clang-format off
 
 // Change provider here to dropbox, local_disk etc...
-#define PROVIDER_TYPE local_disk
+#define PROVIDER_TYPE azure
 
 // Generates an unique method name for a given provider, e.g.
 // PROVIDER_METHOD(dropbox, Hello) = dropboxHello

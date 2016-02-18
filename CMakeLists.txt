@@ -29,8 +29,11 @@ include_directories(/usr/local/include)
 
 link_directories(/usr/local/lib)
 
-set(THIRD_PARTY_LIBRARIES cryptopp crypto pthread)
-set(LIBRARIES serverlib clientlib local_disklib cporlib)
+set(THIRD_PARTY_LIBRARIES cryptopp crypto pthread cpprest.dylib boost_thread-mt
+  boost_system-mt boost_chrono-mt boost_date_time-mt ssl)
+
+set(LIBRARIES serverlib clientlib local_disklib azurelib cporlib)
+
 set(TEST_LIBRARIES gtest gtest_main test_util ${LIBRARIES} ${THIRD_PARTY_LIBRARIES})
 
 # Data Audit libraries
@@ -109,7 +112,7 @@ target_link_libraries(test_main ${THIRD_PARTY_LIBRARIES} ${LIBRARIES})
 
 add_executable(benchmark_main benchmark/main.cc)
 target_link_libraries(benchmark_main benchmark ${THIRD_PARTY_LIBRARIES}
-  ${LIBRARIES})
+   ${LIBRARIES} )
 
 
 endif(${CLIENT_SIDE})
