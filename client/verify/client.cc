@@ -56,7 +56,9 @@ bool Client::Verify(const std::string& file_name, int percent_blocks,
   auto challenge = BuildChallenge(file_tag.public_tag(), percent_blocks);
   auto proof = proof_source_->GetProof(challenge);
 
-  stats = Stats{static_cast<size_t>(proof.ByteSize())};
+  stats = Stats{static_cast<size_t>(file_tag.ByteSize()),
+                static_cast<size_t>(challenge.ByteSize()),
+                static_cast<size_t>(proof.ByteSize())};
 
   return VerifyFile<upload::Client::PrfType>(file_tag, challenge, proof);
 }

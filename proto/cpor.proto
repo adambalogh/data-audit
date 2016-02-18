@@ -38,6 +38,8 @@ message BlockTag {
 //   max_size = 20
 // }
 //
+// TODO check if we need this at all, since it makes filetags huge, if all
+// blocktags have the same size, it's not needed
 message BlockTagMap {
   repeated uint64 end = 1;
   repeated uint64 index = 2;
