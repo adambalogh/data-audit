@@ -55,15 +55,14 @@ void SetUpFiles() {
 }
 
 static void DeleteFiles() {
-  // for (auto file : files) {
-  //  std::remove(
-  //      (local_disk::FileStorage::dir + Storage::GetFilePath(file)).c_str());
-  //  std::remove((local_disk::FileStorage::dir +
-  //               Storage::GetBlockTagFilePath(file)).c_str());
-  //  std::remove(
-  //      (local_disk::FileStorage::dir +
-  //      Storage::GetFileTagPath(file)).c_str());
-  //}
+  for (auto file : files) {
+    std::remove(
+        (local_disk::FileStorage::dir + Storage::GetFilePath(file)).c_str());
+    std::remove((local_disk::FileStorage::dir +
+                 Storage::GetBlockTagFilePath(file)).c_str());
+    std::remove(
+        (local_disk::FileStorage::dir + Storage::GetFileTagPath(file)).c_str());
+  }
 }
 
 static void Upload(benchmark::State& state) {

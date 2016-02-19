@@ -25,7 +25,7 @@ proto::Challenge Client::BuildChallenge(const proto::PublicFileTag& public_tag,
       static_cast<double>(100);
 
   BN_ptr max_weight{BN_new(), ::BN_free};
-  BN_generate_prime_ex(max_weight.get(), 512, false, NULL, NULL, NULL);
+  BN_generate_prime_ex(max_weight.get(), 64, false, NULL, NULL, NULL);
 
   CryptoNumberGenerator random_gen;
 
