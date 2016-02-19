@@ -12,6 +12,7 @@
 #include "audit/client/prf.h"
 #include "audit/client/upload/client.h"
 #include "audit/client/upload/stats.h"
+#include "audit/app/cc/recent_files.h"
 
 using namespace audit;
 
@@ -28,7 +29,7 @@ using Nan::HandleScope;
 
 NAN_METHOD(Upload);
 
-static upload::Client upload_client{GetStorage()};
+static upload::Client upload_client{GetFileStorage()};
 
 class UploadWorker : public Nan::AsyncProgressWorker {
  public:
@@ -53,8 +54,12 @@ class UploadWorker : public Nan::AsyncProgressWorker {
       std::cout << "Stats for uploading " << GetFileName() << ":" << std::endl;
       std::cout << stats.to_string() << std::endl;
 
+      // Add file to recent files
+      AddFile(GetFileName(), stats.file_size);
+
     } catch (std::exception& e) {
       auto error = std::string{e.what()};
+      std::cout << "error: " << error << std::endl;
       SetErrorMessage(error.c_str());
     }
   }

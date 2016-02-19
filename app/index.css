@@ -6,7 +6,9 @@ body {
   overflow: hidden;
   resize: none;
   -webkit-user-select: none;
-  background: #f3f3f3;
+  height: 100%;
+  width: 100%;
+  display: flex;
 }
 
 div {
@@ -14,54 +16,129 @@ div {
   padding: 0px;
 }
 
+/* ------ Side ------- */
+
+#side {
+  flex: 0 0 22%;
+  background: rgba(242, 243, 245, 1)
+}
+
+#menu {
+  height: 100%;
+  border-right: 1px solid #e1e1e1;
+}
+
+input#search {
+  padding: 25px 10px;
+  background: inherit;
+  color: #222;
+  border: 0px;                                        
+  height: 28px;                                       
+  width: 100%;
+  font-size: 12px;                                    
+  outline: 0;                                         
+  text-align: center;
+  border-bottom: 1px solid #dadada;
+}
+
+::-webkit-input-placeholder { 
+  color: #666;
+  text-align: center;
+  font-style: italic;
+}
+
+#menu-items {
+  color: #666;
+  padding: 0px;
+  font-size: 12px;
+}
+
+#menu-items>li {
+  list-style-type: none;
+  cursor: pointer;
+  padding: 12px 5px 12px 26px;
+}
+
+#menu-items>li:hover, #menu-items>li.selected {
+  background: #DADBE4;
+}
+
+#menu-items>li.selected {
+  font-weight: 700;
+}
+
+#upload {
+  width: calc(22% - 1px);
+  position: absolute;
+  bottom: 0px;
+  color: #555;
+  font-size: 13px;
+  padding: 18px 0px 20px 0px;
+  font-weight: bold;
+  text-align: center;
+  background: rgba(249, 250, 253, 1);
+  border-top: 1px solid #dadada;
+  cursor: pointer;
+}
+
+#upload .icon {
+  margin-right: 4px;
+}
+
+#menu-items .icon {
+  text-align: left;
+  width: 12px;
+}
+
+/* ------ Main ------- */
+
+#main {
+  flex: 1;
+  background: #fff;
+}
+
+
 #files_container {
   width: 100%;
-  max-height: calc(100% - 56px);
+  height: 100%;
+  color: #191919;
 
   overflow-y: scroll;
 }
 
 
-ul {
+#files_container>ul {
   margin: 0px;
   padding: 0px;
-  font-size: 13px;
+  font-size: 12px;
 }
 
-li:first-child {
-  margin-top: 14px;
-}
-
-li:last-child {
-  margin-bottom: 14px;
-}
-
-li {
-  margin: 0px 10px 0px 10px;
+#files_container>ul>li {
   list-style-type: none;
-  color: #191919;
-  background: #fbfcfc;
   cursor: default;
-  
-  box-shadow: 0px 0px 9px -5px #333;
 }
 
-li:hover {
-  background: #fff;
+#files_container>ul>li:first-child {
+  margin-top: 10px;
 }
 
-li>div {
+#files_container>ul>li:last-child {
+  margin-bottom: 10px;
+}
+
+#files_container>ul>li>div {
   height: auto;
   vertical-align: middle;
   clear: both;
 }
 
 .file-name-label {
+  font-size: 13px;
+  color: #4d4d4d;
   vertical-align: middle;
   display: inline-block;
-  padding: 15px 16px;
-  width: calc(100% - 52px - 26px - 140px);
-  max-width: calc(100% - 52px - 26px - 140px);
+  padding: 15px 16px 15px 10px;
+  width: calc(100% - 52px - 28px - 140px);
   overflow-x: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -69,17 +146,27 @@ li>div {
 
 .icon {
   margin-right: 10px;
+  color: #777;
 }
 
 .icon-info {
   text-align: right;
-  margin-right: 45px;
+  margin-right: 34px;
   color: #777;
   font-size: 12px;
   width: 70px;
   display: inline-block;
   position: relative;
   bottom: -2px;
+}
+
+.index {
+  margin-right: 18px;
+  width: 25px;
+  text-align: right;
+  display: inline-block;
+  font-size: 11px;
+  color: #777;
 }
 
 .verify-button {
@@ -103,46 +190,14 @@ li>div {
   border: 1px solid #34495e;
 }
 
-input#search {
-  background: #f7f9fa;
-  margin: 0px;
-  padding-left: 17px;
-  border: 0px;
-  height: 32px;
-  width: 220px;
-  font-size: 13px;
-  float: right;
-  outline: 0;
-  border-radius: 30px;
-  box-shadow: inset 0px 0px 4px -2px rgba(51,51,51,1);
-}
-
-#main {
-}
-
-button {
-  font-size: 13px;
-  padding: 7px 12px;
-  margin: 0px 6px 0px 0px;
-  background-image: linear-gradient(to bottom, #f7f9fa, #dcdee0);
-  border-radius: 2px;
-  color: #333;
-  outline: 0;
-  height: 32px;
-  border: 0px;
-}
-
-button>.icon {
-  margin-right: 4px;
-}
-
-button:hover {
-  cursor: pointer;
-  background-image: linear-gradient(to bottom, #e8e5e8, #dedede);
-}
-
-button:active {
-  background: #ccc;
+.under-verification {
+  background: #eee;
+  border: 1px solid #999;
+  color: transparent;
+  background-image: url('res/loading.gif');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 24px;
 }
 
 a.main {
@@ -168,24 +223,9 @@ a.main:visited {
     outline: 0;
 }
 
-#menu {
-  padding: 13px 16px;
-  background: linear-gradient(to right, #136a8a , #267871); 
-}
 
-/*::-webkit-scrollbar {      */
-/*  width: 6px;              */
-/*}                          */
- 
-/*::-webkit-scrollbar-track {*/
-/*  background: #eee;        */
-/*}                          */
- 
-/*::-webkit-scrollbar-thumb {*/
-/*  background: #bdc3c7;     */
-/*}                          */
+/* --------- 3rd party -------- */
 
-/* loading */
 
 #spinner {
   width: 40px;

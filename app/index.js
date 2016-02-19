@@ -46,6 +46,28 @@ function main() {
     spinner.style.display = "none";
     displayFiles(files);
   });
+	
+	// Set up menu highlight mechanism
+	var menuItems = document.getElementsByClassName("menu-item");
+	Array.prototype.forEach.call(menuItems, function(e) {
+		e.addEventListener('click', function() {
+			selectMenu(e.id)
+		});
+	});
+	
+	var recentFilesButton = document.getElementById("recent-files");
+	recentFilesButton.addEventListener('click', function() {
+		native_module.getRecentFiles(function (files) {
+			displayFiles(files);
+		});
+	});
+	
+	var allFilesButton = document.getElementById("all-files");
+	allFilesButton.addEventListener('click', function() {
+		native_module.getFiles(function (files) {
+			displayFiles(files);
+		});
+	});
 
   var uploadButton = document.getElementById("upload");
   uploadButton.onclick = function() {
@@ -81,6 +103,7 @@ function main() {
       });
 
       uploadWin.on('closed', function() {
+				selectMenu("all-files");
         native_module.refreshFiles(function(files) {
           displayFiles(files);
         });
@@ -91,6 +114,7 @@ function main() {
 
   var searchBar = document.getElementById("search");
   searchBar.oninput = function() {
+		selectMenu("all-files");
     native_module.getFiles(this.value, function(files) {
       displayFiles(files);
     });
@@ -104,9 +128,19 @@ function displayFiles(files) {
   while (files_list.firstChild) {
     files_list.removeChild(files_list.firstChild);
   }
+
+  var index = 0;
   files.forEach(function(file) {
+    index += 1;
+
     var fileName = file[0];
     var fileSize = file[1];
+
+    var indexSpan = document.createElement("span");
+    indexSpan.appendChild(document.createTextNode(index));
+    indexSpan.setAttribute("class", "index");
+    indexSpan.setAttribute("id", "file_" + index);
+    indexSpan.setAttribute("data-name", fileName);
 
     var infoSpan = document.createElement("span");
     infoSpan.appendChild(document.createTextNode(fileSize));
@@ -117,15 +151,15 @@ function displayFiles(files) {
     verifyButton.setAttribute("data-file", fileName); 
     verifyButton.appendChild(document.createTextNode("Verify"));
     verifyButton.onclick = function() {
-      verify_file(this.getAttribute("data-file"));
+			verifyButton.className += " under-verification";
+      verify_file(this.getAttribute("data-file"), function() {
+        verifyButton.classList.remove("under-verification");
+      });
     }
     
-    var icon = document.createElement("span");
-    icon.setAttribute("class", "octicon octicon-file-text icon");
-
-    var fileNameLabel = document.createElement("span");
+     var fileNameLabel = document.createElement("span");
     fileNameLabel.setAttribute("class", "file-name-label");
-    fileNameLabel.appendChild(icon);
+    fileNameLabel.appendChild(indexSpan);
     fileNameLabel.appendChild(document.createTextNode(fileName));
 
     var div = document.createElement("div");
@@ -142,29 +176,107 @@ function displayFiles(files) {
 }
 
 // Verifies the given file's integrity, and displays the result
-function verify_file(file_name) {
-  var verifyWin = new BrowserWindow({
-    width: 500,
-    height: 150,
-    title: "Verify " + file_name,
-    resizable: false,
-    maximizable: false,
-    minimizable: false,
-    fullscreen: false,
-    closable: false,
-  });
-  verifyWin.loadURL('file://' + __dirname + '/verify.html');
-  verifyWin.show();
-
-  verifyWin.webContents.on('did-finish-load', function() {
-    verifyWin.webContents.send('fileName', file_name);
-
-    native_module.verifyAsync(file_name, function(percentage) {}, function(result, error) {
-      if (error) {
-        verifyWin.webContents.send('error', error);
-      } else {
-        verifyWin.webContents.send('result', result);
-      }
-    });
+function verify_file(file_name, callback) {
+  native_module.verifyAsync(file_name, function(percentage) {}, function(result, error) {
+		callback();
+    if (error) {
+      alert(error);
+    } else {
+    	if (result == true) {
+    		swal({
+    			title:"", 
+					text: file_name + " successfully verified", 
+					type: "success",
+					animation: 'false',
+					confirmButtonColor: '#3498db'
+    		});
+    	} else {
+    		swal({
+    			title:"", 
+					text: file_name + " is corrupted", 
+					type: "error",
+					animation: 'false'
+    		});
+    	}
+    }
   });
 }
+
+function selectMenu(id) {
+	var selected = document.getElementsByClassName("selected");
+	Array.prototype.forEach.call(selected, function(e) {
+		e.classList.remove("selected");
+	});
+	var menu = document.getElementById(id);
+	menu.classList.add("selected");
+}
+
+function isInt(n){
+    return Number(n) === n && n % 1 === 0;
+}
+
+// Taken from http://stackoverflow.com/a/12014376/3430265
+var Small = {
+    'zero': 0,
+    'one': 1,
+    'two': 2,
+    'three': 3,
+    'four': 4,
+    'five': 5,
+    'six': 6,
+    'seven': 7,
+    'eight': 8,
+    'nine': 9,
+    'ten': 10,
+    'eleven': 11,
+    'twelve': 12,
+    'thirteen': 13,
+    'fourteen': 14,
+    'fifteen': 15,
+    'sixteen': 16,
+    'seventeen': 17,
+    'eighteen': 18,
+    'nineteen': 19,
+    'twenty': 20,
+    'thirty': 30,
+    'forty': 40,
+    'fifty': 50,
+    'sixty': 60,
+    'seventy': 70,
+    'eighty': 80,
+    'ninety': 90
+};
+
+var Magnitude = {
+    'thousand':     1000
+};
+
+var a, n, g;
+
+function text2num(s) {
+    a = s.toString().split(/[\s-]+/);
+    n = 0;
+    g = 0;
+    a.forEach(feach);
+    return n + g;
+}
+
+function feach(w) {
+    var x = Small[w];
+    if (x != null) {
+        g = g + x;
+    }
+    else if (w == "hundred") {
+        g = g * 100;
+    }
+    else {
+        x = Magnitude[w];
+        if (x != null) {
+            n = n + g * x
+            g = 0;
+        }
+        else { 
+            throw("Unknown number: "+w); 
+        }
+    }
+};

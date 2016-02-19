@@ -18,7 +18,7 @@ class FileBrowser {
   std::vector<File> GetAllFiles();
 
   // Returns all the files with names that start with the given string
-  std::vector<File> Search(const std::string& query);
+  std::vector<File> Search(std::string query);
 
  private:
   const std::vector<File> files_;

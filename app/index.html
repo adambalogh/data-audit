@@ -15,19 +15,43 @@
     <script src="index.js"></script>
   </head>
   <body>
-    <div id="main">
+    <div id="side">
 
       <div id="menu">
-        <button id="upload">
-          <span class="octicon octicon-cloud-upload icon"></span>
-          Upload File
-        </button>
-        <input type="text" id="search" placeholder="Search..."/>
-      </div>
-      <div id="files_container">
-        <ul id="files">
+        <input type="text" id="search" placeholder="Search for files"/>
+
+        <ul id="menu-items">
+
+          <li id="all-files" class="menu-item selected">
+            <span class="octicon octicon-three-bars icon"></span>
+            All files
+          </li>
+          <li id="recent-files" class="menu-item">
+            <span class="octicon octicon-clock icon"></span>
+            Recent files
+          </li>
+          <li id="settings" class="menu-item">
+            <span class="octicon octicon-gear icon"></span>
+            Settings
+          </li>
+
         </ul>
+
+        <div id="upload">
+          <span class="octicon octicon-cloud-upload icon"></span>
+          Upload file                                            
+        </div>
+
       </div>
+
+    </div>
+
+    <div id="main">
+
+      <div id="files_container">
+        <ul id="files">         
+        </ul>                   
+      </div>                    
 
       <div id="spinner">
         <div class="double-bounce1"></div>

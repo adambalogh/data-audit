@@ -12,6 +12,10 @@ namespace file_browser {
 struct File {
   File(const std::string& name, size_t size) : name(name), size(size) {}
 
+  File(const File& other) : name(other.name), size(other.size) {}
+
+  File(File&&) = default;
+
   std::string Size() const {
     std::stringstream out;
     out << std::fixed << std::setprecision(1);
@@ -31,6 +35,10 @@ struct File {
   const std::string name;
   const size_t size;
 };
+
+inline bool operator==(const File& a, const File& b) {
+  return a.name == b.name && a.size == b.size;
+}
 
 class FileListSource {
  public:

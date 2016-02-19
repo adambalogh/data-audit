@@ -2,9 +2,15 @@
 
 #include "audit/client/verify/client.h"
 #include "audit/client/verify/no_server_proof_source.h"
+
 #include "audit/providers/local_disk/fetcher.h"
 #include "audit/providers/local_disk/file_storage.h"
 #include "audit/providers/local_disk/file_tag_source.h"
+
+#include "audit/providers/azure/proof_source.h"
+#include "audit/providers/azure/file_storage.h"
+#include "audit/providers/azure/file_tag_source.h"
+
 #include "audit/client/upload/client.h"
 #include "audit/client/upload/storage.h"
 
@@ -49,14 +55,15 @@ void SetUpFiles() {
 }
 
 static void DeleteFiles() {
-  for (auto file : files) {
-    std::remove(
-        (local_disk::FileStorage::dir + Storage::GetFilePath(file)).c_str());
-    std::remove((local_disk::FileStorage::dir +
-                 Storage::GetBlockTagFilePath(file)).c_str());
-    std::remove(
-        (local_disk::FileStorage::dir + Storage::GetFileTagPath(file)).c_str());
-  }
+  // for (auto file : files) {
+  //  std::remove(
+  //      (local_disk::FileStorage::dir + Storage::GetFilePath(file)).c_str());
+  //  std::remove((local_disk::FileStorage::dir +
+  //               Storage::GetBlockTagFilePath(file)).c_str());
+  //  std::remove(
+  //      (local_disk::FileStorage::dir +
+  //      Storage::GetFileTagPath(file)).c_str());
+  //}
 }
 
 static void Upload(benchmark::State& state) {
@@ -70,11 +77,9 @@ static void Upload(benchmark::State& state) {
 
 static void Verify(benchmark::State& state) {
   verify::Stats stats;
-  verify::Client client{
-      std::unique_ptr<verify::FileTagSource>(new local_disk::FileTagSource),
-      std::unique_ptr<verify::ProofSource>(new verify::NoServerProofSource{
-          std::unique_ptr<server::FetcherFactory>{
-              new local_disk::FetcherFactory}})};
+  verify::Client client{std::make_unique<local_disk::FileTagSource>(),
+                        std::make_unique<verify::NoServerProofSource>(
+                            std::make_unique<local_disk::FetcherFactory>())};
   while (state.KeepRunning()) {
     auto result = client.Verify(files[state.range_x()], 100, stats);
     assert(result == true);
