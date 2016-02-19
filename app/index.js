@@ -70,47 +70,57 @@ function main() {
 	});
 
   var uploadButton = document.getElementById("upload");
+	
   uploadButton.onclick = function() {
     dialog.showOpenDialog(function(files) {
       if (files == undefined || files.length == 0) return;
-
-      var uploadWin = new BrowserWindow({
-        width: 540,
-        height: 150,
-        title: "Uploading File",
-        resizable: false,
-        maximizable: false,
-        minimizable: false,
-        fullscreen: false,
-        closable: false,
-      });
-      uploadWin.loadURL('file://' + __dirname + '/upload.html');
-      uploadWin.show();
-
       var file = files[0];
-      uploadWin.webContents.on('did-finish-load', function() {
-        native_module.uploadAsync(
-          file,
-          function(progress) {
-            uploadWin.webContents.send('progress', progress);
+			
+  		swal({
+  			title:"", 
+				text: "Uploading " + file + "<br><br><div id='progress'></div>", 
+				showConfirmButton: false,
+				animation: 'false',
+				html: true,
+  		});		
+			
+		  var line = new ProgressBar.Line('#progress', {
+		    strokeWidth: 1,
+		    duration: 100,
+		    color: '#2980b9'
+		  });
 
-          },
-          function(error) {
-            uploadWin.webContents.send('finished', error);
-          }
-        );
-        uploadWin.webContents.send('fileName', file);
-      });
+      native_module.uploadAsync(
+        file,
+        function(progress) {
+		      line.animate(progress / 100.0);
+        },
+        function(error) {
+					if (error) {
+			  		swal({
+							title: "",
+							text: "Failed to upload " + file + "<br>" + error, 
+							animation: 'false',
+							confirmButtonColor: '#3498db',
+							type: "error",
+			  		});	
+					} else {
+			  		swal({
+							title: "",
+							text: file + " successfully uploaded", 
+							animation: 'false',
+							confirmButtonColor: '#3498db',
+							type: "success",
+			  		});	
+					}	
+	      	native_module.refreshFiles(function(files) {
+	        	displayFiles(files);
+	      	});
+				}
+      );
 
-      uploadWin.on('closed', function() {
-				selectMenu("all-files");
-        native_module.refreshFiles(function(files) {
-          displayFiles(files);
-        });
-      });
-
-    });
-  }
+    }); // showopendialog
+  } // onclick
 
   var searchBar = document.getElementById("search");
   searchBar.oninput = function() {

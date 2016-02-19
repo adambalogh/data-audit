@@ -35,10 +35,11 @@ input#search {
   border: 0px;                                        
   height: 28px;                                       
   width: 100%;
-  font-size: 12px;                                    
+  font-size: 13px;                                    
   outline: 0;                                         
   text-align: center;
   border-bottom: 1px solid #dadada;
+  box-shadow: inset 0px -1px 50px -28px rgba(95,95,95,1);
 }
 
 ::-webkit-input-placeholder { 
