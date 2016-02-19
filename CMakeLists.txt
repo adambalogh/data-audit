@@ -58,13 +58,6 @@ add_library(clientlib
   client/verify/client.cc
 )
 
-add_library(local_disklib
-  providers/local_disk/fetcher.cc
-  providers/local_disk/file_storage.cc
-  providers/local_disk/file_tag_source.cc
-  providers/local_disk/file_list_source.cc
-)
-
 add_library(azurelib
   providers/azure/proof_source.cc
   providers/azure/file_storage.cc
@@ -81,6 +74,13 @@ add_library(serverlib
   server/prover.cc
 )
 
+add_library(local_disklib
+  providers/local_disk/fetcher.cc
+  providers/local_disk/file_storage.cc
+  providers/local_disk/file_tag_source.cc
+  providers/local_disk/file_list_source.cc
+)
+
 add_library(cporlib proto/cpor.pb.cc)
 target_link_libraries(cporlib protobuf)
 
@@ -93,6 +93,8 @@ add_executable(server
   server/main.cc
   server/proof_handler.cc
   server/storage_handler.cc
+  server/file_tag_handler.cc
+  server/file_list_handler.cc
 ) 
 
 target_link_libraries(server serverlib cporlib local_disklib ${THIRD_PARTY_LIBRARIES} proxygenlib
