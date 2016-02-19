@@ -17,7 +17,7 @@ using audit::file_browser::File;
 std::vector<File> FileListSource::GetFiles() {
   std::vector<File> files;
 
-  auto dir_name = FileStorage::dir + Storage::GetFilesDir();
+  auto dir_name = FileStorage::dir + Storage::GetFilesDir() + "/";
 
   DIR *dp;
   struct dirent *ep;
