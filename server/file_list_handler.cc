@@ -8,6 +8,7 @@
 
 #include "audit/common.h"
 #include "audit/providers/local_disk/file_list_source.h"
+#include "audit/proto/cpor.pb.h"
 
 using json = nlohmann::json;
 
@@ -25,7 +26,22 @@ void FileListHandler::onBody(std::unique_ptr<folly::IOBuf> body) noexcept {}
 
 void FileListHandler::onEOM() noexcept {
     auto list = source_.GetFiles();
-    ResponseBuilder(downstream_).status(200, "OK").sendWithEOM();
+
+    proto::FileList file_list;
+    for (auto& file : list) {
+        proto::File proto_file;
+        proto_file.set_name(file.name);
+        proto_file.set_size(file.size);
+        *file_list.add_files() = proto_file;
+    }
+
+    auto bin = file_list.SerializeAsString();
+    auto response_body = IOBuf::copyBuffer(bin);
+
+    ResponseBuilder(downstream_)
+        .status(200, "OK")
+        .body(std::move(response_body))
+        .sendWithEOM();
 }
 
 void FileListHandler::onUpgrade(UpgradeProtocol protocol) noexcept {}

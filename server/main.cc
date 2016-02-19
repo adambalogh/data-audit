@@ -9,7 +9,9 @@
 #include <unistd.h>
 
 #include "audit/server/proof_handler.h"
+#include "audit/server/file_list_handler.h"
 #include "audit/server/storage_handler.h"
+#include "audit/server/file_tag_handler.h"
 
 using namespace proxygen;
 using namespace audit::server;
@@ -37,9 +39,13 @@ class RequestRouter : public RequestHandlerFactory {
         if (msg->getPath() == "/upload") {
             return new StorageHandler();
         }
-        // if (msg->getPath() == "/prove") {
-        return new ProofHandler();
-        //}
+        if (msg->getPath() == "/prove") {
+            return new ProofHandler();
+        }
+        if (msg->getPath() == "/filetag") {
+            return new FileTagHandler();
+        }
+        return new FileListHandler();
     }
 };
 

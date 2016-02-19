@@ -1,15 +1,13 @@
 #pragma once
 
-#include <fstream>
-
 #include "proxygen/httpserver/RequestHandler.h"
 
-#include "audit/providers/local_disk/file_storage.h"
+#include "audit/providers/local_disk/file_tag_source.h"
 
 namespace audit {
 namespace server {
 
-class StorageHandler : public proxygen::RequestHandler {
+class FileTagHandler : public proxygen::RequestHandler {
    public:
     void onRequest(
         std::unique_ptr<proxygen::HTTPMessage> headers) noexcept override;
@@ -25,9 +23,9 @@ class StorageHandler : public proxygen::RequestHandler {
     void onError(proxygen::ProxygenError err) noexcept override;
 
    private:
-    std::unique_ptr<folly::IOBuf> body_;
+    std::string body_ = "";
 
-    std::ofstream out_file_;
+    audit::providers::local_disk::FileTagSource source_;
 };
 }
 }
