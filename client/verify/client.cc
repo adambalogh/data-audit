@@ -1,6 +1,7 @@
 #include "audit/client/verify/client.h"
 
 #include <cstdlib>
+#include <chrono>
 
 #include "openssl/bn.h"
 
@@ -45,8 +46,8 @@ proto::Challenge Client::BuildChallenge(const proto::PublicFileTag& public_tag,
   return challenge;
 }
 
-bool Client::Verify(const std::string& file_name, int percent_blocks,
-                    Stats& stats) {
+bool Client::DoVerify(const std::string& file_name, int percent_blocks,
+                      Stats& stats) {
   if (percent_blocks < 0 || percent_blocks > 100) {
     throw std::logic_error(
         "The percentage of blocks checked must be between 0 and 100.");
@@ -56,11 +57,23 @@ bool Client::Verify(const std::string& file_name, int percent_blocks,
   auto challenge = BuildChallenge(file_tag.public_tag(), percent_blocks);
   auto proof = proof_source_->GetProof(challenge);
 
-  stats = Stats{static_cast<size_t>(file_tag.ByteSize()),
-                static_cast<size_t>(challenge.ByteSize()),
-                static_cast<size_t>(proof.ByteSize())};
+  stats.file_tag_size = static_cast<size_t>(file_tag.ByteSize());
+  stats.challenge_size = static_cast<size_t>(challenge.ByteSize());
+  stats.proof_size = static_cast<size_t>(proof.ByteSize());
 
   return VerifyFile<upload::Client::PrfType>(file_tag, challenge, proof);
+}
+
+bool Client::Verify(const std::string& file_name, int percent_blocks,
+                    Stats& stats) {
+  auto start = std::chrono::high_resolution_clock::now();
+  auto result = DoVerify(file_name, percent_blocks, stats);
+  auto duration = std::chrono::high_resolution_clock::now() - start;
+
+  stats.milliseconds =
+      std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
+
+  return result;
 }
 }
 }

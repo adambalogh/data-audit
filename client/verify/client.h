@@ -30,6 +30,8 @@ class Client {
   bool Verify(const std::string& file_name, int percent_blocks, Stats& stats);
 
  private:
+  bool DoVerify(const std::string& file_name, int percent_blocks, Stats& stats);
+
   proto::Challenge BuildChallenge(const proto::PublicFileTag& public_tag,
                                   int percent_blocks);
 
