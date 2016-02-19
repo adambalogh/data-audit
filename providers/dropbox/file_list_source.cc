@@ -4,6 +4,7 @@
 #include "cpprest/http_client.h"
 #include "nlohmann/json.hpp"
 
+#include "audit/client/upload/storage.h"
 #include "audit/providers/dropbox/dropbox_urls.h"
 
 using json = nlohmann::json;
@@ -11,13 +12,15 @@ using json = nlohmann::json;
 using web::uri;
 using web::http::http_request;
 
+using File = audit::file_browser::File;
+
 namespace audit {
 namespace providers {
 namespace dropbox {
 
-std::vector<const std::string> FileListSource::GetFiles() {
+std::vector<File> FileListSource::GetFiles() {
   json parameters;
-  parameters["path"] = "";
+  parameters["path"] = "/" + upload::Storage::GetFilesDir();
   parameters["recursive"] = false;
   parameters["include_media_info"] = false;
   parameters["include_deleted"] = false;
@@ -33,12 +36,12 @@ std::vector<const std::string> FileListSource::GetFiles() {
   // TODO follow cursor if has_more is true
   auto entries = response_body.at("entries");
 
-  std::vector<const std::string> files;
+  std::vector<File> files;
   for (auto& entry : entries) {
     if (entry.at(".tag") != "file") {
       continue;
     }
-    files.push_back(entry.at("name"));
+    files.push_back(File{entry.at("name"), entry.at("size")});
   }
 
   return files;

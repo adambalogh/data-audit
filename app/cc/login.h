@@ -17,6 +17,8 @@ using Nan::MakeCallback;
 using Nan::GetCurrentContext;
 using Nan::New;
 
+using audit::providers::dropbox::TokenSourceInstance;
+
 NAN_METHOD(GetAuthorizeUrl);
 NAN_METHOD(ExchangeCodeForToken);
 NAN_METHOD(HasToLogin);
@@ -28,21 +30,20 @@ void HasToLogin(const Nan::FunctionCallbackInfo<Value>& info) {
   MakeCallback(GetCurrentContext()->Global(), cb, argc, argv);
 }
 
-// void GetAuthorizeUrl(const Nan::FunctionCallbackInfo<Value>& info) {
-//  Local<Function> cb = info[0].As<Function>();
+void GetAuthorizeUrl(const Nan::FunctionCallbackInfo<Value>& info) {
+  Local<Function> cb = info[0].As<Function>();
 
-//  const unsigned argc = 1;
-//  Local<Value> argv[argc] = {
-//      New(TokenSourceInstance::Get().GetAuthorizeUrl()).ToLocalChecked()};
-//  MakeCallback(GetCurrentContext()->Global(), cb, argc, argv);
-//}
+  const unsigned argc = 1;
+  Local<Value> argv[argc] = {
+      New(TokenSourceInstance::Get().GetAuthorizeUrl()).ToLocalChecked()};
+  MakeCallback(GetCurrentContext()->Global(), cb, argc, argv);
+}
 
-// void ExchangeCodeForToken(const Nan::FunctionCallbackInfo<Value>& info) {
-//  String::Utf8Value utf{info[0].As<String>()};
-//  std::string token{*utf};
+void ExchangeCodeForToken(const Nan::FunctionCallbackInfo<Value>& info) {
+  String::Utf8Value utf{info[0].As<String>()};
+  std::string token{*utf};
 
-//  TokenSourceInstance::Get().ExchangeCodeForToken(token);
-
-//  Local<Function> cb = info[1].As<Function>();
-//  MakeCallback(GetCurrentContext()->Global(), cb, 0, NULL);
-//}
+  TokenSourceInstance::Get().ExchangeCodeForToken(token);
+  Local<Function> cb = info[1].As<Function>();
+  MakeCallback(GetCurrentContext()->Global(), cb, 0, NULL);
+}

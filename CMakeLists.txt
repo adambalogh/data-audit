@@ -37,16 +37,6 @@ set(TEST_LIBRARIES gtest gtest_main test_util ${LIBRARIES} ${THIRD_PARTY_LIBRARI
 
 # Data Audit libraries
 
-#add_library(dropbox
-#  providers/dropbox/dropbox_client.cc
-#  providers/dropbox/fetcher.cc
-#  providers/dropbox/file_list_source.cc
-#  providers/dropbox/file_tag_source.cc
-#  providers/dropbox/storage.cc
-#  providers/dropbox/token_source.cc
-#  providers/dropbox/token_source_instance.cc
-#)
-
 if(${CLIENT_SIDE})
 
 add_library(clientlib
@@ -65,6 +55,16 @@ add_library(azurelib
   providers/azure/file_storage.cc
   providers/azure/file_list_source.cc
   providers/azure/file_tag_source.cc
+)
+
+add_library(dropboxlib
+  providers/dropbox/dropbox_client.cc
+  providers/dropbox/fetcher.cc
+  providers/dropbox/file_list_source.cc
+  providers/dropbox/file_tag_source.cc
+  providers/dropbox/file_storage.cc
+  providers/dropbox/token_source.cc
+  providers/dropbox/token_source_instance.cc
 )
 
 add_library(file_browserlib files/file_browser.cc)

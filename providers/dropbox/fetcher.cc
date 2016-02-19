@@ -1,4 +1,3 @@
-#include "audit/providers/dropbox/storage.h"
 #include "audit/providers/dropbox/fetcher.h"
 
 #include <iostream>
@@ -12,6 +11,7 @@
 
 #include "audit/common.h"
 #include "audit/proto/cpor.pb.h"
+#include "audit/providers/dropbox/file_storage.h"
 
 using json = nlohmann::json;
 
@@ -28,7 +28,9 @@ const std::string Fetcher::tags_dir_{application_dir + "dropboxtags/"};
 
 Fetcher::Fetcher(TokenSourceInterface& token_source,
                  const proto::PublicFileTag& file_tag)
-    : DropboxClient(token_source), server::Fetcher(file_tag) {
+    : DropboxClient(token_source),
+      server::Fetcher(file_tag),
+      block_tag_map_(file_tag_.block_tag_map()) {
   DownloadFile();
   DownloadBlockTagFile();
 }
@@ -41,7 +43,7 @@ Fetcher::~Fetcher() {
 size_t Fetcher::DownloadAndSaveFile(const std::string& path,
                                     const std::string& out_file_path) {
   json parameters;
-  parameters["path"] = path;
+  parameters["path"] = "/" + path;
 
   http_request request{"GET"};
   request.set_request_uri(DOWNLOAD_PATH);
@@ -59,7 +61,7 @@ size_t Fetcher::DownloadAndSaveFile(const std::string& path,
 }
 
 void Fetcher::DownloadFile() {
-  DownloadAndSaveFile(Storage::GetFilePath(file_tag_.file_name()),
+  DownloadAndSaveFile(upload::Storage::GetFilePath(file_tag_.file_name()),
                       files_dir_ + file_tag_.file_name());
   file_.open(files_dir_ + file_tag_.file_name(), std::ifstream::binary);
   if (!file_) {
@@ -70,8 +72,9 @@ void Fetcher::DownloadFile() {
 }
 
 void Fetcher::DownloadBlockTagFile() {
-  DownloadAndSaveFile(Storage::GetBlockTagFilePath(file_tag_.file_name()),
-                      tags_dir_ + file_tag_.file_name());
+  DownloadAndSaveFile(
+      upload::Storage::GetBlockTagFilePath(file_tag_.file_name()),
+      tags_dir_ + file_tag_.file_name());
   block_tag_file_.open(tags_dir_ + file_tag_.file_name(),
                        std::ifstream::binary);
   if (!block_tag_file_) {

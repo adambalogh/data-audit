@@ -1,7 +1,7 @@
 #pragma once
 
 #include "audit/server/fetcher.h"
-#include "audit/block_tag_map.h"
+#include "audit/server/block_tag_map.h"
 #include "audit/providers/dropbox/dropbox_client.h"
 
 namespace audit {
@@ -45,6 +45,8 @@ class Fetcher : public DropboxClient, public server::Fetcher {
   // The file containing the local copy of the BlockTag file of the requested
   // file
   std::ifstream block_tag_file_;
+
+  BlockTagMap block_tag_map_;
 };
 
 class FetcherFactory : public server::FetcherFactory {

@@ -108,11 +108,11 @@ class Storage {
   // FileStorage
 
   // Returns the directory under which all the files are stored.
-  static std::string GetFilesDir() { return "files_dir/"; }
+  static std::string GetFilesDir() { return "files_dir"; }
 
   // Returns a relative path, where the file should be stored
   static std::string GetFilePath(const std::string& file_name) {
-    return GetFilesDir() + file_name;
+    return GetFilesDir() + "/" + file_name;
   }
 
   // Returns a relative path, where the FileTag should be stored

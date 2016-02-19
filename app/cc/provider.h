@@ -3,7 +3,7 @@
 // clang-format off
 
 // Change provider here to dropbox, local_disk etc...
-#define PROVIDER_TYPE azure
+#define PROVIDER_TYPE local_disk
 
 // Generates an unique method name for a given provider, e.g.
 // PROVIDER_METHOD(dropbox, Hello) = dropboxHello
@@ -28,12 +28,12 @@
 #include "audit/files/file_list_source.h"
 #include "audit/server/fetcher.h"
 
-//#include "audit/providers/dropbox/storage.h"
-//#include "audit/providers/dropbox/fetcher.h"
-//#include "audit/providers/dropbox/file_list_source.h"
-//#include "audit/providers/dropbox/file_tag_source.h"
-//#include "audit/providers/dropbox/token_source.h"
-//#include "audit/providers/dropbox/token_source_instance.h"
+#include "audit/providers/dropbox/fetcher.h"
+#include "audit/providers/dropbox/file_list_source.h"
+#include "audit/providers/dropbox/file_storage.h"
+#include "audit/providers/dropbox/file_tag_source.h"
+#include "audit/providers/dropbox/token_source.h"
+#include "audit/providers/dropbox/token_source_instance.h"
 
 #include "audit/providers/local_disk/file_storage.h"
 #include "audit/providers/local_disk/fetcher.h"
@@ -52,35 +52,32 @@ using audit::verify::ProofSource;
 
 // TODO make these factories
 
-// Dropbox Methods
-// std::unique_ptr<ReusableStorage> PROVIDER_METHOD(dropbox, GetStorage)() {
-//  return std::unique_ptr<ReusableStorage>(
-//      new audit::providers::dropbox::Storage{TokenSourceInstance::Get()});
-//}
+// Dropbox
+std::unique_ptr<FileStorage> PROVIDER_METHOD(dropbox, GetFileStorage)() {
+  return std::make_unique<audit::providers::dropbox::FileStorage>(
+      audit::providers::dropbox::TokenSourceInstance::Get());
+}
 
-// std::unique_ptr<FetcherFactory> PROVIDER_METHOD(dropbox, GetFetcherFactory)()
-// {
-//  return std::unique_ptr<FetcherFactory>(
-//      new audit::providers::dropbox::FetcherFactory{
-//          TokenSourceInstance::Get()});
-//}
+std::unique_ptr<ProofSource> PROVIDER_METHOD(dropbox, GetProofSource)() {
+  return std::make_unique<audit::verify::NoServerProofSource>(
+      std::make_unique<audit::providers::dropbox::FetcherFactory>(
+          audit::providers::dropbox::TokenSourceInstance::Get()));
+}
 
-// std::unique_ptr<FileListSource> PROVIDER_METHOD(dropbox, GetFileListSource)()
-// {
-//  return std::unique_ptr<FileListSource>(
-//      new audit::providers::dropbox::FileListSource{
-//          TokenSourceInstance::Get()});
-//}
+std::unique_ptr<FileListSource> PROVIDER_METHOD(dropbox, GetFileListSource)() {
+  return std::make_unique<audit::providers::dropbox::FileListSource>(
+      audit::providers::dropbox::TokenSourceInstance::Get());
+}
 
-// std::unique_ptr<FileTagSource> PROVIDER_METHOD(dropbox, GetFileTagSource)() {
-//  return std::unique_ptr<FileTagSource>(
-//      new
-//      audit::providers::dropbox::FileTagSource{TokenSourceInstance::Get()});
-//}
+std::unique_ptr<FileTagSource> PROVIDER_METHOD(dropbox, GetFileTagSource)() {
+  return std::make_unique<audit::providers::dropbox::FileTagSource>(
+      audit::providers::dropbox::TokenSourceInstance::Get());
+}
 
-// bool PROVIDER_METHOD(dropbox, GetAuthorizationNeeded)() {
-//  return TokenSourceInstance::Get().NeedToAuthorize();
-//}
+bool PROVIDER_METHOD(dropbox, GetAuthorizationNeeded)() {
+  return audit::providers::dropbox::TokenSourceInstance::Get()
+      .NeedToAuthorize();
+}
 
 // Local Disk methods
 std::unique_ptr<FileStorage> PROVIDER_METHOD(local_disk, GetFileStorage)() {

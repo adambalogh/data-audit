@@ -22,12 +22,13 @@
           "/usr/local/lib/libcrypto.a",
           "/usr/local/lib/libcpprest.dylib",
 
-          "/users/adambalogh/Developer/audit/lib/libfile_browserlib.a",
+          "/users/adambalogh/Developer/audit/lib/libclientlib.a",
           "/users/adambalogh/Developer/audit/lib/libcporlib.a",
+          "/users/adambalogh/Developer/audit/lib/libfile_browserlib.a",
           "/users/adambalogh/Developer/audit/lib/liblocal_disklib.a",
           "/users/adambalogh/Developer/audit/lib/libazurelib.a",
+          "/users/adambalogh/Developer/audit/lib/libdropboxlib.a",
           "/users/adambalogh/Developer/audit/lib/libserverlib.a",
-          "/users/adambalogh/Developer/audit/lib/libclientlib.a",
         ],
       },
       "conditions": [

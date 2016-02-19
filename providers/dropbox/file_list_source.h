@@ -8,12 +8,13 @@ namespace audit {
 namespace providers {
 namespace dropbox {
 
-class FileListSource : public DropboxClient, public audit::FileListSource {
+class FileListSource : public DropboxClient,
+                       public file_browser::FileListSource {
  public:
   FileListSource(TokenSource& token_source)
       : DropboxClient(token_source, AUTH_URL) {}
 
-  std::vector<const std::string> GetFiles() override;
+  std::vector<file_browser::File> GetFiles() override;
 };
 }
 }
