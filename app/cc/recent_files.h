@@ -56,13 +56,15 @@ class RecentFileListSource : public FileListSource {
 
 // Adds 1 file to the recent files list, and saves it
 void AddFile(const std::string& file_name, size_t size) {
+  std::vector<File> new_files{File{file_name, size}};
   RecentFileListSource s;
-  auto files = s.GetFiles();
-  std::vector<File> new_files;
-  new_files.push_back(File{file_name, size});
+  std::vector<File> files = s.GetFiles();
   for (auto i = 0u; i < files.size() && new_files.size() < MAX_RECENT_FILES;
        ++i) {
-    new_files.push_back(files[i]);
+    if (std::find(new_files.begin(), new_files.end(), files[i]) ==
+        new_files.end()) {
+      new_files.push_back(files[i]);
+    }
   }
   WriteRecentFiles(new_files);
 }
