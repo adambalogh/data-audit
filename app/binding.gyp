@@ -1,4 +1,8 @@
 {
+  "make_global_settings": [
+    ['CXX','/usr/bin/clang++'],
+    ['LINK','/usr/bin/clang++'],
+  ],
   "targets": [
     {
       "target_name": "native_module",
@@ -42,7 +46,7 @@
             ],
             "OTHER_LDFLAGS": [
               "-stdlib=libc++",
-              "-std=c++11",
+              "-std=c++14",
             ],
             "MACOSX_DEPLOYMENT_TARGET": "10.11"
           },

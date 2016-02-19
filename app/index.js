@@ -57,6 +57,9 @@ function main() {
 	
 	var recentFilesButton = document.getElementById("recent-files");
 	recentFilesButton.addEventListener('click', function() {
+		document.getElementById("main").style.display = "block";
+		document.getElementById("settings-window").style.display = "none";
+		
 		native_module.getRecentFiles(function (files) {
 			displayFiles(files);
 		});
@@ -64,9 +67,18 @@ function main() {
 	
 	var allFilesButton = document.getElementById("all-files");
 	allFilesButton.addEventListener('click', function() {
+		document.getElementById("main").style.display = "block";
+		document.getElementById("settings-window").style.display = "none";
+	
 		native_module.getFiles(function (files) {
 			displayFiles(files);
 		});
+	});
+	
+	var settingsButton = document.getElementById("settings");
+	settingsButton.addEventListener("click", function() {
+		document.getElementById("main").style.display = "none";
+		document.getElementById("settings-window").style.display = "block";
 	});
 
   var uploadButton = document.getElementById("upload");
