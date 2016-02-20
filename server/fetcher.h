@@ -15,6 +15,10 @@ class Fetcher {
  public:
   Fetcher(const proto::PublicFileTag& file_tag) : file_tag_(file_tag) {}
 
+  // Should be called after the constructor in order to set up anything the
+  // fetcher needs
+  virtual void Setup() = 0;
+
   // Returns the content of the block at index, the size of the block is equal
   // to num_sectors * sector_size from the given file_tag
   virtual std::unique_ptr<std::basic_istream<char>> FetchBlock(

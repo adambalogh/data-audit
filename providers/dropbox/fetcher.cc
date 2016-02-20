@@ -29,15 +29,16 @@ const std::string Fetcher::tags_dir_{application_dir + "dropboxtags/"};
 Fetcher::Fetcher(TokenSourceInterface& token_source,
                  const proto::PublicFileTag& file_tag)
     : DropboxClient(token_source),
-      server::Fetcher(file_tag),
-      block_tag_map_(file_tag_.block_tag_map()) {
-  DownloadFile();
-  DownloadBlockTagFile();
-}
+      audit::providers::local_disk::Fetcher(file_tag) {}
 
 Fetcher::~Fetcher() {
   DeleteFile();
   DeleteBlockTagFile();
+}
+
+void Fetcher::Setup() {
+  DownloadFile();
+  DownloadBlockTagFile();
 }
 
 size_t Fetcher::DownloadAndSaveFile(const std::string& path,
@@ -90,33 +91,6 @@ void Fetcher::DeleteFile() {
 
 void Fetcher::DeleteBlockTagFile() {
   std::remove((tags_dir_ + file_tag_.file_name()).c_str());
-}
-
-std::unique_ptr<std::basic_istream<char>> Fetcher::FetchBlock(
-    unsigned long index) {
-  auto block_size = file_tag_.num_sectors() * file_tag_.sector_size();
-  file_.seekg(index * block_size);
-
-  std::vector<unsigned char> binary(block_size);
-  file_.read((char*)binary.data(), binary.size());
-
-  std::string str(binary.begin(), binary.begin() + file_.gcount());
-  return std::unique_ptr<std::basic_istream<char>>{
-      new std::stringstream{std::move(str)}};
-}
-
-proto::BlockTag Fetcher::FetchBlockTag(unsigned long index) {
-  size_t start;
-  size_t end;
-  std::tie(start, end) = block_tag_map_.FindBlockTag(index);
-
-  block_tag_file_.seekg(start);
-  std::vector<unsigned char> buffer(end - start);
-  block_tag_file_.read((char*)buffer.data(), buffer.size());
-
-  proto::BlockTag tag;
-  tag.ParseFromArray(buffer.data(), buffer.size());
-  return tag;
 }
 }
 }

@@ -20,6 +20,7 @@ class NoServerProofSource : public ProofSource {
 
   virtual proto::Proof GetProof(const proto::Challenge& challenge) {
     auto fetcher = fetcher_factory_->Create(challenge.file_tag());
+    fetcher->Setup();
     server::Prover prover{*fetcher, challenge};
     return prover.Prove();
   }

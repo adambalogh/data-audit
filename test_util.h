@@ -113,6 +113,8 @@ class MemoryFetcher : public server::Fetcher {
                 std::vector<proto::BlockTag> &tags, std::stringstream &s)
       : server::Fetcher(file_tag), context_(context), tags_(tags), s_(s) {}
 
+  void Setup() override {}
+
   std::unique_ptr<std::basic_istream<char>> FetchBlock(
       unsigned long index) override {
     std::string block{

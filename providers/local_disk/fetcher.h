@@ -1,3 +1,5 @@
+#pragma once
+
 #include <fstream>
 #include <string>
 
@@ -14,12 +16,16 @@ class Fetcher : public server::Fetcher {
  public:
   Fetcher(const proto::PublicFileTag& file_tag);
 
+  void Setup() override;
+
   std::unique_ptr<std::basic_istream<char>> FetchBlock(
       unsigned long index) override;
 
   proto::BlockTag FetchBlockTag(unsigned long index) override;
 
- private:
+ protected:
+  const std::string file_name_;
+
   const BlockTagMap block_tag_map_;
 
   std::ifstream file_;

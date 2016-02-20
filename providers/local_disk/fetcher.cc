@@ -14,24 +14,26 @@ namespace local_disk {
 
 Fetcher::Fetcher(const proto::PublicFileTag& file_tag)
     : server::Fetcher(file_tag),
+      file_name_(file_tag.file_name()),
       block_tag_map_(file_tag.block_tag_map()),
       block_size_(file_tag_.num_sectors() * file_tag_.sector_size()),
       block_binary_(block_size_, 'a'),
-      block_tag_binary_(block_tag_map_.MaxSize(), 'a') {
-  file_.open(FileStorage::dir + Storage::GetFilePath(file_tag.file_name()),
+      block_tag_binary_(block_tag_map_.MaxSize(), 'a') {}
+
+void Fetcher::Setup() {
+  file_.open(FileStorage::dir + Storage::GetFilePath(file_name_),
              std::ifstream::binary);
   if (!file_) {
     throw std::runtime_error("Could not open file (" +
-                             Storage::GetFilePath(file_tag.file_name()) + ")");
+                             Storage::GetFilePath(file_name_) + ")");
   }
 
   block_tag_file_.open(
-      FileStorage::dir + Storage::GetBlockTagFilePath(file_tag.file_name()),
+      FileStorage::dir + Storage::GetBlockTagFilePath(file_name_),
       std::ifstream::binary);
   if (!block_tag_file_) {
-    throw std::runtime_error(
-        "Could not open file containing BlockTags (" +
-        Storage::GetBlockTagFilePath(file_tag.file_name()) + ")");
+    throw std::runtime_error("Could not open file containing BlockTags (" +
+                             Storage::GetBlockTagFilePath(file_name_) + ")");
   }
 }
 
