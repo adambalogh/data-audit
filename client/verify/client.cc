@@ -47,27 +47,30 @@ proto::Challenge Client::BuildChallenge(const proto::PublicFileTag& public_tag,
 }
 
 bool Client::DoVerify(const std::string& file_name, int percent_blocks,
-                      Stats& stats) {
+                      StageReportCallback callback, Stats& stats) {
   if (percent_blocks < 0 || percent_blocks > 100) {
     throw std::logic_error(
         "The percentage of blocks checked must be between 0 and 100.");
   }
 
+  callback("Preparing verification request...");
   auto file_tag = file_tag_source_->GetFileTag(file_name);
   auto challenge = BuildChallenge(file_tag.public_tag(), percent_blocks);
+  callback("Waiting for server's response...");
   auto proof = proof_source_->GetProof(challenge);
 
   stats.file_tag_size = static_cast<size_t>(file_tag.ByteSize());
   stats.challenge_size = static_cast<size_t>(challenge.ByteSize());
   stats.proof_size = static_cast<size_t>(proof.ByteSize());
 
+  callback("Verifying server's response...");
   return VerifyFile<upload::Client::PrfType>(file_tag, challenge, proof);
 }
 
 bool Client::Verify(const std::string& file_name, int percent_blocks,
-                    Stats& stats) {
+                    StageReportCallback callback, Stats& stats) {
   auto start = std::chrono::high_resolution_clock::now();
-  auto result = DoVerify(file_name, percent_blocks, stats);
+  auto result = DoVerify(file_name, percent_blocks, callback, stats);
   auto duration = std::chrono::high_resolution_clock::now() - start;
 
   stats.milliseconds =

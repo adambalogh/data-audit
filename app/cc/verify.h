@@ -34,17 +34,22 @@ static std::unique_ptr<verify::Client> verify_client;
 
 class VerifyWorker : public Nan::AsyncProgressWorker {
  public:
-  VerifyWorker(Callback* callback, Callback* progress_bar_callback,
+  VerifyWorker(Callback* callback, Callback* stage_report_callback,
                const std::string& file_name)
       : AsyncProgressWorker(callback),
-        progress_bar_callback_(progress_bar_callback),
+        stage_report_callback_(stage_report_callback),
         file_name_(file_name) {}
 
   void Execute(const AsyncProgressWorker::ExecutionProgress& execution_progress)
       override {
     try {
       verify::Stats stats;
-      result_ = verify_client->Verify(file_name_, 100, stats);
+      result_ = verify_client->Verify(file_name_, 100,
+                                      [&execution_progress](std::string stage) {
+                                        execution_progress.Send(stage.data(),
+                                                                stage.size());
+                                      },
+                                      stats);
 
       std::cout << "Stats for verifying " << file_name_ << ": " << std::endl;
       std::cout << stats.to_string() << std::endl;
@@ -69,13 +74,12 @@ class VerifyWorker : public Nan::AsyncProgressWorker {
 
   // This is called everytime the verification makes progress
   void HandleProgressCallback(const char* data, size_t size) override {
-    Local<Value> argv[] = {
-        New<Integer>(*reinterpret_cast<int*>(const_cast<char*>(data)))};
-    progress_bar_callback_->Call(1, argv);
+    Local<Value> argv[] = {New<String>(data, size).ToLocalChecked()};
+    stage_report_callback_->Call(1, argv);
   }
 
  private:
-  Callback* const progress_bar_callback_;
+  Callback* const stage_report_callback_;
 
   const std::string file_name_;
 

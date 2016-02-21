@@ -13,6 +13,8 @@ namespace verify {
 // You should only interact with this class for verification.
 class Client {
  public:
+  typedef std::function<void(std::string)> StageReportCallback;
+
   Client(std::unique_ptr<FileTagSource> file_tag_source,
          std::unique_ptr<ProofSource> proof_source)
       : file_tag_source_(std::move(file_tag_source)),
@@ -27,10 +29,12 @@ class Client {
   // @param stats: stats related to the verification will be placed into this
   //   object
   //
-  bool Verify(const std::string& file_name, int percent_blocks, Stats& stats);
+  bool Verify(const std::string& file_name, int percent_blocks,
+              StageReportCallback callback, Stats& stats);
 
  private:
-  bool DoVerify(const std::string& file_name, int percent_blocks, Stats& stats);
+  bool DoVerify(const std::string& file_name, int percent_blocks,
+                StageReportCallback callback, Stats& stats);
 
   proto::Challenge BuildChallenge(const proto::PublicFileTag& public_tag,
                                   int percent_blocks);

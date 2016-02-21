@@ -41,7 +41,7 @@ int main() {
               new local_disk::FetcherFactory}})};
 
   verify::Stats stats;
-  if (verify_client.Verify(file_name, 100, stats)) {
+  if (verify_client.Verify(file_name, 100, [](std::string) {}, stats)) {
     std::cout << "passed!!!" << std::endl;
   } else {
     std::cout << "failed" << std::endl;

@@ -80,7 +80,8 @@ static void Verify(benchmark::State& state) {
                         std::make_unique<verify::NoServerProofSource>(
                             std::make_unique<local_disk::FetcherFactory>())};
   while (state.KeepRunning()) {
-    auto result = client.Verify(files[state.range_x()], 100, stats);
+    auto result =
+        client.Verify(files[state.range_x()], 100, [](std::string) {}, stats);
     assert(result == true);
   }
 }

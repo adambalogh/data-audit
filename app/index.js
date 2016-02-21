@@ -199,28 +199,37 @@ function displayFiles(files) {
 
 // Verifies the given file's integrity, and displays the result
 function verify_file(file_name, callback) {
-  native_module.verifyAsync(file_name, function(percentage) {}, function(result, error) {
-		callback();
-    if (error) {
-      alert(error);
-    } else {
-    	if (result == true) {
-    		swal({
-    			title:"", 
-					text: file_name + " successfully verified", 
-					type: "success",
-					animation: 'false',
-					confirmButtonColor: '#3498db'
-    		});
-    	} else {
-    		swal({
-    			title:"", 
-					text: file_name + " is corrupted", 
-					type: "error",
-					animation: 'false'
-    		});
-    	}
-    }
+  native_module.verifyAsync(file_name, 
+		function(stage) {
+	  	swal({
+				title: "",
+				text: stage + "<br><img style='margin-top: 14px;' src='res/loading.gif'/>",
+				showConfirmButton: false,
+				html: true
+			});
+	  }, 
+		function(result, error) {
+			callback();
+	    if (error) {
+	      alert(error);
+	    } else {
+	    	if (result == true) {
+	    		swal({
+	    			title:"", 
+						text: file_name + " successfully verified", 
+						type: "success",
+						animation: 'false',
+						confirmButtonColor: '#3498db'
+	    		});
+	    	} else {
+	    		swal({
+	    			title:"", 
+						text: file_name + " is corrupted", 
+						type: "error",
+						animation: 'false'
+	    		});
+	    	}
+	    }
   });
 }
 
