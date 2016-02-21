@@ -35,7 +35,8 @@ class RequestRouter : public RequestHandlerFactory {
 
     RequestHandler* onRequest(RequestHandler*,
                               HTTPMessage* msg) noexcept override {
-        std::cout << "new request" << std::endl;
+        std::cout << msg->getClientIP() << ": "
+                  << "new request " << msg->getPath() << std::endl;
         if (msg->getPath() == "/upload") {
             return new StorageHandler();
         }
