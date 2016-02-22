@@ -39,6 +39,17 @@ window.onload = function() {
 
 // Main called after user is logged in - if needed
 function main() {
+	
+	var dropzone = document.getElementById("files_container");
+	dropzone.ondragover = function () {
+		return false;
+	};
+  dropzone.addEventListener('drop', function(e) {
+  	e.stopPropagation();
+    e.preventDefault();
+		var file = e.dataTransfer.files[0];
+		upload_file(file.path);
+  });
     
   //Initially, show all the files available
   native_module.getFiles(function(files) {
@@ -81,58 +92,14 @@ function main() {
 		document.getElementById("settings-window").style.display = "block";
 	});
 
-  var uploadButton = document.getElementById("upload");
-	
+  var uploadButton = document.getElementById("upload");	
   uploadButton.onclick = function() {
     dialog.showOpenDialog(function(files) {
       if (files == undefined || files.length == 0) return;
       var file = files[0];
-			
-  		swal({
-  			title:"", 
-				text: "Uploading " + file + "<br><br><div id='progress'></div>", 
-				showConfirmButton: false,
-				animation: 'false',
-				html: true,
-  		});		
-			
-		  var line = new ProgressBar.Line('#progress', {
-		    strokeWidth: 1,
-		    duration: 100,
-		    color: '#2980b9'
-		  });
-
-      native_module.uploadAsync(
-        file,
-        function(progress) {
-		      line.animate(progress / 100.0);
-        },
-        function(error) {
-					if (error) {
-			  		swal({
-							title: "",
-							text: "Failed to upload " + file + "<br>" + error, 
-							animation: 'false',
-							confirmButtonColor: '#3498db',
-							type: "error",
-			  		});	
-					} else {
-			  		swal({
-							title: "",
-							text: file + " successfully uploaded", 
-							animation: 'false',
-							confirmButtonColor: '#3498db',
-							type: "success",
-			  		});	
-					}	
-	      	native_module.refreshFiles(function(files) {
-	        	displayFiles(files);
-	      	});
-				}
-      );
-
-    }); // showopendialog
-  } // onclick
+			upload_file(file);
+    });
+  }
 
   var searchBar = document.getElementById("search");
   searchBar.oninput = function() {
@@ -168,6 +135,10 @@ function displayFiles(files) {
     infoSpan.appendChild(document.createTextNode(fileSize));
     infoSpan.setAttribute("class", "icon-info");
   
+		var downloadButton = document.createElement("span");
+		downloadButton.className = "octicon octicon-cloud-download download-button";
+		downloadButton.setAttribute("title", "Download");
+	
     var verifyButton = document.createElement("span");
     verifyButton.setAttribute("class", "verify-button");
     verifyButton.setAttribute("data-file", fileName); 
@@ -195,6 +166,51 @@ function displayFiles(files) {
 
     files_list.appendChild(li);
   });
+}
+
+function upload_file(file) {
+	swal({
+		title:"", 
+		text: "Uploading " + file + "<br><br><div id='progress'></div>", 
+		showConfirmButton: false,
+		animation: 'false',
+		html: true,
+	});		
+
+	var line = new ProgressBar.Line('#progress', {
+	  strokeWidth: 1,
+	  duration: 100,
+	  color: '#2980b9'
+	});
+
+	native_module.uploadAsync(
+	  file,
+	  function(progress) {
+	    line.animate(progress / 100.0);
+	  },
+	  function(error) {
+			if (error) {
+	  		swal({
+					title: "",
+					text: "Failed to upload " + file + "<br>" + error, 
+					animation: 'false',
+					confirmButtonColor: '#3498db',
+					type: "error",
+	  		});	
+			} else {
+	  		swal({
+					title: "",
+					text: file + " successfully uploaded", 
+					animation: 'false',
+					confirmButtonColor: '#3498db',
+					type: "success",
+	  		});	
+			}	
+	  	native_module.refreshFiles(function(files) {
+	    	displayFiles(files);
+	  	});
+		}
+	);
 }
 
 // Verifies the given file's integrity, and displays the result

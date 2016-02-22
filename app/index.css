@@ -132,6 +132,10 @@ input#search {
   clear: both;
 }
 
+.drop {
+  background: #ecf0f1;
+}
+
 .file-name-label {
   font-size: 13px;
   color: #4d4d4d;
@@ -200,6 +204,12 @@ input#search {
   background-size: 24px;
 }
 
+.download-button {
+  color: #2980b9;
+  cursor: pointer;
+  margin-right: 18px;
+}
+
 a.main {
   width:auto;
   text-decoration: none;
@@ -252,8 +262,10 @@ a.main:visited {
   width: 40px;
   height: 40px;
 
-  position: relative;
-  margin: 100px auto;
+  position: absolute;
+
+  top: calc(50% - 20px);
+  right: calc(50% - 20px);
 }
 
 .double-bounce1, .double-bounce2 {
