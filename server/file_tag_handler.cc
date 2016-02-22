@@ -28,11 +28,8 @@ void FileTagHandler::onBody(std::unique_ptr<folly::IOBuf> body) noexcept {
 void FileTagHandler::onEOM() noexcept {
     auto params = json::parse(body_);
     auto file_name = params.at("file_name").get<std::string>();
-    const auto file_tag = source_.GetFileTag(file_name);
-    size_t file_tag_size = file_tag.ByteSize();
-
-    auto bin = file_tag.SerializeAsString();
-    auto response_body = IOBuf::copyBuffer(bin);
+    const auto bin = source_.GetFileTag(file_name);
+    auto response_body = IOBuf::copyBuffer(bin.data(), bin.size());
 
     ResponseBuilder(downstream_)
         .status(200, "OK")
