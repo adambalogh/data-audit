@@ -13,7 +13,7 @@ void SetupCrypto() {
   unsigned char iv[AES::BLOCKSIZE];
   rnd.GenerateBlock(iv, AES::BLOCKSIZE);
 
-  Settings s;
+  Settings s(false);
   s.Set("key",
         std::string{reinterpret_cast<const char*>(key.data()), key.size()});
   s.Set("iv", std::string{reinterpret_cast<const char*>(&iv), AES::BLOCKSIZE});

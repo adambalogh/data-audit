@@ -13,9 +13,11 @@ namespace audit {
 
 class Settings {
  public:
-  Settings() {
-    std::ifstream f{file_};
-    settings_ = json::parse(f);
+  Settings(bool read = true) {
+    if (read) {
+      std::ifstream f{file_};
+      settings_ = json::parse(f);
+    }
   }
 
   ~Settings() {
