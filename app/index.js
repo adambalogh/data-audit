@@ -224,15 +224,19 @@ function verify_file(file_name, callback) {
 				html: true
 			});
 	  }, 
-		function(result, error) {
+		function(result, milliseconds, error) {
 			callback();
 	    if (error) {
-	      alert(error);
+        swal({
+          title: "Error",
+          text: error,
+          type: "error",
+        });
 	    } else {
 	    	if (result == true) {
 	    		swal({
 	    			title:"", 
-						text: file_name + " successfully verified", 
+						text: file_name + " successfully verified in " + (milliseconds/1000.0) + " seconds", 
 						type: "success",
 						animation: 'false',
 						confirmButtonColor: '#3498db'

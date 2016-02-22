@@ -8,6 +8,7 @@
 #include "verify.h"
 #include "file_browser.h"
 #include "recent_files.h"
+#include "settings.h"
 
 using Nan::New;
 
@@ -44,6 +45,12 @@ NAN_MODULE_INIT(InitAll) {
   Nan::Set(
       target, New<String>("refreshFiles").ToLocalChecked(),
       Nan::GetFunction(New<FunctionTemplate>(RefreshFiles)).ToLocalChecked());
+  Nan::Set(
+      target, New<String>("settingsGet").ToLocalChecked(),
+      Nan::GetFunction(New<FunctionTemplate>(SettingsGet)).ToLocalChecked());
+  Nan::Set(
+      target, New<String>("settingsSet").ToLocalChecked(),
+      Nan::GetFunction(New<FunctionTemplate>(SettingsSet)).ToLocalChecked());
 }
 
 NODE_MODULE(native, InitAll)

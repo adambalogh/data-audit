@@ -255,6 +255,12 @@ a.main:visited {
   padding-top: 20px;
 }
 
+.option>.content {
+  margin-left: 10px;
+  margin-top: 4px;
+  font-size: 13px;
+}
+
 /* --------- 3rd party -------- */
 
 
