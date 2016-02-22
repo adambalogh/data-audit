@@ -8,7 +8,6 @@
 #include <nan.h>
 
 #include "provider.h"
-#include "settings.h"
 #include "audit/util.h"
 #include "audit/client/verify/client.h"
 #include "audit/client/verify/stats.h"
@@ -45,13 +44,12 @@ class VerifyWorker : public Nan::AsyncProgressWorker {
       override {
     try {
       verify::Stats stats;
-      result_ = verify_client->Verify(
-          file_name_,
-          settings_instance.Get<int>(Settings::VERIFICATION_PERCENTAGE),
-          [&execution_progress](std::string stage) {
-            execution_progress.Send(stage.data(), stage.size());
-          },
-          stats);
+      result_ = verify_client->Verify(file_name_, 100,
+                                      [&execution_progress](std::string stage) {
+                                        execution_progress.Send(stage.data(),
+                                                                stage.size());
+                                      },
+                                      stats);
 
       std::cout << "Stats for verifying " << file_name_ << ": " << std::endl;
       std::cout << stats.to_string() << std::endl;

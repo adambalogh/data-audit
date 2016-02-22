@@ -54,7 +54,7 @@ bool Client::DoVerify(const std::string& file_name, int percent_blocks,
   }
 
   callback("Preparing verification request...");
-  auto file_tag = file_tag_source_->GetFileTag(file_name);
+  auto file_tag = file_tag_source_.GetFileTag(file_name);
   auto challenge = BuildChallenge(file_tag.public_tag(), percent_blocks);
   callback("Waiting for server's response...");
   auto proof = proof_source_->GetProof(challenge);

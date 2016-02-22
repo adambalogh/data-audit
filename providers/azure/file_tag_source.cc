@@ -17,7 +17,7 @@ namespace audit {
 namespace providers {
 namespace azure {
 
-proto::PrivateFileTag FileTagSource::GetFileTag(const std::string& file_name) {
+std::vector<uint8_t> FileTagSource::GetFileTag(const std::string& file_name) {
   json params;
   params["file_name"] = file_name;
 
@@ -26,13 +26,7 @@ proto::PrivateFileTag FileTagSource::GetFileTag(const std::string& file_name) {
   request.set_body(params.dump());
 
   auto response = client_.request(request).get();
-  auto tag_str = response.extract_string(true).get();
-
-  proto::PrivateFileTag tag;
-  if (!tag.ParseFromString(tag_str)) {
-    // error
-  }
-  return tag;
+  return response.extract_vector().get();
 }
 }
 }

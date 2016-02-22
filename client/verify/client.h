@@ -15,9 +15,9 @@ class Client {
  public:
   typedef std::function<void(std::string)> StageReportCallback;
 
-  Client(std::unique_ptr<FileTagSource> file_tag_source,
+  Client(std::unique_ptr<BinaryFileTagSource> binary_file_tag_source,
          std::unique_ptr<ProofSource> proof_source)
-      : file_tag_source_(std::move(file_tag_source)),
+      : file_tag_source_(std::move(binary_file_tag_source)),
         proof_source_(std::move(proof_source)) {}
 
   // Verify returns true if the given file's integrity could be verified.
@@ -39,7 +39,7 @@ class Client {
   proto::Challenge BuildChallenge(const proto::PublicFileTag& public_tag,
                                   int percent_blocks);
 
-  std::unique_ptr<FileTagSource> file_tag_source_;
+  FileTagSource file_tag_source_;
 
   std::unique_ptr<ProofSource> proof_source_;
 };

@@ -46,7 +46,7 @@
 #include "audit/providers/azure/file_list_source.h"
 
 using audit::upload::FileStorage;
-using audit::verify::FileTagSource;
+using audit::verify::BinaryFileTagSource;
 using audit::file_browser::FileListSource;
 using audit::verify::ProofSource;
 
@@ -69,7 +69,8 @@ std::unique_ptr<FileListSource> PROVIDER_METHOD(dropbox, GetFileListSource)() {
       audit::providers::dropbox::TokenSourceInstance::Get());
 }
 
-std::unique_ptr<FileTagSource> PROVIDER_METHOD(dropbox, GetFileTagSource)() {
+std::unique_ptr<BinaryFileTagSource> PROVIDER_METHOD(dropbox,
+                                                     GetFileTagSource)() {
   return std::make_unique<audit::providers::dropbox::FileTagSource>(
       audit::providers::dropbox::TokenSourceInstance::Get());
 }
@@ -94,7 +95,8 @@ std::unique_ptr<FileListSource> PROVIDER_METHOD(local_disk,
   return std::make_unique<audit::providers::local_disk::FileListSource>();
 }
 
-std::unique_ptr<FileTagSource> PROVIDER_METHOD(local_disk, GetFileTagSource)() {
+std::unique_ptr<BinaryFileTagSource> PROVIDER_METHOD(local_disk,
+                                                     GetFileTagSource)() {
   return std::make_unique<audit::providers::local_disk::FileTagSource>();
 }
 
@@ -113,7 +115,8 @@ std::unique_ptr<FileListSource> PROVIDER_METHOD(azure, GetFileListSource)() {
   return std::make_unique<audit::providers::azure::FileListSource>();
 }
 
-std::unique_ptr<FileTagSource> PROVIDER_METHOD(azure, GetFileTagSource)() {
+std::unique_ptr<BinaryFileTagSource> PROVIDER_METHOD(azure,
+                                                     GetFileTagSource)() {
   return std::make_unique<audit::providers::azure::FileTagSource>();
 }
 

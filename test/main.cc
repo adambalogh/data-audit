@@ -35,10 +35,9 @@ int main() {
       file, [](int percentage) { std::cout << percentage << std::endl; });
 
   verify::Client verify_client{
-      std::unique_ptr<verify::FileTagSource>(new local_disk::FileTagSource),
-      std::unique_ptr<verify::ProofSource>(new verify::NoServerProofSource{
-          std::unique_ptr<server::FetcherFactory>{
-              new local_disk::FetcherFactory}})};
+      std::make_unique<local_disk::FileTagSource>(),
+      std::make_unique<verify::NoServerProofSource>(
+          std::make_unique<local_disk::FetcherFactory>())};
 
   verify::Stats stats;
   if (verify_client.Verify(file_name, 100, [](std::string) {}, stats)) {

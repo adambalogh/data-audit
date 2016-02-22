@@ -10,12 +10,12 @@ namespace audit {
 namespace providers {
 namespace dropbox {
 
-class FileTagSource : public verify::FileTagSource, public DropboxClient {
+class FileTagSource : public verify::BinaryFileTagSource, public DropboxClient {
  public:
   FileTagSource(TokenSourceInterface& token_source)
       : DropboxClient(token_source) {}
 
-  proto::PrivateFileTag GetFileTag(const std::string& file_name) override;
+  std::vector<uint8_t> GetFileTag(const std::string& file_name) override;
 };
 }
 }

@@ -59,7 +59,6 @@ Stats Client::Upload(const File& file, ProgressBar::CallbackType callback) {
       serializer.Done();
   stats.file_tag_size = private_tag.ByteSize();
 
-  // Execute the 3 stores in parallel
   std::thread t1{[&]() {
     storage_.StoreBlockTagFile(file.file_name, serializer.FilePath(),
                                progress_listener);

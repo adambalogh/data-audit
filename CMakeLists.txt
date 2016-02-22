@@ -48,6 +48,7 @@ add_library(clientlib
   client/upload/file.cc
   client/upload/storage.cc
   client/verify/client.cc
+  client/verify/file_tag_source.cc
 )
 
 add_library(azurelib
@@ -107,6 +108,9 @@ endif (${SERVER_SIDE})
 # Benchmark and Simple test
 
 if(${CLIENT_SIDE})
+
+add_executable(install_main install.cc)
+target_link_libraries(install_main cryptopp)
 
 add_executable(test_main test/main.cc)
 target_link_libraries(test_main ${THIRD_PARTY_LIBRARIES} ${LIBRARIES})

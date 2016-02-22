@@ -3,6 +3,14 @@
 #include <fstream>
 #include <sstream>
 
+#include "cryptopp/aes.h"
+#include "cryptopp/modes.h"
+
+#include "audit/settings.h"
+
+using CryptoPP::AES;
+using CryptoPP::SecByteBlock;
+
 namespace audit {
 namespace upload {
 
@@ -18,7 +26,21 @@ void Storage::StoreFile(const std::string& file_name, std::istream& stream,
 void Storage::StoreFileTag(const std::string& file_name,
                            const proto::PrivateFileTag& file_tag,
                            StorageListener& listener) {
-  std::stringstream stream{file_tag.SerializeAsString()};
+  Settings s;
+  auto key_str = s.Get<std::string>("key");
+  SecByteBlock key(reinterpret_cast<const unsigned char*>(key_str.data()),
+                   key_str.size());
+
+  auto iv_str = s.Get<std::string>("iv");
+  unsigned char iv[AES::BLOCKSIZE];
+  std::memcpy(&iv[0], iv_str.data(), iv_str.size());
+
+  CryptoPP::CFB_Mode<CryptoPP::AES>::Encryption encryption(key, key.size(), iv);
+  auto bin = file_tag.SerializeAsString();
+  encryption.ProcessData(reinterpret_cast<unsigned char*>(&bin[0]),
+                         reinterpret_cast<unsigned char*>(&bin[0]), bin.size());
+
+  std::stringstream stream{bin};
   file_storage_->StoreFile(GetFileTagPath(file_name), stream, listener);
 }
 

@@ -13,8 +13,7 @@ namespace audit {
 namespace providers {
 namespace local_disk {
 
-proto::PrivateFileTag FileTagSource::GetFileTag(const std::string& file_name) {
-  proto::PrivateFileTag tag;
+std::vector<uint8_t> FileTagSource::GetFileTag(const std::string& file_name) {
   std::ifstream tag_file{FileStorage::dir + Storage::GetFileTagPath(file_name),
                          std::ifstream::binary};
   if (!tag_file) {
@@ -23,8 +22,13 @@ proto::PrivateFileTag FileTagSource::GetFileTag(const std::string& file_name) {
                              Storage::GetFileTagPath(file_name) + ")");
   }
 
-  tag.ParseFromIstream(&tag_file);
-  return tag;
+  std::vector<uint8_t> bin;
+  tag_file.seekg(0, std::ios_base::end);
+  auto size = tag_file.tellg();
+  tag_file.seekg(0, std::ios_base::beg);
+  bin.resize(size);
+  tag_file.read(reinterpret_cast<char*>(&bin[0]), bin.size());
+  return bin;
 }
 }
 }

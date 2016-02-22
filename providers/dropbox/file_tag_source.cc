@@ -17,7 +17,7 @@ namespace audit {
 namespace providers {
 namespace dropbox {
 
-proto::PrivateFileTag FileTagSource::GetFileTag(const std::string& file_name) {
+std::vector<uint8_t> FileTagSource::GetFileTag(const std::string& file_name) {
   json parameters;
   parameters["path"] = "/" + upload::Storage::GetFileTagPath(file_name);
 
@@ -26,12 +26,7 @@ proto::PrivateFileTag FileTagSource::GetFileTag(const std::string& file_name) {
   request.headers().add("Dropbox-API-Arg", parameters.dump());
 
   auto response = SendRequest(request);
-  auto binary = response.extract_vector().get();
-
-  proto::PrivateFileTag tag;
-  tag.ParseFromArray(binary.data(), binary.size());
-
-  return tag;
+  return response.extract_vector().get();
 }
 }
 }
