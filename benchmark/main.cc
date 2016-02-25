@@ -11,6 +11,7 @@
 #include "audit/providers/azure/file_storage.h"
 #include "audit/providers/azure/file_tag_source.h"
 
+#include "audit/client/upload/file.h"
 #include "audit/client/upload/client.h"
 #include "audit/client/upload/storage.h"
 
@@ -26,6 +27,7 @@
 using namespace audit;
 using namespace audit::providers;
 using audit::upload::Storage;
+using audit::upload::TaggingParameters;
 
 // TODO build benchmark as Release
 std::vector<std::string> files;
@@ -70,7 +72,8 @@ static void Upload(benchmark::State& state) {
 
   while (state.KeepRunning()) {
     s.clear();
-    upload_client.Upload(upload::File{s, files[state.range_x()]}, [](int) {});
+    upload_client.Upload(upload::File{s, files[state.range_x()]},
+                         TaggingParameters{30, 96}, [](int) {});
   }
 }
 

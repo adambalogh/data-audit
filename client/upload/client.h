@@ -21,7 +21,8 @@ class Client {
   Client(std::unique_ptr<FileStorage> file_storage)
       : storage_(std::move(file_storage)) {}
 
-  Stats Upload(const File& file, ProgressBar::CallbackType callback);
+  Stats Upload(const File& file, const TaggingParameters& params,
+               ProgressBar::CallbackType callback);
 
  private:
   Storage storage_;

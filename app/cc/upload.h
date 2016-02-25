@@ -45,14 +45,22 @@ class UploadWorker : public Nan::AsyncProgressWorker {
     upload::File file{content, GetFileName()};
 
     try {
-      auto stats =
-          upload_client.Upload(file, [&execution_progress](int percentage) {
-            execution_progress.Send(reinterpret_cast<const char*>(&percentage),
-                                    sizeof(int));
-          });
+      upload::TaggingParameters params{35, 96};
+      auto stats = upload_client.Upload(file, params,
+                                        [&execution_progress](int percentage) {
+        execution_progress.Send(reinterpret_cast<const char*>(&percentage),
+                                sizeof(int));
+      });
+
+      auto file_size = stats.ToMB(stats.file_size);
+      auto metadata_size =
+          stats.ToMB(stats.file_tag_size) + stats.ToMB(stats.block_tags_size);
 
       std::cout << "Stats for uploading " << GetFileName() << ":" << std::endl;
-      std::cout << stats.to_string() << std::endl;
+      std::cout << "Original file size: " << file_size << " MB" << std::endl;
+      std::cout << "Metadata size: " << metadata_size << " MB" << std::endl;
+      std::cout << "Increase: " << (metadata_size / file_size) * 100 << "%"
+                << std::endl << std::endl;
 
       // Add file to recent files
       AddFile(GetFileName(), stats.file_size);

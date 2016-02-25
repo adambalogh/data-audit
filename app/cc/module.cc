@@ -18,6 +18,10 @@ using v8::FunctionTemplate;
 using v8::String;
 
 NAN_MODULE_INIT(InitAll) {
+  if (RAND_load_file("/dev/urandom", 128) != 128) {
+    throw std::runtime_error("Could not seed RAND");
+  }
+
 #if PROVIDER_TYPE == dropbox
   Nan::Set(target, New<String>("getAuthorizeUrl").ToLocalChecked(),
            Nan::GetFunction(New<FunctionTemplate>(GetAuthorizeUrl))
@@ -26,6 +30,7 @@ NAN_MODULE_INIT(InitAll) {
            Nan::GetFunction(New<FunctionTemplate>(ExchangeCodeForToken))
                .ToLocalChecked());
 #endif
+  //
 
   Nan::Set(
       target, New<String>("hasToLogin").ToLocalChecked(),

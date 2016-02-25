@@ -17,10 +17,8 @@
 namespace audit {
 namespace upload {
 
-Stats Client::Upload(const File& file, ProgressBar::CallbackType callback) {
-  // These 2 parameters seem to produce the best results
-  TaggingParameters params{30, 96};
-
+Stats Client::Upload(const File& file, const TaggingParameters& params,
+                     ProgressBar::CallbackType callback) {
   BN_ptr p{BN_new(), ::BN_free};
   BN_generate_prime_ex(p.get(), params.sector_size * 8, false, NULL, NULL,
                        NULL);

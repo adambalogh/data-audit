@@ -32,7 +32,8 @@ int main() {
 
   upload::File file{content, file_name};
   upload_client.Upload(
-      file, [](int percentage) { std::cout << percentage << std::endl; });
+      file, upload::TaggingParameters{30, 96},
+      [](int percentage) { std::cout << percentage << std::endl; });
 
   verify::Client verify_client{
       std::make_unique<local_disk::FileTagSource>(),
