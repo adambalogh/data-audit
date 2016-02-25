@@ -110,7 +110,7 @@ function main() {
   }
 	
 	var uploadSelector = document.getElementById("upload_params");
-	native_module.settingsGet("params", function(params){
+	native_module.settingsGetParams(function(params){
 		uploadSelector.value = params;
 		uploadSelector.onchange = function() {
 			var selected = uploadSelector.options[uploadSelector.selectedIndex].value;
@@ -119,6 +119,14 @@ function main() {
 			} else if (selected == "min_storage") {
 				native_module.settingsMinStorage();
 			}
+		}
+	});
+	
+	var verificationPercentage = document.getElementById("verification_percentage");
+	native_module.settingsGetVerificationPercentage(function(percentage){
+		verificationPercentage.value = percentage;
+		verificationPercentage.onchange = function() {
+			native_module.settingsVerification(verificationPercentage.value);
 		}
 	});
 

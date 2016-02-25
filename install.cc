@@ -25,4 +25,5 @@ int main() {
   s.Set("num_sectors", 35);
   s.Set("sector_size", 96);
   s.Set("params", "recommended");
+  s.Set("verification_percentage", 80);
 }

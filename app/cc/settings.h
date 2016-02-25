@@ -17,15 +17,21 @@ using Nan::GetCurrentContext;
 using Nan::New;
 using Nan::FunctionCallbackInfo;
 
-NAN_METHOD(SettingsGet) {
-  Local<String> key = info[0].As<String>();
-
+NAN_METHOD(SettingsGetParams) {
   Settings s;
-  auto val = s.Get<std::string>(std::string{*String::Utf8Value{key}});
-
-  auto cb = info[1].As<Function>();
+  auto val = s.Get<std::string>("params");
+  auto cb = info[0].As<Function>();
   const unsigned argc = 1;
   Local<Value> argv[argc] = {New(val).ToLocalChecked()};
+  MakeCallback(Nan::GetCurrentContext()->Global(), cb, argc, argv);
+}
+
+NAN_METHOD(SettingsGetVerificationPercentage) {
+  Settings s;
+  auto val = s.Get<int>("verification_percentage");
+  auto cb = info[0].As<Function>();
+  const unsigned argc = 1;
+  Local<Value> argv[argc] = {New(val)};
   MakeCallback(Nan::GetCurrentContext()->Global(), cb, argc, argv);
 }
 
@@ -41,4 +47,10 @@ NAN_METHOD(SettingsMinStorage) {
   s.Set("num_sectors", 100);
   s.Set("sector_size", 96);
   s.Set("params", "min_storage");
+}
+
+NAN_METHOD(SettingsVerification) {
+  Local<Integer> val = info[0].As<Integer>();
+  Settings s;
+  s.Set("verification_percentage", val->Int32Value());
 }

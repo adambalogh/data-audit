@@ -50,14 +50,21 @@ NAN_MODULE_INIT(InitAll) {
   Nan::Set(
       target, New<String>("refreshFiles").ToLocalChecked(),
       Nan::GetFunction(New<FunctionTemplate>(RefreshFiles)).ToLocalChecked());
+  Nan::Set(target, New<String>("settingsGetParams").ToLocalChecked(),
+           Nan::GetFunction(New<FunctionTemplate>(SettingsGetParams))
+               .ToLocalChecked());
   Nan::Set(
-      target, New<String>("settingsGet").ToLocalChecked(),
-      Nan::GetFunction(New<FunctionTemplate>(SettingsGet)).ToLocalChecked());
+      target, New<String>("settingsGetVerificationPercentage").ToLocalChecked(),
+      Nan::GetFunction(New<FunctionTemplate>(SettingsGetVerificationPercentage))
+          .ToLocalChecked());
   Nan::Set(target, New<String>("settingsRecommended").ToLocalChecked(),
            Nan::GetFunction(New<FunctionTemplate>(SettingsRecommended))
                .ToLocalChecked());
   Nan::Set(target, New<String>("settingsMinStorage").ToLocalChecked(),
            Nan::GetFunction(New<FunctionTemplate>(SettingsMinStorage))
+               .ToLocalChecked());
+  Nan::Set(target, New<String>("settingsVerification").ToLocalChecked(),
+           Nan::GetFunction(New<FunctionTemplate>(SettingsVerification))
                .ToLocalChecked());
 }
 
