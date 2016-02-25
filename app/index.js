@@ -108,6 +108,19 @@ function main() {
       displayFiles(files);
     });
   }
+	
+	var uploadSelector = document.getElementById("upload_params");
+	native_module.settingsGet("params", function(params){
+		uploadSelector.value = params;
+		uploadSelector.onchange = function() {
+			var selected = uploadSelector.options[uploadSelector.selectedIndex].value;
+			if (selected == "recommended"){
+				native_module.settingsRecommended();
+			} else if (selected == "min_storage") {
+				native_module.settingsMinStorage();
+			}
+		}
+	});
 
 }
 
@@ -192,10 +205,11 @@ function upload_file(file) {
 			if (error) {
 	  		swal({
 					title: "",
-					text: "Failed to upload " + file + "<br>" + error, 
+					text: "Failed to upload " + file + "<br><br>" + error, 
 					animation: 'false',
 					confirmButtonColor: '#3498db',
 					type: "error",
+          html: true,
 	  		});	
 			} else {
 	  		swal({

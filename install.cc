@@ -22,4 +22,7 @@ int main() {
   Settings s(false);
   SetupCrypto(s);
   s.Set("provider", "local_disk");
+  s.Set("num_sectors", 35);
+  s.Set("sector_size", 96);
+  s.Set("params", "recommended");
 }

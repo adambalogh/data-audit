@@ -53,9 +53,12 @@ NAN_MODULE_INIT(InitAll) {
   Nan::Set(
       target, New<String>("settingsGet").ToLocalChecked(),
       Nan::GetFunction(New<FunctionTemplate>(SettingsGet)).ToLocalChecked());
-  Nan::Set(
-      target, New<String>("settingsSet").ToLocalChecked(),
-      Nan::GetFunction(New<FunctionTemplate>(SettingsSet)).ToLocalChecked());
+  Nan::Set(target, New<String>("settingsRecommended").ToLocalChecked(),
+           Nan::GetFunction(New<FunctionTemplate>(SettingsRecommended))
+               .ToLocalChecked());
+  Nan::Set(target, New<String>("settingsMinStorage").ToLocalChecked(),
+           Nan::GetFunction(New<FunctionTemplate>(SettingsMinStorage))
+               .ToLocalChecked());
 }
 
 NODE_MODULE(native, InitAll)

@@ -8,6 +8,7 @@
 #include <nan.h>
 
 #include "provider.h"
+#include "audit/settings.h"
 #include "audit/util.h"
 #include "audit/client/prf.h"
 #include "audit/client/upload/client.h"
@@ -44,8 +45,10 @@ class UploadWorker : public Nan::AsyncProgressWorker {
     std::ifstream content{file_path_, std::ifstream::binary};
     upload::File file{content, GetFileName()};
 
+    Settings s;
     try {
-      upload::TaggingParameters params{35, 96};
+      upload::TaggingParameters params{s.Get<int>("num_sectors"),
+                                       s.Get<size_t>("sector_size")};
       auto stats = upload_client.Upload(file, params,
                                         [&execution_progress](int percentage) {
         execution_progress.Send(reinterpret_cast<const char*>(&percentage),

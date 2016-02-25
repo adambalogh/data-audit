@@ -29,11 +29,16 @@ NAN_METHOD(SettingsGet) {
   MakeCallback(Nan::GetCurrentContext()->Global(), cb, argc, argv);
 }
 
-NAN_METHOD(SettingsSet) {
-  Local<String> key = info[0].As<String>();
-  Local<String> value = info[1].As<String>();
-
+NAN_METHOD(SettingsRecommended) {
   Settings s;
-  s.Set(std::string{*String::Utf8Value(key)},
-        std::string{*String::Utf8Value(value)});
+  s.Set("num_sectors", 35);
+  s.Set("sector_size", 96);
+  s.Set("params", "recommended");
+}
+
+NAN_METHOD(SettingsMinStorage) {
+  Settings s;
+  s.Set("num_sectors", 100);
+  s.Set("sector_size", 96);
+  s.Set("params", "min_storage");
 }
