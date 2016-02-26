@@ -66,6 +66,10 @@
         <h2>Settings</h2>
         <div class="option">
           <div>Upload Parameters</div>
+          <div class="description">
+            The additional storage needed and can be lowered,<br>
+            in exchange for lower accuracy.
+          </div>
           <div class="content">
             <select id="upload_params" name="upload">
               <option value="recommended">Recommended (~4% storage overhead)</option>
@@ -77,20 +81,14 @@
 
         <div class="option">
           <div>Verification Percentage</div>
+          <div class="description">
+            What percentage of the file should be checked.<br>
+            The higher it is, the longer the verification will take.
+          </div>
           <div class="content">
             <input type="number" min="0" max="100" id="verification_percentage"/>
           </div>
         </div>
-
-        <div class="option">
-          <div>Storage Provider</div>
-          <div class="content">
-            <input type="radio" name="provider" value="dropbox"/>Dropbox<br>
-            <input type="radio" name="provider" value="azure"/>Azure VM<br>
-            <input type="radio" name="provider" value="local"/>Local disk<br>
-          </div>
-        </div>
-
 
       </div>
     </div>
