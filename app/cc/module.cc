@@ -66,9 +66,6 @@ NAN_MODULE_INIT(InitAll) {
   Nan::Set(target, New<String>("settingsVerification").ToLocalChecked(),
            Nan::GetFunction(New<FunctionTemplate>(SettingsVerification))
                .ToLocalChecked());
-  Nan::Set(target, New<String>("settingsProvider").ToLocalChecked(),
-           Nan::GetFunction(New<FunctionTemplate>(SettingsProvider))
-               .ToLocalChecked());
 }
 
 NODE_MODULE(native, InitAll)

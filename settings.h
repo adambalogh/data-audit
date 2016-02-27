@@ -16,6 +16,9 @@ class Settings {
   Settings(bool read = true) {
     if (read) {
       std::ifstream f{file_};
+      if (!f) {
+        throw std::runtime_error("Could not open settings file");
+      }
       settings_ = json::parse(f);
     }
   }
