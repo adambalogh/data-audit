@@ -6,3 +6,9 @@ It can be used to efficiently check the integrity of files that are stored on re
 servers. 
 
 It relies on the method described in [Compact Proofs of Retrievability.](https://cseweb.ucsd.edu/~hovav/dist/verstore.pdf)
+
+Required libraries:
+* OpenSSL
+* CryptoPP
+* cpprestsdk
+* proxygen
