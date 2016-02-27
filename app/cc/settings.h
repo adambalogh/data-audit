@@ -54,3 +54,11 @@ NAN_METHOD(SettingsVerification) {
   Settings s;
   s.Set("verification_percentage", val->Int32Value());
 }
+
+NAN_METHOD(SettingsProvider) {
+  String::Utf8Value param1(info[0]->ToString());
+  std::string provider{*param1};
+
+  Settings s;
+  s.Set("provider", provider);
+}
