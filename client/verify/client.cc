@@ -22,8 +22,9 @@ proto::Challenge Client::BuildChallenge(const proto::PublicFileTag& public_tag,
 
   // This is the actual number of blocks we will vefify
   int num_blocks_checked =
-      static_cast<double>((public_tag.num_blocks() * percent_blocks)) /
-      static_cast<double>(100);
+      std::max(static_cast<double>((public_tag.num_blocks() * percent_blocks)) /
+                   static_cast<double>(100),
+               1.0);
 
   BN_ptr max_weight{BN_new(), ::BN_free};
   BN_generate_prime_ex(max_weight.get(), 64, false, NULL, NULL, NULL);
