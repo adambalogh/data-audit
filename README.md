@@ -13,3 +13,4 @@ Dependencies:
 * CryptoPP
 * cpprestsdk
 * proxygen
+* lz4
