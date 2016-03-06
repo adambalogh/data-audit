@@ -7,7 +7,8 @@ servers.
 
 It relies on the method described in [Compact Proofs of Retrievability.](https://cseweb.ucsd.edu/~hovav/dist/verstore.pdf)
 
-Required libraries:
+Dependencies:
+* protobuf
 * OpenSSL
 * CryptoPP
 * cpprestsdk
