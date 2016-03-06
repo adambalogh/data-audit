@@ -16,6 +16,10 @@ SET(CMAKE_CXX_FLAGS
 set(SERVER_SIDE true)
 set(CLIENT_SIDE false)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -DCOMPRESS_FILES")
+
+find_package( ZLIB REQUIRED )
+
 # Build client when we are on Mac
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
   set(CLIENT_SIDE true)
@@ -83,6 +87,7 @@ add_library(local_disklib
   providers/local_disk/file_tag_source.cc
   providers/local_disk/file_list_source.cc
 )
+target_link_libraries(local_disklib lz4)
 
 add_library(cporlib proto/cpor.pb.cc)
 target_link_libraries(cporlib protobuf)

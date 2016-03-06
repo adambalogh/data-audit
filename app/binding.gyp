@@ -21,6 +21,7 @@
           "/usr/local/lib/libprotobuf.a",
           "/usr/local/lib/libcrypto.a",
           "/usr/local/lib/libcpprest.dylib",
+          "/usr/local/lib/liblz4.a",
 
           "/users/adambalogh/Developer/audit/lib/libclientlib.a",
           "/users/adambalogh/Developer/audit/lib/libcporlib.a",

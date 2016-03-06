@@ -23,11 +23,12 @@ void FileStorage::StoreFile(const std::string& file_name, std::istream& stream,
   }
 
   std::array<char, 1000 * 10> buffer;
-  size_t written;
+
+  size_t read;
   while (stream.read(buffer.data(), buffer.size()).gcount()) {
-    written = stream.gcount();
-    out_file.write(buffer.data(), written);
-    listener.OnChunkStored(written);
+    read = stream.gcount();
+    out_file.write(buffer.data(), read);
+    listener.OnChunkStored(read);
   }
 }
 }

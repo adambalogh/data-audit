@@ -25,6 +25,8 @@ class Client {
                ProgressBar::CallbackType callback);
 
  private:
+  void Compress(const File& file) const;
+
   Storage storage_;
 };
 }

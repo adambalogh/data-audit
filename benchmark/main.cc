@@ -2,18 +2,17 @@
 
 #include "audit/client/verify/client.h"
 #include "audit/client/verify/no_server_proof_source.h"
-
 #include "audit/providers/local_disk/fetcher.h"
 #include "audit/providers/local_disk/file_storage.h"
 #include "audit/providers/local_disk/file_tag_source.h"
-
 #include "audit/providers/azure/proof_source.h"
 #include "audit/providers/azure/file_storage.h"
 #include "audit/providers/azure/file_tag_source.h"
-
 #include "audit/client/upload/file.h"
 #include "audit/client/upload/client.h"
 #include "audit/client/upload/storage.h"
+
+#include "lz4.h"
 
 #include <assert.h>
 #include <cstdlib>
@@ -23,6 +22,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <unordered_map>
 
 using namespace audit;
 using namespace audit::providers;
@@ -69,11 +69,14 @@ static void DeleteFiles() {
 
 static void Upload(benchmark::State& state) {
   std::stringstream s{std::move(file_contents[state.range_x()])};
+  size_t total_size = 0;
 
   while (state.KeepRunning()) {
     s.clear();
-    upload_client.Upload(upload::File{s, files[state.range_x()]},
-                         TaggingParameters{30, 96}, [](int) {});
+    auto params = upload_client.Upload(upload::File{s, files[state.range_x()]},
+                                       TaggingParameters{80, 96}, [](int) {});
+    total_size =
+        params.file_size + params.file_tag_size + params.block_tags_size;
   }
 }
 
@@ -92,7 +95,6 @@ static void Verify(benchmark::State& state) {
 // Upload must be executed first, otherwise Verify won't have any files to
 // verify
 BENCHMARK(Upload)->Arg(0)->Arg(1)->Arg(2);
-
 BENCHMARK(Verify)->Arg(0)->Arg(1)->Arg(2);
 
 int main(int argc, char** argv) {
@@ -100,5 +102,5 @@ int main(int argc, char** argv) {
   ::benchmark::Initialize(&argc, argv);
   SetUpFiles();
   ::benchmark::RunSpecifiedBenchmarks();
-  DeleteFiles();
+  // DeleteFiles();
 }
