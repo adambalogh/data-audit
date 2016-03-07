@@ -102,5 +102,5 @@ int main(int argc, char** argv) {
   ::benchmark::Initialize(&argc, argv);
   SetUpFiles();
   ::benchmark::RunSpecifiedBenchmarks();
-  // DeleteFiles();
+  DeleteFiles();
 }

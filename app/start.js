@@ -10,8 +10,8 @@ app.on('window-all-closed', function() {
 
 app.on('ready', function() {
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 450,
+    width: 900,
+    height: 500,
     resizable: false,
     fullscreen: false,
     fullscreenable: false,
@@ -20,7 +20,7 @@ app.on('ready', function() {
   mainWindow.loadURL('file://' + __dirname + '/index.html');
 
   // TODO disable for Release
-  mainWindow.webContents.openDevTools();
+  //mainWindow.webContents.openDevTools();
   mainWindow.on('closed', function() {
     mainWindow = null;
   });

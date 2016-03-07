@@ -37,7 +37,7 @@ NAN_METHOD(SettingsGetVerificationPercentage) {
 
 NAN_METHOD(SettingsRecommended) {
   Settings s;
-  s.Set("num_sectors", 35);
+  s.Set("num_sectors", 80);
   s.Set("sector_size", 96);
   s.Set("params", "recommended");
 }
