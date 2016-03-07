@@ -103,6 +103,7 @@ add_executable(server
   server/storage_handler.cc
   server/file_tag_handler.cc
   server/file_list_handler.cc
+  server/batch_proof_handler.cc
 ) 
 
 target_link_libraries(server serverlib cporlib local_disklib ${THIRD_PARTY_LIBRARIES} proxygenlib
