@@ -114,11 +114,29 @@ message Challenge {
   repeated ChallengeItem items = 2;
 }
 
+// Verification request for a single file within a BatchChallenge.
+// Note that the weight for each index is missing.
+message BatchChallengeItem {
+  required PublicFileTag file_tag = 1;
+  repeated int32 indexes = 2;
+}
+
+// BatchChallenge is a more compact form of sending verification requests for
+// multiple files.
+message BatchChallenge {
+  required BatchChallengeItem challenges = 1;
+
+  // weights are reused for each challenge in this batch.
+  // The number of weights must be equal to the length of the longest indexes
+  // array in this batch,
+  // e.g.: for each c in challanges: c.indexes.size <= weights.size
+  repeated bytes weights = 2;
+}
+
 // Proof contains all the information the client needs to verify the integrity
 // of a file.
 message Proof {
   required bytes sigma = 1;
-
   repeated bytes mus = 2;
 }
 
