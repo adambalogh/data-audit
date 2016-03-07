@@ -13,6 +13,11 @@ class ProofSource {
  public:
   virtual proto::Proof GetProof(const proto::Challenge& challenge) = 0;
 
+  // BatchGetProof is a more efficient way of verifying multiple files at the
+  // same time
+  virtual proto::BatchProof BatchGetProof(
+      const proto::BatchChallenge& challenge) = 0;
+
   virtual ~ProofSource() {}
 };
 }

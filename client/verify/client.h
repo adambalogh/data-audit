@@ -32,6 +32,10 @@ class Client {
   bool Verify(const std::string& file_name, int percent_blocks,
               StageReportCallback callback, Stats& stats);
 
+  std::vector<bool> BatchVerify(const std::vector<const std::string>& files,
+                                int percent_blocks,
+                                StageReportCallback callback, Stats& stats);
+
  private:
   bool DoVerify(const std::string& file_name, int percent_blocks,
                 StageReportCallback callback, Stats& stats);

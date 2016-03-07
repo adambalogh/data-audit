@@ -25,6 +25,26 @@ class NoServerProofSource : public ProofSource {
     return prover.Prove();
   }
 
+  virtual proto::BatchProof BatchGetProof(
+      const proto::BatchChallenge& batch_challenge) {
+    proto::BatchProof proofs;
+
+    for (const auto& batch_item : batch_challenge.challenges()) {
+      proto::Challenge challenge;
+      // TODO avoid copying file_tag and weight
+      *challenge.mutable_file_tag() = batch_item.file_tag();
+      for (int index_i = 0; index_i < batch_item.indexes_size(); ++index_i) {
+        auto challenge_item = challenge.add_items();
+        challenge_item->set_index(batch_item.indexes(index_i));
+        assert(batch_challenge.weights_size() >= index_i);
+        challenge_item->set_weight(batch_challenge.weights(index_i));
+      }
+      *proofs.add_proofs() = std::move(GetProof(challenge));
+    }
+
+    return std::move(proofs);
+  }
+
  private:
   std::unique_ptr<server::FetcherFactory> fetcher_factory_;
 };

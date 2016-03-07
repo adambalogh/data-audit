@@ -28,6 +28,23 @@ proto::Proof ProofSource::GetProof(const proto::Challenge& challenge) {
   }
   return proof;
 }
+
+proto::BatchProof ProofSource::BatchGetProof(
+    const proto::BatchChallenge& challenge) {
+  // TODO authentication
+  http_request request{"GET"};
+  request.set_request_uri(BATCH_PROVE_URL);
+  request.set_body(challenge.SerializeAsString());
+
+  auto response = client_.request(request).get();
+  auto body_str = response.extract_string(true).get();
+
+  proto::BatchProof proof;
+  if (!proof.ParseFromString(body_str)) {
+    // error
+  }
+  return std::move(proof);
+}
 }
 }
 }

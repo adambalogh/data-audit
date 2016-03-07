@@ -124,7 +124,7 @@ message BatchChallengeItem {
 // BatchChallenge is a more compact form of sending verification requests for
 // multiple files.
 message BatchChallenge {
-  required BatchChallengeItem challenges = 1;
+  repeated BatchChallengeItem challenges = 1;
 
   // weights are reused for each challenge in this batch.
   // The number of weights must be equal to the length of the longest indexes
@@ -138,6 +138,10 @@ message BatchChallenge {
 message Proof {
   required bytes sigma = 1;
   repeated bytes mus = 2;
+}
+
+message BatchProof {
+  repeated Proof proofs = 1;
 }
 
 message File {
