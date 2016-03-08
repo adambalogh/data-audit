@@ -26,7 +26,7 @@ void BlockTagSerializer::Flush() {
     buffer_end += tag.ByteSize();
   }
   assert(buffer_end = buffer.size());
-  progress_bar_.Progress(buffer_end);
+  Progress(buffer_end);
 
   out_file_.write((char*)buffer.data(), buffer_end);
 

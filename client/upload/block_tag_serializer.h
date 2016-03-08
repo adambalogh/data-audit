@@ -3,6 +3,7 @@
 #include "audit/proto/cpor.pb.h"
 #include "audit/client/upload/progress_bar.h"
 #include "audit/client/upload/file.h"
+#include "audit/client/upload/progressable.h"
 
 #include <array>
 #include <fstream>
@@ -34,13 +35,12 @@ namespace upload {
 //    s.Done();
 //    StoreFile(s.FileName(), ...);
 //
-class BlockTagSerializer {
+class BlockTagSerializer : private Progressable {
  public:
-  BlockTagSerializer(const std::string& file_full_path,
-                     ProgressBar& progress_bar)
-      : file_name_(files_dir + file_full_path),
-        out_file_(file_name_, std::ofstream::binary),
-        progress_bar_(progress_bar) {
+  BlockTagSerializer(const std::string& file_name, ProgressBar& progress_bar)
+      : Progressable(progress_bar),
+        file_name_(files_dir + file_name),
+        out_file_(file_name_, std::ofstream::binary) {
     if (!out_file_) {
       throw std::runtime_error(
           "Could not open file to serialize BlockTags to. (" + file_name_ +
@@ -90,8 +90,6 @@ class BlockTagSerializer {
   size_t file_end_{0};
 
   proto::BlockTagMap block_tag_map_;
-
-  ProgressBar& progress_bar_;
 };
 }
 }
