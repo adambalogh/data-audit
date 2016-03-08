@@ -33,8 +33,8 @@ void Client::Compress(const File& file) const {
   std::vector<char> compressed_buffer(LZ4_compressBound(buffer.size()));
   size_t read;
   size_t compressed_size;
-  while (file.stream.read(buffer.data(), buffer.size()).gcount()) {
-    read = file.stream.gcount();
+  while (file.stream->read(buffer.data(), buffer.size()).gcount()) {
+    read = file.stream->gcount();
     compressed_size =
         LZ4_compress_default(buffer.data(), compressed_buffer.data(), read,
                              compressed_buffer.size());
@@ -56,11 +56,13 @@ Stats Client::Upload(const File& f, const TaggingParameters& params,
 
   // Compress file using LZ4
   Compress(f);
-  std::ifstream stream{CompressedPath(f.file_name), std::ifstream::binary};
-  if (!stream) {
+  auto stream = std::make_unique<std::ifstream>(CompressedPath(f.file_name),
+                                                std::ifstream::binary);
+  if (!(*stream)) {
     throw std::runtime_error("Compressed file could not be opened");
   }
-  File compressed_file{stream, f.file_name};
+
+  File compressed_file{std::move(stream), f.file_name};
 
   FileContext context{compressed_file, params, std::move(alphas), std::move(p),
                       std::unique_ptr<PRF>(new PrfType)};
@@ -99,7 +101,7 @@ Stats Client::Upload(const File& f, const TaggingParameters& params,
                           progress_listener);
   }};
   std::thread t3{[&]() {
-    storage_.StoreFile(compressed_file.file_name, compressed_file.stream,
+    storage_.StoreFile(compressed_file.file_name, *compressed_file.stream,
                        progress_listener);
   }};
 

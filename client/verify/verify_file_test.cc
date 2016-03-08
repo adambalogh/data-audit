@@ -24,13 +24,13 @@ using namespace audit::verify;
 
 // TODO cleanup
 TEST(Verification, Successful) {
-  std::stringstream content{"abcdefgh"};
+  std::string content{"abcdefgh"};
   unsigned int p = 7883;
   std::vector<unsigned int> alphas{342, 53};
   std::vector<unsigned int> blocks{0, 1};
   std::vector<unsigned int> weights{43, 89};
 
-  File file{content, ""};
+  File file{MakeFile(content), ""};
   TaggingParameters params{2, 1};
 
   FileContext context{file, params, make_BN_vector(alphas), BN_new_ptr(p),
@@ -53,7 +53,8 @@ TEST(Verification, Successful) {
     tags.push_back(tagger.GetNext());
   }
 
-  MemoryFetcher fetcher{challenge.file_tag(), context, tags, content};
+  std::stringstream stream(content);
+  MemoryFetcher fetcher{challenge.file_tag(), context, tags, stream};
   Prover prover{fetcher, challenge};
   auto proof = prover.Prove();
 

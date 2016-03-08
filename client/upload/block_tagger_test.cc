@@ -28,7 +28,7 @@ class BlockTaggerTest : public ::testing::Test {
  protected:
   ~BlockTaggerTest() { delete context; }
 
-  BlockTagger MakeBlockTagger(std::istream &stream,
+  BlockTagger MakeBlockTagger(const std::string &content,
                               std::vector<unsigned int> alphas_int,
                               int num_sectors = 1, size_t sector_size = 1,
                               int p_int = 32452867) {
@@ -37,37 +37,39 @@ class BlockTaggerTest : public ::testing::Test {
     for (int i = 0; i < num_sectors; ++i) {
       alphas.push_back(BN_new_ptr(alphas_int[i]));
     }
-    File file{stream, ""};
+    auto stream = std::make_unique<std::stringstream>(content);
+    // TODO delete this after used
+    auto file = new File{std::move(stream), ""};
     TaggingParameters params{num_sectors, sector_size};
-    context = new FileContext{file, params, std::move(alphas), std::move(p),
+    context = new FileContext{*file, params, std::move(alphas), std::move(p),
                               std::move(std::unique_ptr<PRF>(new DummyPRF))};
     return BlockTagger{*context};
   }
 
-  BlockTagger MakeBlockTagger(std::istream &stream,
+  BlockTagger MakeBlockTagger(const std::string &content,
                               unsigned int const_alpha = 1, int num_sectors = 1,
                               size_t sector_size = 1, int p_int = 32452867) {
     std::vector<unsigned int> alphas(num_sectors, const_alpha);
-    return MakeBlockTagger(stream, alphas, num_sectors, sector_size, p_int);
+    return MakeBlockTagger(content, alphas, num_sectors, sector_size, p_int);
   }
 
   FileContext *context;
 };
 
 TEST_F(BlockTaggerTest, EmptyFile) {
-  std::stringstream s;
+  std::string s;
   auto t = MakeBlockTagger(s);
   EXPECT_EQ(false, t.HasNext());
 }
 
 TEST_F(BlockTaggerTest, NotEmptyFile) {
-  std::stringstream s{"a"};
+  std::string s{"a"};
   auto t = MakeBlockTagger(s);
   EXPECT_EQ(true, t.HasNext());
 }
 
 TEST_F(BlockTaggerTest, SingleLetter) {
-  std::stringstream s{"a"};
+  std::string s{"a"};
   auto t = MakeBlockTagger(s, 10);
 
   auto tag = t.GetNext();
@@ -76,7 +78,7 @@ TEST_F(BlockTaggerTest, SingleLetter) {
 }
 
 TEST_F(BlockTaggerTest, BecomesInvalid) {
-  std::stringstream s{"abc"};
+  std::string s{"abc"};
   auto t = MakeBlockTagger(s, 1, 1, 10);
 
   t.GetNext();
@@ -84,7 +86,7 @@ TEST_F(BlockTaggerTest, BecomesInvalid) {
 }
 
 TEST_F(BlockTaggerTest, LargerSectorSize) {
-  std::stringstream s{"a"};
+  std::string s{"a"};
   auto t = MakeBlockTagger(s, 10, 1, 10);
 
   auto tag = t.GetNext();
@@ -93,7 +95,7 @@ TEST_F(BlockTaggerTest, LargerSectorSize) {
 }
 
 TEST_F(BlockTaggerTest, LargerSectorNumber) {
-  std::stringstream s{"a"};
+  std::string s{"a"};
   auto t = MakeBlockTagger(s, 10, 10, 1);
 
   auto tag = t.GetNext();
@@ -102,7 +104,7 @@ TEST_F(BlockTaggerTest, LargerSectorNumber) {
 }
 
 TEST_F(BlockTaggerTest, LargeSectorSizeAndNumber) {
-  std::stringstream s{"a"};
+  std::string s{"a"};
   auto t = MakeBlockTagger(s, 10, 10, 10);
 
   auto tag = t.GetNext();
@@ -111,7 +113,7 @@ TEST_F(BlockTaggerTest, LargeSectorSizeAndNumber) {
 }
 
 TEST_F(BlockTaggerTest, Modulo) {
-  std::stringstream s{"a"};
+  std::string s{"a"};
   auto t = MakeBlockTagger(s, 100, 1, 1, 11);
 
   int expected = (100 * static_cast<int>('a')) % 11;
@@ -140,8 +142,8 @@ BN_ptr ToBN(unsigned char *start, int length, unsigned int mul) {
 
 TEST_F(BlockTaggerTest, FullFile) {
   // Blocks{"abcd", "efgh", "i"}
-  std::stringstream s{"abcdefghi"};
-  auto s_ptr = (unsigned char *)s.str().data();
+  std::string s{"abcdefghi"};
+  auto s_ptr = (unsigned char *)s.data();
 
   auto t = MakeBlockTagger(s, {2, 4}, 2, 2);
 

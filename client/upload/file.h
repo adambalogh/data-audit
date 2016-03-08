@@ -15,10 +15,10 @@ namespace upload {
 
 // Wrapper class for a single file.
 struct File {
-  File(std::istream& stream, const std::string& file_name);
+  File(std::unique_ptr<std::istream> stream, const std::string& file_name);
 
   // The stream containing the content of the file
-  std::istream& stream;
+  const std::unique_ptr<std::istream> stream;
 
   // The name of the file, e.g. text.txt
   const std::string file_name;
@@ -56,7 +56,7 @@ struct TaggingParameters {
 //
 class FileContext {
  public:
-  FileContext(const File& file, const TaggingParameters& parameters,
+  FileContext(File& file, const TaggingParameters& parameters,
               std::vector<BN_ptr> alphas, BN_ptr p, std::unique_ptr<PRF> prf);
 
   const File& file() { return file_; }
@@ -79,7 +79,7 @@ class FileContext {
   int CalculateNumBlocks();
 
   // The file we want to audit
-  File file_;
+  File& file_;
 
   // Parameters used for tagging this file
   TaggingParameters parameters_;

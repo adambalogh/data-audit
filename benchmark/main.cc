@@ -68,13 +68,15 @@ static void DeleteFiles() {
 }
 
 static void Upload(benchmark::State& state) {
-  std::stringstream s{std::move(file_contents[state.range_x()])};
+  auto s = std::make_unique<std::stringstream>(
+      std::move(file_contents[state.range_x()]));
   size_t total_size = 0;
 
   while (state.KeepRunning()) {
-    s.clear();
-    auto params = upload_client.Upload(upload::File{s, files[state.range_x()]},
-                                       TaggingParameters{80, 96}, [](int) {});
+    s->clear();
+    auto params =
+        upload_client.Upload(upload::File{std::move(s), files[state.range_x()]},
+                             TaggingParameters{80, 96}, [](int) {});
     total_size =
         params.file_size + params.file_tag_size + params.block_tags_size;
   }

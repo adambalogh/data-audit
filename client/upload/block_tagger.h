@@ -29,8 +29,8 @@ class BlockTagger {
  public:
   // Constructs a BlockTagger.
   BlockTagger(FileContext& context) : context_(context) {
-    buffer.resize(std::max(context.parameters().sector_size,
-                           static_cast<size_t>(1000) * 1000));
+    buffer.resize(
+        std::max(context.parameters().sector_size, static_cast<size_t>(4000)));
   }
 
   // Returns the BlockTag for the next block from the file, should only be
@@ -46,17 +46,18 @@ class BlockTagger {
 
   proto::BlockTag GenerateTag();
 
+ private:
+  FileContext& context_;
+
   // Buffer for reading file
   std::vector<unsigned char> buffer;
 
-  int start_{0};
-  int end_{0};
+  size_t start_ = 0;
+  size_t end_ = 0;
 
-  unsigned long num_blocks_read_{0};
+  unsigned long num_blocks_read_ = 0;
 
-  bool file_read_{false};
-
-  FileContext& context_;
+  bool file_read_ = false;
 
   // BN context used for computations
   BN_CTX_ptr ctx{BN_CTX_new(), ::BN_CTX_free};

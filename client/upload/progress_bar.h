@@ -54,9 +54,9 @@ class ProgressBar {
   std::mutex mu_;
 
   // This value measures the current progress relative to max
-  size_t current_value_{0};
+  size_t current_value_ = 0;
 
-  size_t percentage_{0};
+  size_t percentage_ = 0;
 
   // Should be called whenever the percentage increases
   CallbackType callback_;

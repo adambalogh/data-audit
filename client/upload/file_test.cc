@@ -11,8 +11,10 @@
 using namespace audit::upload;
 
 TEST(File, ThrowsExceptionWhenInvalidFile) {
-  std::ifstream s{""};
-  EXPECT_THROW(File(s, ""), std::runtime_error);
+  // invalid file
+  auto empty = std::make_unique<std::ifstream>("");
+
+  EXPECT_THROW(File(std::move(empty), ""), std::runtime_error);
 }
 
 TEST(TaggingParameters, BlockSize) {
@@ -22,9 +24,8 @@ TEST(TaggingParameters, BlockSize) {
 }
 
 TEST(FileContext, AlphaInvalidSize) {
-  std::stringstream s;
   BN_ptr p{BN_new(), ::BN_free};
-  File file{s, ""};
+  File file{EmptyFile(), ""};
   TaggingParameters parameters{2, 1};
   EXPECT_THROW(FileContext(file, parameters, make_BN_vector({1}), std::move(p),
                            std::unique_ptr<PRF>{new DummyPRF}),
@@ -32,9 +33,8 @@ TEST(FileContext, AlphaInvalidSize) {
 }
 
 TEST(FileContext, AlphaSize) {
-  std::stringstream s;
   BN_ptr p{BN_new(), ::BN_free};
-  File file{s, ""};
+  File file{EmptyFile(), ""};
   TaggingParameters parameters{2, 1};
   EXPECT_NO_THROW(FileContext(file, parameters, make_BN_vector({1, 1}),
                               std::move(p),
@@ -43,9 +43,9 @@ TEST(FileContext, AlphaSize) {
 
 TEST(FileContext, NumBlocks) {
   // Length is 10
-  std::stringstream s{"aaaaaaaaaa"};
+  auto s = MakeFile("aaaaaaaaaa");
   BN_ptr p{BN_new(), ::BN_free};
-  File file{s, ""};
+  File file{std::move(s), ""};
   TaggingParameters parameters{2, 1};
   FileContext context{file, parameters, make_BN_vector({1, 1}), std::move(p),
                       std::unique_ptr<PRF>{new DummyPRF}};
@@ -55,15 +55,15 @@ TEST(FileContext, NumBlocks) {
 
 TEST(FileContext, NumBlocksLastBlockNotFull) {
   // Length is 9
-  std::stringstream s{"aaaaaaaaa"};
+  auto s = MakeFile("aaaaaaaaa");
   BN_ptr p{BN_new(), ::BN_free};
-  File file{s, ""};
+  File file{std::move(s), ""};
   TaggingParameters parameters{2, 1};
   FileContext context{file, parameters, make_BN_vector({1, 1}), std::move(p),
                       std::unique_ptr<PRF>{new DummyPRF}};
 }
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 }

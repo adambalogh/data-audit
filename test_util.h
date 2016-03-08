@@ -136,3 +136,9 @@ class MemoryFetcher : public server::Fetcher {
   std::vector<proto::BlockTag> &tags_;
   std::stringstream &s_;
 };
+
+std::unique_ptr<std::istream> MakeFile(std::string content) {
+  return std::move(std::make_unique<std::stringstream>(content));
+}
+
+std::unique_ptr<std::istream> EmptyFile() { return std::move(MakeFile("")); }

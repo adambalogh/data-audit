@@ -25,15 +25,15 @@ void BlockTagger::FillBuffer() {
   std::copy(std::begin(buffer) + start_, std::begin(buffer) + end_,
             std::begin(buffer));
 
-  context_.file().stream.read((char*)buffer.data() + bytes_left,
-                              buffer.size() - bytes_left);
+  context_.file().stream->read((char*)buffer.data() + bytes_left,
+                               buffer.size() - bytes_left);
   start_ = 0;
-  end_ = bytes_left + context_.file().stream.gcount();
+  end_ = bytes_left + context_.file().stream->gcount();
   if (end_ != buffer.size()) {
     file_read_ = true;
 
-    context_.file().stream.clear();
-    context_.file().stream.seekg(0, context_.file().stream.beg);
+    context_.file().stream->clear();
+    context_.file().stream->seekg(0, context_.file().stream->beg);
   }
 }
 
@@ -60,8 +60,7 @@ proto::BlockTag BlockTagger::GenerateTag() {
       FillBuffer();
     }
     BN_bin2bn(buffer.data() + start_,
-              std::min(context_.parameters().sector_size,
-                       (unsigned long)end_ - start_),
+              std::min(context_.parameters().sector_size, end_ - start_),
               sector.get());
     BN_mul(sector.get(), context_.alphas().at(i).get(), sector.get(),
            ctx.get());
@@ -76,7 +75,7 @@ proto::BlockTag BlockTagger::GenerateTag() {
   tag.set_index(num_blocks_read_++);
   BignumToString(*sigma, tag.mutable_sigma());
 
-  return tag;
+  return std::move(tag);
 }
 
 proto::BlockTag BlockTagger::GetNext() { return GenerateTag(); }

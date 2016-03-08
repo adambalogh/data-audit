@@ -9,22 +9,24 @@
 namespace audit {
 namespace upload {
 
-File::File(std::istream& stream, const std::string& file_name)
-    : stream(stream),
-      file_name(file_name),
-      // TODO check stream somehow?
-      size([&stream]() {
-        stream.seekg(0, stream.end);
-        auto length = stream.tellg();
-        stream.seekg(0, stream.beg);
-        return length;
-      }()) {
+size_t CalculateSize(std::istream& stream) {
   if (!stream) {
-    throw std::runtime_error("The given stream cannot be read from.");
+    throw std::runtime_error("The given stream is not open.");
+  }
+  stream.seekg(0, stream.end);
+  auto length = stream.tellg();
+  stream.seekg(0, stream.beg);
+  return length;
+}
+
+File::File(std::unique_ptr<std::istream> s, const std::string& file_name)
+    : stream(std::move(s)), file_name(file_name), size(CalculateSize(*stream)) {
+  if (!(*stream)) {
+    throw std::runtime_error("The given stream is not open.");
   }
 }
 
-FileContext::FileContext(const File& file, const TaggingParameters& parameters,
+FileContext::FileContext(File& file, const TaggingParameters& parameters,
                          std::vector<BN_ptr> alphas, BN_ptr p,
                          std::unique_ptr<PRF> prf)
     : file_(file),

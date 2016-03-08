@@ -64,15 +64,16 @@ class BlockTagSerializer final : private Progressable {
   // stored
   std::string FilePath() const { return file_name_; }
 
-  // The directory under which all the tag files are stored
-  static const std::string files_dir;
-
  private:
   // Deletes the temporary file where the BlockTags are stored
   void DeleteTempFile() const;
 
   // Writes the content of the buffer to out_file
   void Flush();
+
+ private:
+  // The directory under which all the tag files are stored
+  static const std::string files_dir;
 
   // Name of the file where the tags are serialized to
   const std::string file_name_;

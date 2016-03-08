@@ -35,8 +35,8 @@ TEST(Prover, Sigma) {
     alphas.push_back(g.GenerateNumber(*p));
   }
 
-  std::stringstream stream{"abcdefghijklmno\npqr "};
-  File file{stream, ""};
+  std::string content = "abcdefghijklmno\npqr ";
+  File file{MakeFile(content), ""};
 
   FileContext context{file, params, std::move(alphas), std::move(p),
                       std::unique_ptr<PRF>{new HMACPRF}};
@@ -61,6 +61,7 @@ TEST(Prover, Sigma) {
   auto weight2 = BN_new_ptr(17);
   item->set_weight(BignumToString(*weight2));
 
+  std::stringstream stream(content);
   MemoryFetcher fetcher{challenge.file_tag(), context, tags, stream};
 
   Prover prover{fetcher, challenge};

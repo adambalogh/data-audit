@@ -4,6 +4,7 @@
 #include "openssl/rand.h"
 
 #include "audit/util.h"
+#include "audit/test_util.h"
 #include "audit/client/prf.h"
 #include "audit/client/upload/client.h"
 #include "audit/server/fetcher.h"
@@ -28,9 +29,9 @@ int main() {
   upload::Client upload_client{
       std::unique_ptr<upload::FileStorage>{new local_disk::FileStorage}};
 
-  std::stringstream content{"thisisiatestfile"};
+  auto content = MakeFile("thisisiatestfile");
 
-  upload::File file{content, file_name};
+  upload::File file{std::move(content), file_name};
   upload_client.Upload(
       file, upload::TaggingParameters{30, 96},
       [](int percentage) { std::cout << percentage << std::endl; });
