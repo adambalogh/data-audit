@@ -35,7 +35,7 @@ namespace upload {
 //    s.Done();
 //    StoreFile(s.FileName(), ...);
 //
-class BlockTagSerializer : private Progressable {
+class BlockTagSerializer final : private Progressable {
  public:
   BlockTagSerializer(const std::string& file_name, ProgressBar& progress_bar)
       : Progressable(progress_bar),

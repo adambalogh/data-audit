@@ -13,6 +13,7 @@ class Progressable {
 
   virtual ~Progressable() {}
 
+ protected:
   void Progress(int n) { progress_bar_.Progress(n); }
 
  private:

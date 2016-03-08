@@ -14,22 +14,22 @@ const std::string BlockTagSerializer::files_dir{application_dir +
 
 void BlockTagSerializer::Flush() {
   size_t required_size = 0;
-  for (auto& tag : tags_) {
+  for (const auto& tag : tags_) {
     required_size += tag.ByteSize();
   }
-
-  std::vector<unsigned char> buffer(required_size);
-  size_t buffer_end = 0;
-
-  for (auto& tag : tags_) {
-    tag.SerializeToArray(buffer.data() + buffer_end, buffer.size());
-    buffer_end += tag.ByteSize();
+  if (required_size <= 0) {
+    return;
   }
-  assert(buffer_end = buffer.size());
-  Progress(buffer_end);
 
-  out_file_.write((char*)buffer.data(), buffer_end);
-
+  std::vector<unsigned char> flush_buf(required_size);
+  size_t flush_buf_size = 0;
+  for (auto& tag : tags_) {
+    tag.SerializeToArray(flush_buf.data() + flush_buf_size, flush_buf.size());
+    flush_buf_size += tag.ByteSize();
+  }
+  assert(flush_buf_size = flush_buf.size());
+  Progress(flush_buf_size);
+  out_file_.write((char*)flush_buf.data(), flush_buf_size);
   tags_.clear();
   buffer_size_ = 0;
 }
