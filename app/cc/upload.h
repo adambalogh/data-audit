@@ -42,8 +42,9 @@ class UploadWorker : public Nan::AsyncProgressWorker {
 
   void Execute(const AsyncProgressWorker::ExecutionProgress& execution_progress)
       override {
-    std::ifstream content{file_path_, std::ifstream::binary};
-    upload::File file{content, GetFileName()};
+    upload::File file{
+        std::make_unique<std::ifstream>(file_path_, std::ifstream::binary),
+        GetFileName()};
 
     Settings s;
     try {

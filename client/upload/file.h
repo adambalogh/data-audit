@@ -59,7 +59,7 @@ class FileContext {
   FileContext(File& file, const TaggingParameters& parameters,
               std::vector<BN_ptr> alphas, BN_ptr p, std::unique_ptr<PRF> prf);
 
-  const File& file() { return file_; }
+  const File& file() const { return file_; }
 
   const TaggingParameters& parameters() const { return parameters_; }
 
@@ -78,10 +78,8 @@ class FileContext {
  private:
   int CalculateNumBlocks();
 
-  // The file we want to audit
   File& file_;
 
-  // Parameters used for tagging this file
   TaggingParameters parameters_;
 
   // The number of blocks in a file
