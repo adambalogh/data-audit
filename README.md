@@ -7,7 +7,17 @@ servers.
 
 It relies on the method described in [Compact Proofs of Retrievability.](https://cseweb.ucsd.edu/~hovav/dist/verstore.pdf)
 
-Dependencies:
+### Project structure:
+* `app`: Frontend for client-side app
+* `client/`: Backend for client-side app
+* `client/upload`: Code related to uploading and tagging a file
+* `client/verify`: Code related to verifying a file
+* `files`: File browser
+* `proto`: Protocol Buffers
+* `providers`: Code for working with different cloud storage providers
+* `server`: Simple implementation of a cloud storage provider
+
+### Dependencies:
 * protobuf
 * OpenSSL
 * CryptoPP
